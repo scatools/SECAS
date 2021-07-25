@@ -8,11 +8,13 @@ const Main = () => {
 	const [ activeSidebar, setActiveSidebar ] = useState(false);
 	const [data, setData] = useState(null);
 
-	const [weightsDone, setWeightsDone]=useState(false);
+	// const [weightsDone, setWeightsDone]=useState(false);
 
 	return (
 		<div>
-			<Sidebar activeSidebar={activeSidebar} setActiveSidebar={setActiveSidebar} setWeightsDone={setWeightsDone} setData={setData} />
+			<Sidebar activeSidebar={activeSidebar} setActiveSidebar={setActiveSidebar} 
+			// setWeightsDone={setWeightsDone} 
+			setData={setData} />
 			<div style={{ height: '100%', position: 'relative' }} className="content">
 				<Button
 					style={{ position: 'absolute', top: '80px', left: '50px', zIndex: 1 }}

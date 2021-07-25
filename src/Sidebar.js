@@ -7,7 +7,9 @@ import {changeMeasures,changeMeasuresWeight,changeGoalWeights} from './action';
 import { GoInfo } from 'react-icons/go';
 import ReactTooltip from "react-tooltip";
 
-const Sidebar = ({activeSidebar,setActiveSidebar,setWeightsDone, setData}) =>{
+const Sidebar = ({activeSidebar,setActiveSidebar,
+	// setWeightsDone, 
+	setData}) =>{
 	const dispatch = useDispatch();
 	const [show, setShow] = useState(false);
 	const handleClose = () => setShow(false);
