@@ -2,7 +2,7 @@ export const dataLayer = {
 	'id': 'cvt-data',
 	'type': 'fill',
 	'source': 'cvt',
-	'source-layer': 'Hex_mSE_blueprint-dmns8l',
+	'source-layer': 'Middle_SE_Boundary_WGS84',
 	'minzoom': 0,
 	'maxzoom': 22,
 	'paint': {
@@ -16,7 +16,7 @@ export const dataLayerHightLight = {
 	'id': 'cvt-data-highlighted',
 	'type': 'fill',
 	'source': 'cvt1',
-	'source-layer': 'Hex_mSE_blueprint-dmns8l',
+	'source-layer': 'Middle_SE_Boundary_WGS84',
 	'paint': {
 		'fill-outline-color': '#484896',
 		'fill-color': '#6e599f',
