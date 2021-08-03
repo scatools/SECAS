@@ -10,8 +10,8 @@ const Map = ({
 	//weightsDone, 
 	data }) => {
 	const [ viewport, setViewport ] = useState({
-		latitude: 30.8,
-		longitude: -88.4,
+		latitude: 35,
+		longitude: -95,
 		zoom: 5,
 		bearing: 0,
 		pitch: 0
@@ -51,7 +51,7 @@ const Map = ({
 			// weightsDone && 
 			(
 				<>
-				<Source type="vector" url="mapbox://chuck0520.4fzqbp42" maxzoom={22} minzoom={0}>
+				<Source type="vector" url="mapbox://chuck0520.6jl5wnun" maxzoom={22} minzoom={0}>
 					<Layer
 						{...dataLayer}
 						// paint={{

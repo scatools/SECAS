@@ -55,7 +55,7 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 											{ value: 'hab2', label: 'Forested Wetland BDH' },
 											{ value: 'hab3', label: 'Upland Hardwoods - Forest' },
 											{ value: 'hab4', label: 'Upland Hardwoods - Woodland' },
-											{ value: 'hab5', label: 'Upland Hardwoods - Woodland' },
+											// { value: 'hab5', label: 'Upland Hardwoods - Woodland' },
 											{ value: 'hab6', label: 'Tidal Marsh BDH' },
 											{ value: 'hab7', label: 'Big Rivers' },
 											{ value: 'hab8', label: 'Streams and Rivers' }
@@ -104,7 +104,7 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 																'hab'
 															)}
 													>
-														Low ROI [0]
+														Proportion of Low ROI [0]
 													</ToggleButton>
 													<ToggleButton
 														type="radio"
@@ -120,7 +120,7 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 																'hab'
 															)}
 													>
-														Restore [1]
+														Proportion of Restore [1]
 													</ToggleButton>
 													<ToggleButton
 														type="radio"
@@ -136,14 +136,14 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 																'hab'
 															)}
 													>
-														Enhance [2]
+														Proportion of Enhance [2]
 													</ToggleButton>
 													<ToggleButton
 														type="radio"
 														variant="outline-secondary"
 														name="weight"
-														value="high"
-														checked={measure.weight === 'high'}
+														value="max"
+														checked={measure.weight === 'max'}
 														onChange={(e) =>
 															handleChange(
 																e.currentTarget.value,
@@ -152,7 +152,7 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 																'hab'
 															)}
 													>
-														Maintain [3]
+														Proportion of Maintain [3]
 													</ToggleButton>
 												</ButtonGroup>
 											</div>

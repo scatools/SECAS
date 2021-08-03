@@ -1,22 +1,29 @@
 export const dataLayer = {
-	'id': 'cvt-data',
+	'id': 'secas-data',
 	'type': 'fill',
-	'source': 'cvt',
-	'source-layer': 'Middle_SE_Boundary_WGS84',
+	'source': 'secas',
+	'source-layer': 'Hex_mSE_blueprint_WGS84',
 	'minzoom': 0,
 	'maxzoom': 22,
 	'paint': {
-		'fill-outline-color': '#484896',
-		'fill-color': '#f04b26',
+		'fill-color': {
+			property: 'FWAWMN',
+			stops: [
+			  [1, '#ACFFAD'],
+			  [2, '#71EFA3'],
+			  [3, '#50CB93'],
+			  [4, '#54436B'],
+			]
+		  },
 		'fill-opacity': 0.75
 	}
 };
 
 export const dataLayerHightLight = {
-	'id': 'cvt-data-highlighted',
+	'id': 'secas-data-highlighted',
 	'type': 'fill',
-	'source': 'cvt1',
-	'source-layer': 'Middle_SE_Boundary_WGS84',
+	'source': 'secas1',
+	'source-layer': 'Hex_mSE_blueprint_WGS84',
 	'paint': {
 		'fill-outline-color': '#484896',
 		'fill-color': '#6e599f',
