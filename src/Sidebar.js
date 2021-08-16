@@ -55,7 +55,7 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 											{ value: 'hab2', label: 'Forested Wetland BDH' },
 											{ value: 'hab3', label: 'Upland Hardwoods - Forest' },
 											{ value: 'hab4', label: 'Upland Hardwoods - Woodland' },
-											{ value: 'hab5', label: 'Upland Hardwoods - Woodland' },
+											// { value: 'hab5', label: 'Upland Hardwoods - Woodland' },
 											{ value: 'hab6', label: 'Tidal Marsh BDH' },
 											{ value: 'hab7', label: 'Big Rivers' },
 											{ value: 'hab8', label: 'Streams and Rivers' }
@@ -93,26 +93,66 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 													<ToggleButton
 														type="radio"
 														variant="outline-secondary"
+														name="weight"
+														value="low"
+														checked={measure.weight === 'low'}
+														onChange={(e) =>
+															handleChange(
+																e.currentTarget.value,
+																e.currentTarget.name,
+																measure.value,
+																'hab'
+															)}
 													>
-														Low ROI [0]
+														Proportion of Low ROI [0]
 													</ToggleButton>
 													<ToggleButton
 														type="radio"
 														variant="outline-secondary"
+														name="weight"
+														value="medium"
+														checked={measure.weight === 'medium'}
+														onChange={(e) =>
+															handleChange(
+																e.currentTarget.value,
+																e.currentTarget.name,
+																measure.value,
+																'hab'
+															)}
 													>
-														Restore [1]
+														Proportion of Restore [1]
 													</ToggleButton>
 													<ToggleButton
 														type="radio"
 														variant="outline-secondary"
+														name="weight"
+														value="high"
+														checked={measure.weight === 'high'}
+														onChange={(e) =>
+															handleChange(
+																e.currentTarget.value,
+																e.currentTarget.name,
+																measure.value,
+																'hab'
+															)}
 													>
-														Enhance [2]
+														Proportion of Enhance [2]
 													</ToggleButton>
 													<ToggleButton
 														type="radio"
 														variant="outline-secondary"
+														name="weight"
+														value="max"
+														checked={measure.weight === 'max'}
+														onChange={(e) =>
+															handleChange(
+																e.currentTarget.value,
+																e.currentTarget.name,
+																measure.value,
+																'hab'
+															)}
 													>
-														Maintain [3]
+														Proportion of Maintain [3]
 													</ToggleButton>
 												</ButtonGroup>
 											</div>
