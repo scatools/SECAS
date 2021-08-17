@@ -25,6 +25,10 @@ const Main = () => {
 				>
 					Start
 				</Button>
+				<div id="floatingWindow" className="window">
+					<p>Please zoom in to level 10 to explore the details of a single hexagonal area.</p>
+					<p>Current zoom level :</p>
+				</div>
 				<Map 
 				// weightsDone={weightsDone} 
 				data={data}/>

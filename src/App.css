@@ -27,7 +27,7 @@
 .legend {
   position: absolute;
   top:75vh;
-  left: 1vw;
+  right:2vw;
   background-color: rgb(247, 245, 245);
   border-radius: 30px;
   padding:10px
