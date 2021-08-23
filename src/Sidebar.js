@@ -52,14 +52,14 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 										styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
 										menuPortalTarget={document.body}
 										options={[
-											{ value: 'hab1', label: 'Open Pine Woodland BDH' },
+											// { value: 'hab1', label: 'Open Pine Woodland BDH' },
 											{ value: 'hab2', label: 'Forested Wetland BDH' },
 											{ value: 'hab3', label: 'Upland Hardwoods - Forest' },
 											{ value: 'hab4', label: 'Upland Hardwoods - Woodland' },
 											// { value: 'hab5', label: 'Upland Hardwoods - Woodland' },
 											{ value: 'hab6', label: 'Tidal Marsh BDH' },
-											{ value: 'hab7', label: 'Big Rivers' },
-											{ value: 'hab8', label: 'Streams and Rivers' }
+											// { value: 'hab7', label: 'Big Rivers' },
+											// { value: 'hab8', label: 'Streams and Rivers' }
 										]}
 										isMulti
 										isClearable={false}
