@@ -48,6 +48,7 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 									<div>
 									<span>Habitat Type:</span>
 									<Select
+										id="selectHabitatType"
 										styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
 										menuPortalTarget={document.body}
 										options={[
@@ -71,13 +72,13 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 											    state = selectedOption.map((selected) => ({
 											    	...selected,
 											    	utility: selected['utility'] || '1',
-											    	weight: selected['weight'] || 'medium'
+											    	// weight: selected['weight'] || 'medium'
 											    }));
 										    }else{
 										    	state = null;
 										    	handleWeights(0,'hab');
 										    }
-										    dispatch(changeMeasures('hab', state))
+										    dispatch(changeMeasures('hab', state))											
 										}}    
 										className="basic-multi-select"
 										classNamePrefix="select"
@@ -91,6 +92,7 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 												</span>
 												<ButtonGroup toggle className="ml-2">
 													<ToggleButton
+														id="lowButton"
 														type="radio"
 														variant="outline-secondary"
 														name="weight"
@@ -107,6 +109,7 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 														Proportion of Low ROI [0]
 													</ToggleButton>
 													<ToggleButton
+														id="mediumButton"
 														type="radio"
 														variant="outline-secondary"
 														name="weight"
@@ -123,6 +126,7 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 														Proportion of Restore [1]
 													</ToggleButton>
 													<ToggleButton
+														id="highButton"
 														type="radio"
 														variant="outline-secondary"
 														name="weight"
@@ -139,6 +143,7 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 														Proportion of Enhance [2]
 													</ToggleButton>
 													<ToggleButton
+														id="maxButton"
 														type="radio"
 														variant="outline-secondary"
 														name="weight"
@@ -159,7 +164,9 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 										))}
 										</div>
 									<br />
-									
+									<Button id="avmButton">
+										Show Map of Average Weighted Mean
+									</Button>
 								</Card.Body>
 							</Accordion.Collapse>
 						</Card>

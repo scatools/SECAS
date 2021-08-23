@@ -43,32 +43,6 @@ color: #fff;
     color: #6f7072;
 }
 
-
-/*
-#sidebar .ControlWrapper {
-    padding: 20px 0;
-}
-
-#sidebar .ControlWrapper p {
-    color: #fff;
-    padding: 10px;
-    font-size: 20px;
-}
-
-#sidebar .ControlWrapper .card {
-    border: 1px solid #363c3f;
-}
-
-#sidebar .ControlWrapper .card-header {
-    background-color: #6f7072;
-}
-
-#sidebar .ControlWrapper .card-body {
-    background-color: #a1a3a7;
-}
-*/
-
-
 #sidebar .ControlWrapper {
     padding: 20px 0;
 }
@@ -103,3 +77,21 @@ color: #fff;
     top: 0;
     right: 0;
 } */
+
+.window {
+    position: absolute;
+    top: 80px;
+    left: 1200px;
+    color: #fff;
+    border: 2px white solid;
+    width: 300px;
+    height: 100px;
+    padding: 0px;
+    border-radius: 4px;
+    box-shadow: 6px 6px 5px gray;
+    transition: box-shadow 1s;
+    z-index: 8;
+    /* &:hover {
+      box-shadow: 0px 0px 0px gray;
+    } */
+}
