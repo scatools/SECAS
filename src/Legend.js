@@ -36,7 +36,7 @@ const Legend = ({legendInfo}) => {
 	}
 	
 	return (
-		<div class="legend">
+		<div class="legend" style={legendInfo ? {display: "block"} : {display: "none"}}>
 			<div class="legend-title">Legend</div>
 			<div class="legend-scale">
 				<ul class="legend-labels">
