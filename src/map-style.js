@@ -5,18 +5,6 @@ export const dataLayer = {
 	'source-layer': 'Hex_mSE_blueprint_WGS84',
 	'minzoom': 0,
 	'maxzoom': 22,
-	// 'paint': {
-	// 	'fill-color': {
-	// 		property: 'FWAWMN',
-	// 		stops: [
-	// 		  [1, '#ACFFAD'],
-	// 		  [2, '#71EFA3'],
-	// 		  [3, '#50CB93'],
-	// 		  [4, '#54436B'],
-	// 		]
-	// 	  },
-	// 	'fill-opacity': 0.75
-	// }
 };
 
 export const dataLayerHightLight = {

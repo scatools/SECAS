@@ -17,15 +17,7 @@ const Map = ({
 		bearing: 0,
 		pitch: 0
 	});
-	const [fillColor, setFillColor] = useState({
-		property: 'FWAWMN',
-		stops: [
-		  [1, '#ACFFAD'],
-		  [2, '#71EFA3'],
-		  [3, '#50CB93'],
-		  [4, '#54436B'],
-		]
-	  });
+	const [ fillColor, setFillColor ] = useState('#6E599F');
 	const [ filter, setFilter ] = useState([ 'in', 'OBJECTID', '' ]);
 	const [ hoverInfo, setHoverInfo ] = useState(null);
 	const [ legendInfo, setLegendInfo ] = useState(null);
@@ -592,13 +584,9 @@ const Map = ({
 						{...dataLayer}
 						id = "SECASlayer"
 						value = "SECASlayer"
-						// paint={{
-						// 	'fill-color': data,
-						// 	'fill-opacity': [ 'case', [ 'boolean', [ 'feature-state', 'hover' ], false ], 1, 0.5 ]
-						// }}
 						paint={{
 							'fill-color': fillColor,
-							'fill-opacity': 0.75
+							'fill-opacity': 0.5
 						}}
 					/>
 					<Layer {...dataLayerHightLight} filter={filter} />
