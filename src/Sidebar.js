@@ -92,7 +92,7 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 
 										<br></br>
 										<span>
-											<em>Proportion maps will be available after the map of Average Weighted Mean is being generated.</em>
+											<em>Proportion maps will be available after the map of Area Weighted Mean is being generated.</em>
 										</span>
 										<br></br>
 									
@@ -177,7 +177,7 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 									</div>
 									<br />
 									<Button id="avmButton">
-										Show Map of Average Weighted Mean
+										Show Map of Area Weighted Mean
 									</Button>
 								</Card.Body>
 							</Accordion.Collapse>
