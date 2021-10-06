@@ -82,11 +82,12 @@ color: #fff;
     FLOATING WINDOW STYLE
 ----------------------------------------------------- */
 
-.window {
+#floatingWindow {
     position: absolute;
     top: 80px;
-    left: 1200px;
+    right: 20px;
     color: #fff;
+    background-color: rgba(0,0,0,.5);
     border: 2px white solid;
     width: 300px;
     height: 100px;
@@ -94,7 +95,7 @@ color: #fff;
     border-radius: 4px;
     box-shadow: 6px 6px 5px gray;
     transition: box-shadow 1s;
-    z-index: 8;
+    z-index: 4;
     /* &:hover {
       box-shadow: 0px 0px 0px gray;
     } */

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Accordion, Card, Form, Row, Col, ButtonGroup, ToggleButton, Table, Modal } from 'react-bootstrap';
+import { Accordion, Button, ButtonGroup, Card, Container, Form, FormControl, InputGroup, Modal, Table, ToggleButton } from 'react-bootstrap';
 import './main.css';
 import Select from 'react-select';
 import {useDispatch,useSelector} from 'react-redux';
@@ -15,6 +15,7 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 	const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 	const [ mode, setMode ] = useState('add');
+	const [ inputMode, setInputMode ] = useState('health');
 
     const weights =  useSelector(state => state.weights)
 
@@ -41,13 +42,13 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 					<Accordion defaultActiveKey="0">
 						<Card className="my-2">
 							<Accordion.Toggle as={Card.Header} eventKey="2">
-								Select System:
+								Select Habitat Type:
 							</Accordion.Toggle>
 							<Accordion.Collapse eventKey="2">
 								<Card.Body>
 									<div>
 										<span> 
-										<em>Please select one habitat type from the list and click the blue button to display the visualization. </em> 
+										<em>Please select one habitat type from the list and click next. </em> 
 										</span>
 										<br></br>
 										<br></br>
@@ -89,12 +90,101 @@ const Sidebar = ({activeSidebar,setActiveSidebar,
 											className="basic-multi-select"
 											classNamePrefix="select"
 										/>
+									</div>
+								</Card.Body>
+							</Accordion.Collapse>
 
-										<br></br>
-										<span>
-											<em>Proportion maps will be available after the map of Area Weighted Mean is being generated.</em>
+							<Accordion.Toggle as={Card.Header} eventKey="2">
+								Select Attribute:
+							</Accordion.Toggle>
+							<Accordion.Collapse eventKey="2">
+								<Card.Body>
+									<div>
+										<span> 
+										<em>Please select one attribute from the list and click next. </em> 
 										</span>
 										<br></br>
+										<br></br>
+										<span>Attribute:</span>
+										<br></br>
+										<Select
+											id="selectAttribute"
+											styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+											menuPortalTarget={document.body}
+											options={[
+												{ value: 'health', label: 'Health' },
+												{ value: 'function', label: 'Function' },
+												{ value: 'connectivity', label: 'Connectivity' },
+											]}
+											isClearable={false}
+											placeholder="Select Attribute..."
+											name="colors"
+											onChange={(e) => {
+												// console.log(e);
+												setInputMode(e.value);
+											}}
+										/>
+									</div>
+								</Card.Body>
+							</Accordion.Collapse>
+							
+							<Accordion.Toggle as={Card.Header} eventKey="2">
+								Select Indicator:
+							</Accordion.Toggle>
+							<Accordion.Collapse eventKey="2">
+								<Card.Body>
+									<div>
+										<span> 
+										<em>Please select one indicator from the list and click the blue button to display the visualization. </em> 
+										</span>
+										<br></br>
+										<br></br>
+										<span>Indicator:</span>
+										<br></br>
+										{inputMode === 'health' && (
+											<Select
+												id="selectIndicator"
+												styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+												menuPortalTarget={document.body}
+												options={[
+													{ value: 'hea1', label: 'Site Intergrity' },
+													{ value: 'hea2', label: 'Biodiversity' },
+													{ value: 'hea3', label: 'Disturbance' },
+												]}
+												isClearable={false}
+												placeholder="Select Indicator..."
+												name="attribute"
+											/>
+										)}
+
+										{inputMode === 'function' && (
+											<Select
+												id="selectIndicator"
+												styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+												menuPortalTarget={document.body}
+												options={[
+													{ value: 'fun1', label: 'Ecosystem Services' }
+												]}
+												isClearable={false}
+												placeholder="Select Indicator..."
+												name="attribute"
+											/>
+										)}
+
+										{inputMode === 'connectivity' && (
+											<Select
+												id="selectIndicator"
+												styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+												menuPortalTarget={document.body}
+												options={[
+													{ value: 'con1', label: 'Connectedness / Fragmentation' },
+													{ value: 'con2', label: 'Permeability of Hubs' }
+												]}
+												isClearable={false}
+												placeholder="Select Indicator..."
+												name="attribute"
+											/>
+										)}										
 									
 										{weights.hab.selected &&
 											weights.hab.selected.map((measure) => (
