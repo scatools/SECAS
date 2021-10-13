@@ -6,63 +6,63 @@ color: #fff;
 ----------------------------------------------------- */
 
 #sidebar {
-    width: 500px;
-    position: absolute;
-    top: 55.5px;
-    left: -600px;
-    height: auto;
-    min-height: 94.3vh;
-    z-index: 5;
-    background: #292a2b;
-    color: #fff;
-    transition: all 0.3s;
-    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+  width: 500px;
+  position: absolute;
+  top: 55.5px;
+  left: -600px;
+  height: auto;
+  min-height: 94.3vh;
+  z-index: 5;
+  background: #292a2b;
+  color: #fff;
+  transition: all 0.3s;
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
 }
 
 #sidebar.active {
-    left: 0;
+  left: 0;
 }
 
 #dismiss {
-    width: 35px;
-    height: 35px;
-    line-height: 35px;
-    text-align: center;
-    background: #3b3b3b;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    -webkit-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  text-align: center;
+  background: #3b3b3b;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  -webkit-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
 }
 
 #dismiss:hover {
-    background: #fff;
-    color: #6f7072;
+  background: #fff;
+  color: #6f7072;
 }
 
 #sidebar .ControlWrapper {
-    padding: 20px 0;
+  padding: 20px 0;
 }
 
 #sidebar .ControlWrapper p {
-    color: #fff;
-    padding: 10px;
-    font-size: 26px;
+  color: #fff;
+  padding: 10px;
+  font-size: 26px;
 }
 
 #sidebar .ControlWrapper .card {
-    border: 1px solid #363c3f;
+  border: 1px solid #363c3f;
 }
 
 #sidebar .ControlWrapper .card-header {
-    background-color: #6f7072;
+  background-color: #6f7072;
 }
 
 #sidebar .ControlWrapper .card-body {
-    background-color: #a1a3a7;
+  background-color: #a1a3a7;
 }
 /* ---------------------------------------------------
     CONTENT STYLE
@@ -83,19 +83,19 @@ color: #fff;
 ----------------------------------------------------- */
 
 .window {
-    position: absolute;
-    top: 80px;
-    left: 1200px;
-    color: #fff;
-    border: 2px white solid;
-    width: 300px;
-    height: 100px;
-    padding: 0px;
-    border-radius: 4px;
-    box-shadow: 6px 6px 5px gray;
-    transition: box-shadow 1s;
-    z-index: 8;
-    /* &:hover {
+  position: absolute;
+  top: 80px;
+  right: 20px;
+  color: #fff;
+  border: 2px white solid;
+  width: 300px;
+  height: 100px;
+  padding: 0px;
+  border-radius: 4px;
+  box-shadow: 6px 6px 5px gray;
+  transition: box-shadow 1s;
+  z-index: 8;
+  /* &:hover {
       box-shadow: 0px 0px 0px gray;
     } */
 }
