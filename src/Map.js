@@ -6,9 +6,7 @@ import Legend from './Legend';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiY2h1Y2swNTIwIiwiYSI6ImNrMDk2NDFhNTA0bW0zbHVuZTk3dHQ1cGUifQ.dkjP73KdE6JMTiLcUoHvUA';
 
-const Map = ({ 
-	//weightsDone, 
-	data }) => {
+const Map = ({ data }) => {
 	const map = useRef(null);
 	const [ viewport, setViewport ] = useState({
 		latitude: 35,
@@ -591,6 +589,13 @@ const Map = ({
 					/>
 					<Layer {...dataLayerHightLight} filter={filter} />
 				</Source>
+				{/* <Source type="raster" url="mapbox://chuck0520.3dbvy7bi" maxzoom={22} minzoom={0}>
+					<Layer
+						type='raster'
+						id = "SECASlayerRaster"
+						value = "SECASlayerRaster"
+					/>
+				</Source> */}
 				<ControlPanel hoverInfo={hoverInfo?hoverInfo:{hexagon:{}}}></ControlPanel>
 				<Legend legendInfo={legendInfo}></Legend>
 				</>
