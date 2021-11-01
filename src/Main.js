@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Button} from 'react-bootstrap';
-import Map from './Map';
+import { Button } from 'react-bootstrap';
+import { MdMenu } from 'react-icons/md';
 import './main.css';
+import Map from './Map';
 import Sidebar from './Sidebar';
 
 const Main = () => {
@@ -36,12 +37,8 @@ const Main = () => {
 						setActiveSidebar(true);
 					}}
 				>
-					Start
+					<MdMenu />
 				</Button>
-				{/* <div id="floatingWindow" className="window">
-					<p>Please zoom in to level 10 to explore the details of a single hexagonal area.</p>
-					<p>Current zoom level :</p>
-				</div> */}
 				<Map drawingMode={drawingMode}
 					setFeatureList={setFeatureList}
 					aoiSelected={aoiSelected}
