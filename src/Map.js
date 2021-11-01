@@ -115,9 +115,9 @@ const Map = ({ drawingMode, setFeatureList, aoiSelected, editAOI, viewport, setV
 	return (
 		<MapGL
 			{...viewport}
-			style={{ position: 'fixed' }}
+			style={{ position: 'fixed', top: '5.7vh' }}
 			width="100vw"
-			height="100vh"
+			height="94.3vh"
 			// mapStyle="mapbox://styles/mapbox/dark-v9"
 			mapStyle="mapbox://styles/mapbox/light-v9"
 			// onViewportChange={(nextViewport) => setViewport(nextViewport)}
@@ -126,8 +126,7 @@ const Map = ({ drawingMode, setFeatureList, aoiSelected, editAOI, viewport, setV
 			mapboxApiAccessToken={MAPBOX_TOKEN}
 			ref={map}
 		>
-			{!habitatType && (
-				<>
+			{!habitatType && (				
 				<Source type="vector" url="mapbox://chuck0520.4fzqbp42" maxzoom={22} minzoom={0}>
 					<Layer
 						{...dataLayer}
@@ -140,9 +139,6 @@ const Map = ({ drawingMode, setFeatureList, aoiSelected, editAOI, viewport, setV
 						}}
 					/>
 				</Source>				
-				<ControlPanel hoverInfo={hoverInfo?hoverInfo:{hexagon:{}}}></ControlPanel>
-				<Legend legendInfo={legendInfo}></Legend>
-				</>
 			)}
 			<Editor
 				ref={editorRef}
@@ -165,49 +161,64 @@ const Map = ({ drawingMode, setFeatureList, aoiSelected, editAOI, viewport, setV
 			)}
 			{drawingMode && renderDrawTools()}
 			{habitatType === 'hab2' && (
-				<Source type="raster" url="mapbox://chuck0520.3dbvy7bi" maxzoom={22} minzoom={0}>
-					<Layer
-						type='raster'
-						id = "Forested_Wetland"
-						value = "Forested_Wetland"
-					/>
-				</Source>
+				<>
+					<Source type="raster" url="mapbox://chuck0520.3dbvy7bi" maxzoom={22} minzoom={0}>
+						<Layer
+							type='raster'
+							id = "Forested_Wetland"
+							value = "Forested_Wetland"
+						/>
+					</Source>
+					<Legend legendInfo="FW"></Legend>
+				</>
 			)}
 			{habitatType === 'hab3' && (
-				<Source type="raster" url="mapbox://chuck0520.813oo4df" maxzoom={22} minzoom={0}>
-					<Layer
-						type='raster'
-						id = "Upland_Hardwoods_Forest"
-						value = "Upland_Hardwoods_Forest"
-					/>
-				</Source>
+				<>
+					<Source type="raster" url="mapbox://chuck0520.813oo4df" maxzoom={22} minzoom={0}>
+						<Layer
+							type='raster'
+							id = "Upland_Hardwoods_Forest"
+							value = "Upland_Hardwoods_Forest"
+						/>
+					</Source>
+					<Legend legendInfo="UHF"></Legend>
+				</>
 			)}
 			{habitatType === 'hab4' && (
-				<Source type="raster" url="mapbox://chuck0520.6kkntksf" maxzoom={22} minzoom={0}>
-					<Layer
-						type='raster'
-						id = "Upland_Hardwoods_Woodland"
-						value = "Upland_Hardwoods_Woodland"
-					/>
-				</Source>
+				<>
+					<Source type="raster" url="mapbox://chuck0520.6kkntksf" maxzoom={22} minzoom={0}>
+						<Layer
+							type='raster'
+							id = "Upland_Hardwoods_Woodland"
+							value = "Upland_Hardwoods_Woodland"
+						/>
+					</Source>
+					<Legend legendInfo="UHW"></Legend>
+				</>
 			)}
 			{habitatType === 'hab5' && (
-				<Source type="raster" url="mapbox://chuck0520.c4pm2rl8" maxzoom={22} minzoom={0}>
-					<Layer
-						type='raster'
-						id = "Mixed_Forest"
-						value = "Mixed_Forest"
-					/>
-				</Source>
+				<>
+					<Source type="raster" url="mapbox://chuck0520.c4pm2rl8" maxzoom={22} minzoom={0}>
+						<Layer
+							type='raster'
+							id = "Mixed_Forest"
+							value = "Mixed_Forest"
+						/>
+					</Source>
+					<Legend legendInfo="MF"></Legend>
+				</>
 			)}
 			{habitatType === 'hab6' && (
-				<Source type="raster" url="mapbox://chuck0520.bwuspx5h" maxzoom={22} minzoom={0}>
-					<Layer
-						type='raster'
-						id = "Grass"
-						value = "Grass"
-					/>
-				</Source>
+				<>
+					<Source type="raster" url="mapbox://chuck0520.bwuspx5h" maxzoom={22} minzoom={0}>
+						<Layer
+							type='raster'
+							id = "Grass"
+							value = "Grass"
+						/>
+					</Source>
+					<Legend legendInfo="G"></Legend>
+				</>
 			)}
 		</MapGL>
 	);
