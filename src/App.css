@@ -9,7 +9,18 @@
     z-index: 9;
     pointer-events: none;
     opacity: 0.8;
-  }
+}
+
+.file-drop {
+  width: 95% !important;
+  height: auto;
+  min-height: 200px;
+  border: gray 2px dotted;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .control-panel {
   position: absolute;
@@ -39,20 +50,23 @@
   font-weight: bold;
   font-size: 90%;
 }
+
 .legend .legend-scale ul {
   margin: 0;
   margin-bottom: 5px;
   padding: 0;
   float: left;
   list-style: none;
-  }
+}
+
 .legend .legend-scale ul li {
   font-size: 80%;
   list-style: none;
   margin-left: 0;
   line-height: 18px;
   margin-bottom: 2px;
-  }
+}
+
 .legend ul.legend-labels li span {
   display: block;
   float: left;
@@ -61,4 +75,4 @@
   margin-right: 5px;
   margin-left: 0;
   border: 1px solid #999;
-  }
+}
