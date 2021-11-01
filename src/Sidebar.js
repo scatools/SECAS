@@ -1,22 +1,17 @@
 import React, { useState, useCallback } from 'react';
-import { Accordion, Alert, Button, ButtonGroup, Card, Container, Form, FormControl, InputGroup, Modal, Table, ToggleButton } from 'react-bootstrap';
-import './main.css';
-import Select from 'react-select';
+import { Accordion, Alert, Button, ButtonGroup, Card, Container, FormControl, InputGroup, ToggleButton } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeMeasures, changeMeasuresWeight, changeGoalWeights } from './action';
-import { GoInfo } from 'react-icons/go';
-import ReactTooltip from "react-tooltip";
+import Dropzone from 'react-dropzone';
+import Select from 'react-select';
+import { v4 as uuid } from 'uuid';
+import area from "@turf/area";
+import axios from 'axios';
+import shp from 'shpjs';
+import './main.css';
+import { changeMeasures, changeMeasuresWeight, changeGoalWeights, input_aoi } from './action';
 import SidebarMode from './SidebarMode';
 import SidebarViewGroup from './SidebarViewGroup';
 import SidebarViewDetail from './SidebarViewDetail';
-// import SidebarDismiss from './SidebarDismiss';
-// import SidebarAssemble from './SidebarAssemble';
-import axios from 'axios';
-import { v4 as uuid } from 'uuid';
-import { input_aoi } from './action';
-import Dropzone from 'react-dropzone';
-import shp from 'shpjs';
-import area from "@turf/area";
 
 const Sidebar = ({
 	activeSidebar,
@@ -38,13 +33,7 @@ const Sidebar = ({
 	const [ selectMode, setSelectMode ] = useState('health');
 	const [ drawData, setDrawData ] = useState('');
 	const [ alerttext, setAlerttext ] = useState(false);
-	const [ retrievingOptions, setRetrievingOptions ] = useState('hucBoundary');
-	const [ hucList, setHucList ] = useState([]);
-	const [ hucNameList, setHucNameList ] = useState([]);
-	const [ hucIDList, setHucIDList ] = useState([]);
-	const [ hucNameSelected, setHucNameSelected ]= useState([]);
-	// const [ hucIDSelected, setHucIDSelected ]= useState([]);
-	const weights =  useSelector(state => state.weights);
+	// const weights =  useSelector(state => state.weights);
 	const dispatch = useDispatch();
 	
 	const calculateArea = (input) => {
@@ -200,7 +189,7 @@ const Sidebar = ({
 				</div>
 
 				<div className="ControlWrapper">
-					<p>Sample Area</p>
+					<h5>&nbsp;&nbsp;Options:</h5>
 					<hr />
 					<SidebarMode mode={mode} setMode={setMode} />
 					<hr />
@@ -214,7 +203,7 @@ const Sidebar = ({
 									<Card.Body>
 										<div>
 											<span> 
-											<em>Please select one habitat type from the list and visualize. </em> 
+											<em>Please select one habitat type from the list to visualize. </em> 
 											</span>
 											<br></br>
 											<br></br>
@@ -238,22 +227,9 @@ const Sidebar = ({
 												isMulti={false}
 												isClearable={false}
 												placeholder="Select Habitat..."
-												name="colors"
-												value={weights.hab.selected}
+												name="selectHabitatType"
 												onChange={(selectedOption) => {
-													setHabitatType(selectedOption.value);
-													// let state;
-													// if (selectedOption) {
-													// 	state = selectedOption.map((selected) => ({
-													// 		...selected,
-													// 		utility: selected['utility'] || '1',
-													// 		// weight: selected['weight'] || 'medium'
-													// 	}));
-													// }else{
-													// 	state = null;
-													// 	handleWeights(0,'hab');
-													// }
-													// dispatch(changeMeasures('hab', state))											
+													setHabitatType(selectedOption.value);											
 												}}    
 												className="basic-multi-select"
 												classNamePrefix="select"
@@ -412,7 +388,7 @@ const Sidebar = ({
 									<Card.Body>
 										<div>
 											<span> 
-											<em>Please select one indicator from the list and click the blue button to display the visualization. </em> 
+											<em>Please select one indicator from the list and click the blue button to create assessment. </em> 
 											</span>
 											<br></br>
 											<br></br>
@@ -465,7 +441,7 @@ const Sidebar = ({
 										</div>
 										<br />
 										<Button id="avmButton">
-											Show Map of Area Weighted Mean
+											Create Assessment
 										</Button>
 									</Card.Body>
 								</Accordion.Collapse>

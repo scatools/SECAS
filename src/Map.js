@@ -11,8 +11,6 @@ const MAPBOX_TOKEN = 'pk.eyJ1IjoiY2h1Y2swNTIwIiwiYSI6ImNrMDk2NDFhNTA0bW0zbHVuZTk
 
 const Map = ({ drawingMode, setFeatureList, aoiSelected, editAOI, viewport, setViewport, habitatType }) => {
 	const map = useRef(null);
-	const [ fillColor, setFillColor ] = useState('#6E599F');
-	const [ fillOpacity, setFillOpacity ] = useState(0.5);
 	const [ filter, setFilter ] = useState([ 'in', 'OBJECTID', '' ]);
 	const [ hoverInfo, setHoverInfo ] = useState(null);
 	const [ legendInfo, setLegendInfo ] = useState(null);
@@ -125,21 +123,7 @@ const Map = ({ drawingMode, setFeatureList, aoiSelected, editAOI, viewport, setV
 			// onViewStateChange={onViewStateChange}
 			mapboxApiAccessToken={MAPBOX_TOKEN}
 			ref={map}
-		>
-			{!habitatType && (				
-				<Source type="vector" url="mapbox://chuck0520.4fzqbp42" maxzoom={22} minzoom={0}>
-					<Layer
-						{...dataLayer}
-						// id = "SECASlayer"
-						value = "SECASlayer"
-						paint={{
-							'fill-outline-color': '#484896',
-							'fill-color': fillColor,
-							'fill-opacity': 0.5
-						}}
-					/>
-				</Source>				
-			)}
+		>			
 			<Editor
 				ref={editorRef}
 				style={{ width: '100%', height: '100%' }}
@@ -156,10 +140,38 @@ const Map = ({ drawingMode, setFeatureList, aoiSelected, editAOI, viewport, setV
 					type:'FeatureCollection',
 					features: aoi[0].geometry
 				}}>
-					<Layer  id="data" type="fill" paint={{"fill-color":'#fee08b','fill-opacity': 0.8}}/>
+					<Layer  id="data" type="fill" paint={{"fill-color": "#fee08b", "fill-outline-color": "#fee08b", "fill-opacity": 0.5}}/>
 				</Source>
 			)}
 			{drawingMode && renderDrawTools()}
+			{!habitatType && (				
+				<Source type="vector" url="mapbox://chuck0520.4fzqbp42" maxzoom={22} minzoom={0}>
+					<Layer
+						{...dataLayer}
+						// id = "SECASlayer"
+						value = "SECASlayer"
+						paint={{
+							'fill-outline-color': '#484896',
+							'fill-color': '#6E599F',
+							'fill-opacity': 0.5
+						}}
+					/>
+				</Source>				
+			)}
+			{habitatType && (				
+				<Source type="vector" url="mapbox://chuck0520.4fzqbp42" maxzoom={22} minzoom={0}>
+					<Layer
+						{...dataLayer}
+						// id = "SECASlayer"
+						value = "SECASlayer"
+						paint={{
+							'fill-outline-color': 'gray',
+							'fill-color': 'transparent',
+							'fill-opacity': 1
+						}}
+					/>
+				</Source>				
+			)}			
 			{habitatType === 'hab2' && (
 				<>
 					<Source type="raster" url="mapbox://chuck0520.3dbvy7bi" maxzoom={22} minzoom={0}>
