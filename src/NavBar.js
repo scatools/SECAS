@@ -7,7 +7,7 @@ const Nav = () => {
 		<Navbar bg="dark" variant="dark" fixed="top">
 			<Navbar.Brand href="#home">
 				<Link to="/" style={{ color: 'white', textDecoration: 'None' }}>
-					SECAS Framework
+					SECAS Blueprint
 				</Link>
 			</Navbar.Brand>
 		</Navbar>

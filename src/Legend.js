@@ -1,56 +1,40 @@
 import React from 'react';
 
 const Legend = ({legendInfo}) => {
-
-	let color = ['#ACFFAD', '#71EFA3', '#50CB93', '#54436B'];
-	let color_FW = ['#ACFFAD', '#71EFA3', '#50CB93', '#54436B'];
-	let color_UHF = ['#CDD193', '#BACC81', '#478C5C', '#013A20'];
-	let color_UHW = ['#E4D4C8', '#D0B49F', '#A47551', '#523A28'];
-	let color_TM = ['#D4F1F4', '#75E6DA', '#189AB4', '#05445E'];
-
-	let range = ["0~1", "1~2", "2~3", "3~4"];
-	let range1 = ["0~1", "1~2", "2~3", "3~4"];
-	let range2 = ["0%~25%", "25%~50%", "50~75%", "75%~100%"];
+	let legendTitles = {
+						"FW": ["Current Site Condition for \nForest Wetland"],
+						"UHF": ["Current Site Condition for \nUpland Hardwoods -- Forest"],
+						"UHW": ["Current Site Condition for \nUpland Hardwoods -- Woodland"],
+						"MF": ["Current Site Condition for \nMixed Forest"],
+						"G": ["Current Site Condition for \nGrass"]
+					}
 	
-	if (legendInfo) {
-
-		if (legendInfo[0] == "FW") {
-			color = color_FW;
-		}
-		else if (legendInfo[0] == "UHF") {
-			color = color_UHF;
-		}
-		else if (legendInfo[0] == "UHW") {
-			color = color_UHW;
-		}
-		else if (legendInfo[0] == "TM") {
-			color = color_TM;
-		}
-		
-		if (legendInfo[1] == "AWMN") {
-			range = range1;
-		}
-		else if (legendInfo[1] == "PROP") {
-			range = range2;
-		}
+	let legendColors = {
+		"FW": ['#ACFFAD', '#71EFA3', '#50CB93', '#54436B'],
+		"UHF": ['#ffffcc', '#c2e699', '#78c679', '#238443'],
+		"UHW": ['#ffffd4', '#fed98e', '#fe9929', '#cc4c02'],
+		"MF": ['#a6611a', '#dfc27d', '#80cdc1', '#018571'],
+		"G": ['#edf8e9', '#bae4b3', '#74c476', '#238b45']
 	}
+
+	let legendLabels = ["Low", "Medium", "High", "Very High"]
 	
 	return (
 		<div class="legend" style={legendInfo ? {display: "block"} : {display: "none"}}>
-			<div class="legend-title">Legend</div>
+			<div class="legend-title">{legendTitles[legendInfo]}</div>
 			<div class="legend-scale">
 				<ul class="legend-labels">
 					<li>
-						<span style={{background:color[0]}} />{range[0]}
+						<span style={{background:legendColors[legendInfo][0], opacity:0.5}} />{legendLabels[0]}
 					</li>
 					<li>
-						<span style={{background:color[1]}} />{range[1]}
+						<span style={{background:legendColors[legendInfo][1], opacity:0.5}} />{legendLabels[1]}
 					</li>
 					<li>
-						<span style={{background:color[2]}} />{range[2]}
+						<span style={{background:legendColors[legendInfo][2], opacity:0.5}} />{legendLabels[2]}
 					</li>
 					<li>
-						<span style={{background:color[3]}} />{range[3]}
+						<span style={{background:legendColors[legendInfo][3], opacity:0.5}} />{legendLabels[3]}
 					</li>
 				</ul>
 			</div>
