@@ -42,7 +42,7 @@ const SidebarMode = ({ view, setView }) => {
         checked={view === "assess"}
         onChange={(e) => setView(e.currentTarget.value)}
       >
-        Assess
+        Current Condition
       </ToggleButton>
     </ButtonGroup>
   );

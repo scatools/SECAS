@@ -27,7 +27,7 @@ const AddDraw = ({
   };
   const handleSubmit = async () => {
     dispatch(setLoader(true));
-    let loadTimer = setTimeout(() => timeoutHandler(), 30000);
+    // let loadTimer = setTimeout(() => timeoutHandler(), 30000);
     if (!drawData) {
       setAlerttext("A name for this area of interest is required.");
       window.setTimeout(() => setAlerttext(false), 4000);
@@ -65,12 +65,12 @@ const AddDraw = ({
     }
 
     dispatch(setLoader(false));
-    clearTimeout(loadTimer);
+    // clearTimeout(loadTimer);
   };
 
   return (
     <Container className="mt-3">
-      {timeoutError && <TimeoutError countdown={countdown} />}
+      {/* {timeoutError && <TimeoutError countdown={countdown} />} */}
       <InputGroup className="m-auto" style={{ width: "80%" }}>
         <InputGroup.Prepend>
           <InputGroup.Text id="basic-addon1">Plan Name:</InputGroup.Text>
