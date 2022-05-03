@@ -90,3 +90,85 @@
   margin-left: 0;
   border: 1px solid #999;
 }
+
+.button-cont {
+  margin-top: 50px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.smaller-text {
+  font-size: 12px !important;
+}
+
+.form-btn-container {
+  margin: 30px;
+  display: flex;
+  justify-content: space-around;
+}
+
+button.btn-dark.ml-1.btn {
+  font-size: 14px;
+  margin: 5px;
+}
+
+.btn-success,
+.btn-secondary,
+.btn-danger,
+.btn-primary {
+  min-width: 180px;
+}
+
+button.ml-1.btn.btn-danger {
+  margin: 5px;
+  font-size: 14px;
+  min-width: initial;
+}
+
+button.sidebarControlBtn.btn.btn-secondary {
+  min-width: initial;
+  width: initial;
+}
+
+.btn-container {
+  display: flex;
+  flex-direction: row;
+}
+
+#resetButton {
+  color: red;
+  display: flex;
+  justify-content: space-between;
+  width: 120px;
+  font-weight: bold;
+  font-size: 12px;
+  position: absolute;
+  bottom: 2vh;
+  right: 10px;
+}
+
+.container.detail-buttons {
+  margin-left: -25px;
+  width: 125%;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.mt-4 {
+  position: fixed !important;
+  right: 30px;
+  bottom: 30px;
+  margin: 0;
+  padding: 0.5rem !important;
+}
+
+.mt-4 p {
+  font-size: 20px;
+  padding: 0 !important;
+  margin: 0;
+}
+
+.mt-4 .h4 {
+  font-size: 20px;
+}

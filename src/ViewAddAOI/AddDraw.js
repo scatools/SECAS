@@ -26,46 +26,8 @@ const AddDraw = ({
     setDrawData(e.target.value);
   };
   const handleSubmit = async () => {
-    dispatch(setLoader(true));
-    // let loadTimer = setTimeout(() => timeoutHandler(), 30000);
-    if (!drawData) {
-      setAlerttext("A name for this area of interest is required.");
-      window.setTimeout(() => setAlerttext(false), 4000);
-    } else if (featureList.length === 0) {
-      setAlerttext("At least one polygon is required.");
-      window.setTimeout(() => setAlerttext(false), 4000);
-    } else {
-      setAlerttext(false);
-      const newList = featureList;
-      const data = {
-        type: "MultiPolygon",
-        coordinates: newList.map((feature) => feature.geometry.coordinates),
-      };
-
-      // For development on local server
-      // const res = await axios.post('http://localhost:5000/data', { data });
-      // For production on Heroku
-      const res = await axios.post(
-        "https://sca-cpt-backend.herokuapp.com/data",
-        { data }
-      );
-      const planArea = calculateArea(newList);
-      dispatch(
-        input_aoi({
-          name: drawData,
-          geometry: newList,
-          hexagons: res.data.data,
-          rawScore: aggregate(res.data.data, planArea),
-          scaleScore: getStatus(aggregate(res.data.data, planArea)),
-          id: uuid(),
-        })
-      );
-      setDrawingMode(false);
-      setView("view");
-    }
-
-    dispatch(setLoader(false));
-    // clearTimeout(loadTimer);
+    //
+    setView("hfc");
   };
 
   return (

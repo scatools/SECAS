@@ -27,12 +27,12 @@ const SidebarMode = ({ view, setView }) => {
       <ToggleButton
         type="radio"
         variant="outline-secondary"
-        name="view"
-        value="view"
-        checked={view === "view"}
+        name="hfc"
+        value="hfc"
+        checked={view === "hfc"}
         onChange={(e) => setView(e.currentTarget.value)}
       >
-        View AOI
+        HFC Measures
       </ToggleButton>
       <ToggleButton
         type="radio"
@@ -42,7 +42,7 @@ const SidebarMode = ({ view, setView }) => {
         checked={view === "assess"}
         onChange={(e) => setView(e.currentTarget.value)}
       >
-        Current Condition
+        Assess Condition
       </ToggleButton>
     </ButtonGroup>
   );
