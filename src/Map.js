@@ -4,12 +4,12 @@ import { Editor, DrawPolygonMode, EditingMode } from 'react-map-gl-draw';
 import { useSelector } from 'react-redux';
 import { getFeatureStyle, getEditHandleStyle } from './draw-style';
 import { dataLayer, dataLayerHightLight } from './map-style';
-import ControlPanel from './ControlPanel';
+import { normalization } from "./helper/aggregateHex"
 import Legend from './Legend';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiY2h1Y2swNTIwIiwiYSI6ImNrMDk2NDFhNTA0bW0zbHVuZTk3dHQ1cGUifQ.dkjP73KdE6JMTiLcUoHvUA';
 
-const Map = ({ drawingMode, setFeatureList, aoiSelected, editAOI, viewport, setViewport, habitatType }) => {
+const Map = ({ drawingMode, setFeatureList, aoiSelected, editAOI, viewport, setViewport, habitatType, hexGrid }) => {
 	const map = useRef(null);
 	const [ filter, setFilter ] = useState([ 'in', 'OBJECTID', '' ]);
 	const [ hoverInfo, setHoverInfo ] = useState(null);
@@ -21,6 +21,48 @@ const Map = ({ drawingMode, setFeatureList, aoiSelected, editAOI, viewport, setV
 	var avmButton = document.getElementById("avmButton");
 	// var selectHabitatType = document.getElementById("selectHabitatType");
 	var selectedOption = document.getElementsByClassName("select__multi-value__label");
+
+	const aoiList = Object.values(useSelector((state) => state.aoi)).filter(
+    (aoi) => aoi.id === aoiSelected
+  );
+
+	const renderHexGrid = () => {
+		const hexFeatureList = aoiList[0].hexagons.map((hex) => {
+			let scoreList = normalization(hex);
+			let scoreArray = Object.values(scoreList);
+			let averageScore = scoreArray.reduce((a, b) => a + b, 0)/scoreArray.length;
+		  return {
+				type: "Feature",
+				geometry: JSON.parse(hex.geometry),
+				properties: { 
+					gid: hex.gid, 
+					objectid: hex.objectid,
+					score: averageScore
+				},
+		  };
+		});
+
+		const hexData = {
+		  type: "FeatureCollection",
+		  features: hexFeatureList,
+		};
+
+		return (
+		  <Source type="geojson" data={hexData}>
+			<Layer
+			  id="hex"
+			  type="fill"
+			  paint={{
+					"fill-color": {
+						property: "score",
+						stops: [[0.1, "#95efff"], [0.3, "#4bd3d1"], [0.5, "#00b597"], [0.7, "#009456"], [0.9, "#057300"]]
+					},
+					"fill-opacity": 0.5,
+			  }}
+			/>
+		  </Source>
+		);
+	};
 
 	const onSelect = (options) => {
 		setSelectedFeatureIndex(options && options.selectedFeatureIndex);
@@ -140,10 +182,19 @@ const Map = ({ drawingMode, setFeatureList, aoiSelected, editAOI, viewport, setV
 					type:'FeatureCollection',
 					features: aoi[0].geometry
 				}}>
-					<Layer  id="data" type="fill" paint={{"fill-color": "#fee08b", "fill-outline-color": "#fee08b", "fill-opacity": 0.5}}/>
+					<Layer
+						id="data"
+						type="fill"
+						paint={{
+							"fill-color": hexGrid ? "transparent" : "#fee08b",
+							"fill-outline-color": "#484896",
+							"fill-opacity": 0.5
+						}}
+					/>
 				</Source>
 			)}
 			{drawingMode && renderDrawTools()}
+			{aoiList.length > 0 && hexGrid && renderHexGrid()}
 			{!habitatType && (				
 				<Source type="vector" url="mapbox://chuck0520.4fzqbp42" maxzoom={22} minzoom={0}>
 					<Layer

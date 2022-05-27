@@ -3,13 +3,14 @@ import { Card, Button, InputGroup, FormControl } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { MdViewList, MdEdit, MdDelete } from 'react-icons/md';
 import { HiDocumentReport } from 'react-icons/hi';
+import { GiHexes } from 'react-icons/gi';
 import { delete_aoi, edit_aoi } from './action';
 // import { calculateArea, aggregate, getStatus } from './helper/aggregateHex';
 import axios from 'axios';
 import area from "@turf/area";
 
 
-const SidebarViewDetail = ({ aoiSelected, setActiveTable, setDrawingMode, editAOI, setEditAOI, featureList, setAlerttext}) => {
+const SidebarViewDetail = ({ aoiSelected, setActiveTable, setDrawingMode, editAOI, setEditAOI, featureList, setAlerttext, hexGrid, setHexGrid}) => {
 	const aoi = Object.values(useSelector((state) => state.aoi)).filter(aoi=>aoi.id===aoiSelected);
 	const dispatch = useDispatch();
 	const [aoiName,setAoiName] = useState("");
@@ -76,24 +77,30 @@ const SidebarViewDetail = ({ aoiSelected, setActiveTable, setDrawingMode, editAO
 						{/* <li>This area of interest has an area of {Math.round(aoi[0].rawScore.hab0*100)/100} km<sup>2</sup></li> */}
 						{/* <li>This area of interest contains {aoi[0].hexagons.length} hexagons</li> */}
 					</ul>
-				<Button variant="dark" 
+				<Button
+					variant="dark"
+					className="ml-2 mb-2"
 					onClick={()=>{setActiveTable(aoiSelected)}}
 				>
 					<MdViewList /> &nbsp;
 					View
 				</Button>
-				<Button variant="dark" className="ml-1"
-				        onClick={()=>{
-							setEditAOI(true);
-							setDrawingMode(true);
-							setAoiName(aoi[0].name)
-						}}
+				<Button
+					variant="dark"
+					className="ml-2 mb-2"
+				  onClick={()=>{
+						setEditAOI(true);
+						setDrawingMode(true);
+						setAoiName(aoi[0].name)
+					}}
 				>
 					<MdEdit /> &nbsp;
 					Edit
 				</Button>
-				<Button variant="dark" className="ml-1" 
-				    onClick={()=>{
+				<Button
+					variant="dark"
+					className="ml-2 mb-2" 
+				  onClick={()=>{
 						setActiveTable(false);
 						dispatch(delete_aoi(aoi[0].id))
 					}}
@@ -101,11 +108,21 @@ const SidebarViewDetail = ({ aoiSelected, setActiveTable, setDrawingMode, editAO
 					<MdDelete /> &nbsp;
 					Delete
 				</Button>
-				<Button variant="dark" className="ml-1" 
-				    onClick={handleDownload}
+				<Button
+					variant="dark"
+					className="ml-2 mb-2" 
+				  onClick={handleDownload}
 				>
 					<HiDocumentReport /> &nbsp;
 					Report
+				</Button>
+				<Button
+					variant="dark"
+					className="ml-2 mb-2" 
+				  onClick={() => {setHexGrid(!hexGrid)}}
+				>
+					<GiHexes /> &nbsp;
+					{hexGrid ? "Hide Hexagon Grid" : "Show Hexagon Grid"}
 				</Button>
 				{editAOI && 
 				(
