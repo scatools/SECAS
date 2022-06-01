@@ -24,7 +24,9 @@ const Sidebar = ({
 	editAOI,
 	setEditAOI,
 	setViewport,
-	setHabitatType
+	setHabitatType,
+	hexGrid,
+	setHexGrid
 	}) =>{
 	
 	const [ show, setShow ] = useState(false);	
@@ -66,22 +68,22 @@ const Sidebar = ({
 			setAlerttext(false);
 			const newList = featureList;
 			// console.log(newList);
-			// const data = {
-			// 	type: 'MultiPolygon',
-			// 	coordinates: newList.map((feature) => feature.geometry.coordinates)
-			// };
+			const data = {
+				type: 'MultiPolygon',
+				coordinates: newList.map((feature) => feature.geometry.coordinates)
+			};
 
 			// For development on local server
 			// const res = await axios.post('http://localhost:5000/data', { data });
 			// For production on Heroku
-			// const res = await axios.post('https://sca-cpt-backend.herokuapp.com/data', { data });
+			const res = await axios.post('https://secas-backend.herokuapp.com/data', { data });
 			const planArea = calculateArea(newList);
 			dispatch(
 				input_aoi({
 					name: drawData,
 					geometry: newList,
 					area: planArea,
-					// hexagons: res.data.data,
+					hexagons: res.data.data,
 					// rawScore: aggregate(res.data.data, planArea),
 					// scaleScore: getStatus(aggregate(res.data.data, planArea)),
 					id: uuid()
@@ -110,19 +112,19 @@ const Sidebar = ({
 				}
 			}))
 			// console.log(newList);
-			// const data = geometry;
+			const data = geometry;
 			
 			// For development on local server
 			// const res = await axios.post('http://localhost:5000/data', { data });
 			// For production on Heroku
-			// const res = await axios.post('https://sca-cpt-backend.herokuapp.com/data', { data });
+			const res = await axios.post('https://secas-backend.herokuapp.com/data', { data });
 			const planArea = calculateArea(newList);
 			dispatch(
 				input_aoi({
 					name: 'Area of Interest ' + aoiNumber,
 					geometry: newList,
 					area: planArea,
-					// hexagons: res.data.data,
+					hexagons: res.data.data,
 					// rawScore: aggregate(res.data.data, planArea),
 					// scaleScore: getStatus(aggregate(res.data.data, planArea)),
 					id: uuid()
@@ -341,6 +343,8 @@ const Sidebar = ({
 								setEditAOI={setEditAOI}
 								featureList={featureList}
 								setAlerttext={setAlerttext}
+								hexGrid={hexGrid}
+								setHexGrid={setHexGrid}
 							/>
 						</Container>
 					)}

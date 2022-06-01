@@ -14,6 +14,7 @@ const Main = () => {
 	const [ editAOI, setEditAOI ] = useState(false);
 	const [ viewport, setViewport ] = useState({latitude: 35, longitude: -95, zoom: 5});
 	const [ habitatType, setHabitatType ] = useState(null);
+	const [hexGrid, setHexGrid] = useState(false);
 
 	return (
 		<div>
@@ -28,6 +29,8 @@ const Main = () => {
 					setEditAOI={setEditAOI}
 					setViewport={setViewport}
 					setHabitatType={setHabitatType}
+					hexGrid={hexGrid}
+					setHexGrid={setHexGrid}
 			/>
 			<div style={{ height: '100%', position: 'relative' }} className="content">
 				<Button
@@ -46,6 +49,7 @@ const Main = () => {
 					viewport={viewport}
 					setViewport={setViewport}
 					habitatType={habitatType}
+					hexGrid={hexGrid}
 				/>
 			</div>
 		</div>
