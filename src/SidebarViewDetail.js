@@ -5,7 +5,7 @@ import { MdViewList, MdEdit, MdDelete } from 'react-icons/md';
 import { HiDocumentReport } from 'react-icons/hi';
 import { GiHexes } from 'react-icons/gi';
 import { delete_aoi, edit_aoi } from './action';
-// import { calculateArea, aggregate, getStatus } from './helper/aggregateHex';
+import { normalization } from './helper/aggregateHex';
 import axios from 'axios';
 import area from "@turf/area";
 
@@ -21,6 +21,17 @@ const SidebarViewDetail = ({ aoiSelected, setActiveTable, setDrawingMode, editAO
 		  totalArea= input.reduce((a,b)=>{return a+area(b)},0)/1000000
 		}
 		return totalArea;
+	}
+
+	const calculateScore = (aoiList) => {
+		const hexScoreList = aoiList[0].hexagons.map((hex) => {
+			let scoreList = normalization(hex);
+			let scoreArray = Object.values(scoreList);
+			let averageScore = scoreArray.reduce((a, b) => a + b, 0)/scoreArray.length;
+			return averageScore;
+		})
+		const aoiScore = (hexScoreList.reduce((a, b) => a + b, 0)/hexScoreList.length).toFixed(2);
+		return aoiScore;
 	}
 
 	const handleEdit = async()=>{
@@ -74,8 +85,8 @@ const SidebarViewDetail = ({ aoiSelected, setActiveTable, setDrawingMode, editAO
 				<Card.Title>{aoi[0].name}</Card.Title>
 					<ul>
 						<li>This area of interest has an area of {Math.round(aoi[0].area*100)/100} km<sup>2</sup></li>
-						{/* <li>This area of interest has an area of {Math.round(aoi[0].rawScore.hab0*100)/100} km<sup>2</sup></li> */}
-						{/* <li>This area of interest contains {aoi[0].hexagons.length} hexagons</li> */}
+						<li>This area of interest contains {aoi[0].hexagons.length} hexagons</li>
+						<li>This area has an overall HFC Score of <b>{calculateScore(aoi)}</b> under current condition</li>
 					</ul>
 				<Button
 					variant="dark"
