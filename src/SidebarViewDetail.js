@@ -99,7 +99,7 @@ const SidebarViewDetail = ({ aoiSelected, setActiveTable, setDrawingMode, editAO
 				<Button
 					variant="dark"
 					className="ml-2 mb-2"
-				  onClick={()=>{
+					onClick={()=>{
 						setEditAOI(true);
 						setDrawingMode(true);
 						setAoiName(aoi[0].name)
@@ -111,7 +111,7 @@ const SidebarViewDetail = ({ aoiSelected, setActiveTable, setDrawingMode, editAO
 				<Button
 					variant="dark"
 					className="ml-2 mb-2" 
-				  onClick={()=>{
+					onClick={()=>{
 						setActiveTable(false);
 						dispatch(delete_aoi(aoi[0].id))
 					}}
@@ -122,7 +122,7 @@ const SidebarViewDetail = ({ aoiSelected, setActiveTable, setDrawingMode, editAO
 				<Button
 					variant="dark"
 					className="ml-2 mb-2" 
-				  onClick={handleDownload}
+				  	onClick={handleDownload}
 				>
 					<HiDocumentReport /> &nbsp;
 					Report
@@ -130,29 +130,32 @@ const SidebarViewDetail = ({ aoiSelected, setActiveTable, setDrawingMode, editAO
 				<Button
 					variant="dark"
 					className="ml-2 mb-2" 
-				  onClick={() => {setHexGrid(!hexGrid)}}
+				  	onClick={() => {setHexGrid(!hexGrid)}}
 				>
 					<GiHexes /> &nbsp;
 					{hexGrid ? "Hide Hexagon Grid" : "Show Hexagon Grid"}
 				</Button>
-				{editAOI && 
-				(
-				<>
-				<hr/>
-				<InputGroup className="mb-3" style={{ width: '60%' }}>
-					<InputGroup.Prepend>
-						<InputGroup.Text id="basic-addon1">Plan Name:</InputGroup.Text>
-					</InputGroup.Prepend>
-					<FormControl name="planName" value={aoiName} onChange={(e)=>{setAoiName(e.target.value)}} placeholder="Name area of interest here..."/>
-				</InputGroup>
-				<Button variant="dark"
-				        // onClick={handleEdit}
-				>
-					Finalize Changes
-				</Button>
-				</>
-				)
-				}								
+				{editAOI && (
+					<>
+						<hr/>
+						<InputGroup className="mb-3" style={{ width: '60%' }}>
+							<InputGroup.Prepend>
+								<InputGroup.Text id="basic-addon1">Plan Name:</InputGroup.Text>
+							</InputGroup.Prepend>
+							<FormControl
+								name="planName"
+								value={aoiName}
+								onChange={(e)=>{setAoiName(e.target.value)}}
+								placeholder="Name area of interest here..."
+							/>
+						</InputGroup>
+						<Button variant="dark"
+							// onClick={handleEdit}
+						>
+							Finalize Changes
+						</Button>
+					</>
+				)}								
 			</Card.Body>
 		</Card>
 		}

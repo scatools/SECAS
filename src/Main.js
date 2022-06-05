@@ -4,6 +4,7 @@ import { MdMenu } from 'react-icons/md';
 import './main.css';
 import Map from './Map';
 import Sidebar from './Sidebar';
+import AoiDetailTable from "./AoiDetailTable";
 
 const Main = () => {
 	const [ activeSidebar, setActiveSidebar ] = useState(false);
@@ -31,6 +32,10 @@ const Main = () => {
 					setHabitatType={setHabitatType}
 					hexGrid={hexGrid}
 					setHexGrid={setHexGrid}
+			/>
+			<AoiDetailTable
+				activeTable={activeTable}
+				setActiveTable={setActiveTable}
 			/>
 			<div style={{ height: '100%', position: 'relative' }} className="content">
 				<Button

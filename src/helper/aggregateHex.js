@@ -97,6 +97,46 @@ export function normalization(input){
   return normalizationResult;
 }
 
+export function calculateScore(aoiList){
+  const hexScoreList = aoiList[0].hexagons.map((hex) => {
+    let scoreList = normalization(hex);
+    return scoreList;
+  });
+  
+  let aoiScore = hexScoreList.reduce((a, b) => {
+    return {
+      scoreH1: a.scoreH1 + b.scoreH1,
+      scoreH2: a.scoreH2 + b.scoreH2,
+      scoreH3: a.scoreH3 + b.scoreH3,
+      scoreH4: a.scoreH4 + b.scoreH4,
+      scoreF1: a.scoreF1 + b.scoreF1,
+      scoreF2: a.scoreF2 + b.scoreF2,
+      scoreC1: a.scoreC1 + b.scoreC1,
+      scoreC2: a.scoreC2 + b.scoreC2,
+    }
+  }, {
+    scoreH1: 0,
+    scoreH2: 0,
+    scoreH3: 0,
+    scoreH4: 0,
+    scoreF1: 0,
+    scoreF2: 0,
+    scoreC1: 0,
+    scoreC2: 0,
+  });
+
+  aoiScore.scoreH1 = Math.round(100*aoiScore.scoreH1/hexScoreList.length)/100;
+  aoiScore.scoreH2 = Math.round(100*aoiScore.scoreH2/hexScoreList.length)/100;
+  aoiScore.scoreH3 = Math.round(100*aoiScore.scoreH3/hexScoreList.length)/100;
+  aoiScore.scoreH4 = Math.round(100*aoiScore.scoreH4/hexScoreList.length)/100;
+  aoiScore.scoreF1 = Math.round(100*aoiScore.scoreF1/hexScoreList.length)/100;
+  aoiScore.scoreF2 = Math.round(100*aoiScore.scoreF2/hexScoreList.length)/100;
+  aoiScore.scoreC1 = Math.round(100*aoiScore.scoreC1/hexScoreList.length)/100;
+  aoiScore.scoreC2 = Math.round(100*aoiScore.scoreC2/hexScoreList.length)/100;
+
+  return aoiScore;
+}
+
 export function aggregate(input,area) {
     // console.log(input);
     const hexNumber = input.length===0? 1: input.length;
