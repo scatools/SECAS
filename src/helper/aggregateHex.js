@@ -38,10 +38,8 @@ export function calculateArea(input){
 
 export function normalization(input){
   let scoreH1 = Math.round(parseFloat(input.site))==0?0:(
-                  Math.round(parseFloat(input.site))==1?0.25:(
-                    Math.round(parseFloat(input.site))==2?0.5:(
-                      Math.round(parseFloat(input.site))==3?0.75:1
-                    )
+                  Math.round(parseFloat(input.site))==1?0.5:(
+                    Math.round(parseFloat(input.site))==2?0.75:1
                   )
                 );
   let scoreH2 = Math.round(parseFloat(input.species))==0?0:(
