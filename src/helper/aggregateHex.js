@@ -15,12 +15,13 @@ import area from "@turf/area";
         lcmr2: Threatened and Endangered Species - Critical Habitat Area -Mean
         lcmr3: Threatened and Endangered Species - Number of Species -Max
         lcmr4: Light Pollution Index -Max
-        lcmr5: Terrestrial Vertebrate Biodiversity -Max?
-        lcmr6: Vulnerability to Invasive Plants -Max?
+        lcmr5: Terrestrial Vertebrate Biodiversity -Max
+        lcmr6: Vulnerability to Invasive Plants -Mean
         cl1: National Register of Historic Places -Max
         cl2: National Heritage Area -Mean
         cl3: Proximity to Socially Vulnerable Communities -Max
         cl4: Community Threat Index -Max
+        cl5: Social Vulnerability Index -Mean
         eco1: High Priority Working Lands -Mean
         eco2: Commercial Fishing Reliance -Max
         eco3: Recreational Fishing Engagement -Max
@@ -36,6 +37,140 @@ export function calculateArea(input) {
       }, 0) / 1000000;
   }
   return totalArea;
+}
+
+export function normalization(input) {
+  let scoreH1 =
+    Math.round(parseFloat(input.site)) == 0
+      ? 0
+      : Math.round(parseFloat(input.site)) == 1
+      ? 0.5
+      : Math.round(parseFloat(input.site)) == 2
+      ? 0.75
+      : 1;
+  let scoreH2 =
+    Math.round(parseFloat(input.species)) == 0
+      ? 0
+      : Math.round(parseFloat(input.species)) == 1
+      ? 0.33
+      : Math.round(parseFloat(input.species)) == 2
+      ? 0.66
+      : 1;
+  let scoreH3 =
+    Math.round(parseFloat(input.fire)) == 0
+      ? 0
+      : Math.round(parseFloat(input.fire)) <= 3
+      ? 0.33
+      : Math.round(parseFloat(input.fire)) <= 6
+      ? 0.66
+      : 1;
+  let scoreH4 =
+    Math.round(parseFloat(input.protected)) == 0
+      ? 0
+      : Math.round(parseFloat(input.protected)) == 3
+      ? 0.5
+      : 1;
+  let scoreF1 =
+    parseFloat(input.carbon) <= 1
+      ? 0
+      : parseFloat(input.carbon) <= 5
+      ? 0.33
+      : parseFloat(input.carbon) <= 10
+      ? 0.66
+      : 1;
+  let scoreF2 =
+    parseFloat(input.forest) == 0
+      ? 0
+      : parseFloat(input.forest) <= 0.25
+      ? 0.25
+      : parseFloat(input.forest) <= 0.5
+      ? 0.5
+      : parseFloat(input.forest) <= 0.75
+      ? 0.75
+      : 1;
+  let scoreC1 =
+    Math.round(parseFloat(input.landscape)) == 0
+      ? 0
+      : Math.round(parseFloat(input.landscape)) == 1
+      ? 0.25
+      : Math.round(parseFloat(input.landscape)) == 2
+      ? 0.5
+      : Math.round(parseFloat(input.landscape)) == 3
+      ? 0.75
+      : 1;
+  let scoreC2 =
+    parseFloat(input.resilience) == 0
+      ? 0
+      : parseFloat(input.resilience) <= 0.25
+      ? 0.25
+      : parseFloat(input.resilience) <= 0.5
+      ? 0.5
+      : parseFloat(input.resilience) <= 0.75
+      ? 0.75
+      : 1;
+  let normalizationResult = {
+    scoreH1: scoreH1,
+    scoreH2: scoreH2,
+    scoreH3: scoreH3,
+    scoreH4: scoreH4,
+    scoreF1: scoreF1,
+    scoreF2: scoreF2,
+    scoreC1: scoreC1,
+    scoreC2: scoreC2,
+  };
+
+  return normalizationResult;
+}
+
+export function calculateScore(aoiList) {
+  const hexScoreList = aoiList[0].hexagons.map((hex) => {
+    let scoreList = normalization(hex);
+    return scoreList;
+  });
+
+  let aoiScore = hexScoreList.reduce(
+    (a, b) => {
+      return {
+        scoreH1: a.scoreH1 + b.scoreH1,
+        scoreH2: a.scoreH2 + b.scoreH2,
+        scoreH3: a.scoreH3 + b.scoreH3,
+        scoreH4: a.scoreH4 + b.scoreH4,
+        scoreF1: a.scoreF1 + b.scoreF1,
+        scoreF2: a.scoreF2 + b.scoreF2,
+        scoreC1: a.scoreC1 + b.scoreC1,
+        scoreC2: a.scoreC2 + b.scoreC2,
+      };
+    },
+    {
+      scoreH1: 0,
+      scoreH2: 0,
+      scoreH3: 0,
+      scoreH4: 0,
+      scoreF1: 0,
+      scoreF2: 0,
+      scoreC1: 0,
+      scoreC2: 0,
+    }
+  );
+
+  aoiScore.scoreH1 =
+    Math.round((100 * aoiScore.scoreH1) / hexScoreList.length) / 100;
+  aoiScore.scoreH2 =
+    Math.round((100 * aoiScore.scoreH2) / hexScoreList.length) / 100;
+  aoiScore.scoreH3 =
+    Math.round((100 * aoiScore.scoreH3) / hexScoreList.length) / 100;
+  aoiScore.scoreH4 =
+    Math.round((100 * aoiScore.scoreH4) / hexScoreList.length) / 100;
+  aoiScore.scoreF1 =
+    Math.round((100 * aoiScore.scoreF1) / hexScoreList.length) / 100;
+  aoiScore.scoreF2 =
+    Math.round((100 * aoiScore.scoreF2) / hexScoreList.length) / 100;
+  aoiScore.scoreC1 =
+    Math.round((100 * aoiScore.scoreC1) / hexScoreList.length) / 100;
+  aoiScore.scoreC2 =
+    Math.round((100 * aoiScore.scoreC2) / hexScoreList.length) / 100;
+
+  return aoiScore;
 }
 
 export function aggregate(input, area) {
@@ -100,6 +235,10 @@ export function aggregate(input, area) {
           parseFloat(a.cl4) >= parseFloat(b.cl4)
             ? parseFloat(a.cl4)
             : parseFloat(b.cl4),
+        cl5:
+          parseFloat(a.cl5) >= parseFloat(b.cl5)
+            ? parseFloat(a.cl5)
+            : parseFloat(b.cl5),
         eco1: parseFloat(a.eco1) + parseFloat(b.eco1),
         eco2:
           parseFloat(a.eco2) >= parseFloat(b.eco2)
@@ -136,6 +275,7 @@ export function aggregate(input, area) {
       cl2: 0,
       cl3: 0,
       cl4: 0,
+      cl5: 0,
       eco1: 0,
       eco2: 0,
       eco3: 0,
@@ -159,7 +299,7 @@ export function aggregate(input, area) {
 }
 
 export function getStatus(input) {
-  // console.log(input);
+  // NEED TO DOUBLE CHECK
   let scaledResult = {
     hab0: Math.round(input.hab0 * 247.105 * 100) / 100 + " acres",
     hab1: input.hab1 === 1 ? "Yes" : "No",
@@ -176,9 +316,9 @@ export function getStatus(input) {
     wq1: String(Math.round(input.wq1 * 10000) / 100) + "%",
     wq2: String(Math.round(input.wq2 * 10000) / 100) + "%",
     wq3: String(Math.round(input.wq3 * 10000) / 100) + "%",
-    wq4: String(Math.round(input.wq3 * 10000) / 100) + "%",
-    wq5: Math.round(input.wq3 * 100) / 100,
-    wq6: input.hab1 === 1 ? "Yes" : "No",
+    wq4: String(Math.round(input.wq4 * 10000) / 100) + "%",
+    wq5: Math.round(input.wq5 * 100) / 100,
+    wq6: input.wq6 === 1 ? "Yes" : "No",
     lcmr1:
       input.lcmr1 > 6
         ? "High"
@@ -225,7 +365,16 @@ export function getStatus(input) {
         : input.cl4 > 0
         ? "Low"
         : "Insufficient data",
-    cl2: String(Math.round(input.cl2 * 10000) / 100) + "%",
+    cl5:
+      input.cl5 == 1
+        ? "High"
+        : input.cl5 == 0.75
+        ? "Medium-High"
+        : input.cl5 == 0.5
+        ? "Medium"
+        : input.cl5 == 0.25
+        ? "Low"
+        : "Insufficient data",
     eco1: String(Math.round(input.eco1 * 10000) / 100) + "%",
     eco2:
       input.eco2 > 3
@@ -253,6 +402,7 @@ export function getStatus(input) {
 }
 
 export function getScaledForAssessment(input, id, name) {
+  // NEED TO DOUBLE CHECK
   let scaledResult = {
     id,
     name,
@@ -300,6 +450,7 @@ export function getScaledForAssessment(input, id, name) {
     cl2: Math.round(input.cl2 * 100) / 100,
     cl3: input.cl3,
     cl4: input.cl4,
+    cl5: input.cl5,
     eco1: Math.round(input.eco1 * 100) / 100,
     eco2: input.eco2 / 4,
     eco3: input.eco3 / 4,
@@ -342,6 +493,7 @@ export function mergeIntoArray(input) {
     cl2: [],
     cl3: [],
     cl4: [],
+    cl5: [],
     eco1: [],
     eco2: [],
     eco3: [],

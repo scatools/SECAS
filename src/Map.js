@@ -1,10 +1,12 @@
 import React, { useRef, useState, useEffect } from "react";
-import MapGL, { Source, Layer } from "react-map-gl";
+import MapGL, { Source, Layer, Popup } from "react-map-gl";
 import { Editor, DrawPolygonMode, EditingMode } from "react-map-gl-draw";
 import { useSelector } from "react-redux";
+import { Table } from "react-bootstrap";
+import bbox from "@turf/bbox";
 import { getFeatureStyle, getEditHandleStyle } from "./draw-style";
 import { dataLayer, dataLayerHightLight } from "./map-style";
-import ControlPanel from "./ControlPanel";
+import { normalization } from "./helper/aggregateHex";
 import Legend from "./Legend";
 
 const MAPBOX_TOKEN =
@@ -18,16 +20,16 @@ const Map = ({
   viewport,
   setViewport,
   habitatType,
-  mode,
-  setMode,
+  hexGrid,
 }) => {
   const map = useRef(null);
   const [filter, setFilter] = useState(["in", "OBJECTID", ""]);
   const [hoverInfo, setHoverInfo] = useState(null);
   const [legendInfo, setLegendInfo] = useState(null);
-  const aoi = Object.values(useSelector((state) => state.aoi)).filter(
-    (aoi) => aoi.id === aoiSelected
-  );
+  const [showPopup, setShowPopup] = useState(false);
+  const [hoveredProperty, setHoveredProperty] = useState(null);
+  const [hoveredGeometry, setHoveredGeometry] = useState(null);
+  const [mode, setMode] = useState(null);
   const [selectedFeatureIndex, setSelectedFeatureIndex] = useState(null);
 
   var avmButton = document.getElementById("avmButton");
@@ -35,6 +37,163 @@ const Map = ({
   var selectedOption = document.getElementsByClassName(
     "select__multi-value__label"
   );
+
+  const aoi = Object.values(useSelector((state) => state.aoi)).filter(
+    (aoi) => aoi.id === aoiSelected
+  );
+
+  const aoiList = Object.values(useSelector((state) => state.aoi)).filter(
+    (aoi) => aoi.id === aoiSelected
+  );
+
+  const renderHexGrid = () => {
+    const hexFeatureList = aoiList[0].hexagons.map((hex) => {
+      let scoreList = normalization(hex);
+      let scoreArray = Object.values(scoreList);
+      let averageScore =
+        scoreArray.reduce((a, b) => a + b, 0) / scoreArray.length;
+      return {
+        type: "Feature",
+        geometry: JSON.parse(hex.geometry),
+        properties: {
+          gid: hex.gid,
+          objectid: hex.objectid,
+          scoreH1: scoreList.scoreH1,
+          scoreH2: scoreList.scoreH2,
+          scoreH3: scoreList.scoreH3,
+          scoreH4: scoreList.scoreH4,
+          scoreF1: scoreList.scoreF1,
+          scoreF2: scoreList.scoreF2,
+          scoreC1: scoreList.scoreC1,
+          scoreC2: scoreList.scoreC2,
+          overallScore: averageScore,
+        },
+      };
+    });
+
+    const hexData = {
+      type: "FeatureCollection",
+      features: hexFeatureList,
+    };
+
+    return (
+      <Source type="geojson" data={hexData}>
+        <Layer
+          id="hex"
+          type="fill"
+          paint={{
+            "fill-color": {
+              property: "overallScore",
+              stops: [
+                [0.1, "#95efff"],
+                [0.3, "#4bd3d1"],
+                [0.5, "#00b597"],
+                [0.7, "#009456"],
+                [0.9, "#057300"],
+              ],
+            },
+            "fill-opacity": 0.5,
+          }}
+        />
+      </Source>
+    );
+  };
+
+  const renderPopup = () => {
+    var aoiBbox = bbox({
+      type: "Feature",
+      geometry: hoveredGeometry,
+    });
+    var popupLongitude = (aoiBbox[0] + aoiBbox[2]) / 2;
+    var popupLatitude = (aoiBbox[1] + aoiBbox[3]) / 2;
+
+    return (
+      <Popup
+        longitude={popupLongitude}
+        latitude={popupLatitude}
+        anchor="bottom"
+        // onClose={() => setShowPopup(false)}
+      >
+        <Table striped bordered size="sm" variant="light">
+          <thead>
+            <tr>
+              <th>Measures</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colSpan="2">
+                <b>Health: </b>{" "}
+              </td>
+            </tr>
+            <tr>
+              <td>Open Pine Site Condition:</td>
+              <td>{hoveredProperty.scoreH1}</td>
+            </tr>
+            <tr>
+              <td>Open Pine Species:</td>
+              <td>{hoveredProperty.scoreH2}</td>
+            </tr>
+            <tr>
+              <td>Toby's Fire:</td>
+              <td>{hoveredProperty.scoreH3}</td>
+            </tr>
+            <tr>
+              <td>Conservation Management:</td>
+              <td>{hoveredProperty.scoreH4}</td>
+            </tr>
+            <tr>
+              <td colSpan="2">
+                <b>Function: </b>{" "}
+              </td>
+            </tr>
+            <tr>
+              <td>Forest Carbon:</td>
+              <td>{hoveredProperty.scoreF1}</td>
+            </tr>
+            <tr>
+              <td>Working Lands:</td>
+              <td>{hoveredProperty.scoreF2}</td>
+            </tr>
+            <tr>
+              <td colSpan="2">
+                <b>Connectivity:</b>{" "}
+              </td>
+            </tr>
+            <tr>
+              <td>Open Pine Landscape Condition: </td>
+              <td>{hoveredProperty.scoreC1}</td>
+            </tr>
+            <tr>
+              <td>TNC Resilience:</td>
+              <td>{hoveredProperty.scoreC2}</td>
+            </tr>
+            <tr>
+              <td>
+                <b style={{ color: "blue" }}>Overall Score:</b>{" "}
+              </td>
+              <td>
+                <b style={{ color: "blue" }}>
+                  {hoveredProperty.overallScore.toFixed(2)}
+                </b>
+              </td>
+            </tr>
+          </tbody>
+        </Table>
+      </Popup>
+    );
+  };
+
+  const onHover = (e) => {
+    if (e.features) {
+      const featureHovered = e.features[0];
+      if (featureHovered) {
+        setHoveredProperty(featureHovered.properties);
+        setHoveredGeometry(featureHovered.geometry);
+      }
+    }
+  };
 
   const onSelect = (options) => {
     setSelectedFeatureIndex(options && options.selectedFeatureIndex);
@@ -83,47 +242,6 @@ const Map = ({
     }
   }, [editAOI, aoi, drawingMode, aoiSelected]);
 
-  const renderDrawTools = () => {
-    // Copy from mapbox
-    return (
-      <div className="mapboxgl-ctrl-top-right">
-        <div className="mapboxgl-ctrl-group mapboxgl-ctrl">
-          <button
-            className="mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_polygon"
-            title="Polygon tool (p)"
-            onClick={async () => {
-              setMode(new DrawPolygonMode());
-            }}
-          />
-
-          <button
-            className="mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_trash"
-            title="Delete"
-            onClick={onDelete}
-          />
-        </div>
-      </div>
-    );
-  };
-
-  // const onViewStateChange = (e) => {
-  // 	// console.log(e);
-  // 	let windowContent = document.getElementById("floatingWindow");
-  // 	// let popupWindow = document.getElementsByClassName("map.tooltip");
-  // 	windowContent.style.display = 'block';
-  // 	// console.log(popupWindow);
-  // 	if (e.viewState.zoom >= 10) {
-  // 		windowContent.innerHTML = "<p>Click to explore the details of a single hexagonal area.</p>"
-  // 								+"<p>Current zoom level :"
-  // 								+e.viewState.zoom.toFixed(1)+"</p>"
-  // 	}
-  // 	else {
-  // 		windowContent.innerHTML = "<p>Please zoom in to level 10 to explore the details of a single hexagonal area.</p>"
-  // 								+"<p>Current zoom level :"
-  // 								+e.viewState.zoom.toFixed(1)+"</p>"
-  // 	}
-  // }
-
   return (
     <MapGL
       {...viewport}
@@ -137,6 +255,7 @@ const Map = ({
       // onViewStateChange={onViewStateChange}
       mapboxApiAccessToken={MAPBOX_TOKEN}
       ref={map}
+      onHover={onHover}
     >
       <Editor
         ref={editorRef}
@@ -161,14 +280,19 @@ const Map = ({
             id="data"
             type="fill"
             paint={{
-              "fill-color": "#fee08b",
-              "fill-outline-color": "#fee08b",
+              "fill-color": hexGrid ? "transparent" : "#fee08b",
+              "fill-outline-color": "#484896",
               "fill-opacity": 0.5,
             }}
           />
         </Source>
       )}
       {drawingMode && renderDrawTools()}
+      {aoiList.length > 0 && hexGrid && renderHexGrid()}
+      {aoiList.length > 0 &&
+        hexGrid &&
+        hoveredProperty.overallScore &&
+        renderPopup()}
       {!habitatType && (
         <Source
           type="vector"
