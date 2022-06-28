@@ -45,6 +45,8 @@ const Sidebar = ({
   hexGrid,
   setHexGrid,
   autoDraw,
+  hexOpacity,
+  setHexOpacity,
 }) => {
   const [show, setShow] = useState(false);
   const [view, setView] = useState("visualize");
@@ -130,6 +132,8 @@ const Sidebar = ({
               hexGrid={hexGrid}
               setHexGrid={setHexGrid}
               setViewport={setViewport}
+              hexOpacity={hexOpacity}
+              setHexOpacity={setHexOpacity}
             />
           </Container>
         )}

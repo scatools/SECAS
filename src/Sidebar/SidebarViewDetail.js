@@ -6,6 +6,7 @@ import {
   FormControl,
   Container,
 } from "react-bootstrap";
+import RangeSlider from "react-bootstrap-range-slider";
 import { useSelector, useDispatch } from "react-redux";
 import { MdViewList, MdEdit, MdDelete } from "react-icons/md";
 import { HiDocumentReport } from "react-icons/hi";
@@ -30,6 +31,8 @@ const SidebarViewDetail = ({
   hexGrid,
   setHexGrid,
   setViewport,
+  hexOpacity,
+  setHexOpacity,
 }) => {
   const aoiList = Object.values(useSelector((state) => state.aoi)).filter(
     (aoi) => aoi.id === aoiSelected
@@ -201,6 +204,17 @@ const SidebarViewDetail = ({
                 Finalize Changes
               </Button>
             </>
+          )}
+          {hexGrid && (
+            <div>
+              <h4>Opacity: </h4>
+              <RangeSlider
+                step={1}
+                value={hexOpacity}
+                onChange={(e) => setHexOpacity(e.target.value)}
+                variant="secondary"
+              />
+            </div>
           )}
         </Container>
       )}

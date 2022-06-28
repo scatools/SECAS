@@ -23,6 +23,7 @@ const Main = () => {
   });
   const [mapOverlay, setMapOverlay] = useState(null);
   const [hexGrid, setHexGrid] = useState(false);
+  const [hexOpacity, setHexOpacity] = useState(50);
 
   const autoDraw = async () => {
     setMode(new DrawPolygonMode());
@@ -52,6 +53,8 @@ const Main = () => {
         setHexGrid={setHexGrid}
         autoDraw={autoDraw}
         editMode={editMode}
+        hexOpacity={hexOpacity}
+        setHexOpacity={setHexOpacity}
       />
       <AoiDetailTable
         activeTable={activeTable}
@@ -82,6 +85,7 @@ const Main = () => {
           interactiveLayerIds={interactiveLayerIds}
           setInteractiveLayerIds={setInteractiveLayerIds}
           editMode={editMode}
+          hexOpacity={hexOpacity}
         />
       </div>
     </div>

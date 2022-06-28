@@ -25,6 +25,7 @@ const Map = ({
   setMode,
   autoDraw,
   interactiveLayerIds,
+  hexOpacity,
 }) => {
   const map = useRef(null);
   const [filter, setFilter] = useState(["in", "OBJECTID", ""]);
@@ -90,7 +91,12 @@ const Map = ({
                 [0.9, "#057300"],
               ],
             },
-            "fill-opacity": 0.5,
+            "fill-opacity": [
+              "case",
+              ["boolean", ["feature-state", "hover"], false],
+              1,
+              parseInt(hexOpacity) / 100,
+            ],
           }}
         />
       </Source>
@@ -98,12 +104,12 @@ const Map = ({
   };
 
   const renderPopup = () => {
-    var aoiBbox = bbox({
+    let aoiBbox = bbox({
       type: "Feature",
       geometry: hoveredGeometry,
     });
-    var popupLongitude = (aoiBbox[0] + aoiBbox[2]) / 2;
-    var popupLatitude = (aoiBbox[1] + aoiBbox[3]) / 2;
+    let popupLongitude = (aoiBbox[0] + aoiBbox[2]) / 2;
+    let popupLatitude = (aoiBbox[1] + aoiBbox[3]) / 2;
 
     return (
       <Popup
