@@ -3,11 +3,14 @@ import { Button } from "react-bootstrap";
 import { MdMenu } from "react-icons/md";
 import "./main.css";
 import Map from "./Map";
-import Sidebar from "./Sidebar";
+import Sidebar from "./Sidebar/Sidebar";
 import AoiDetailTable from "./AoiDetailTable";
+import { DrawPolygonMode, EditingMode } from "react-map-gl-draw";
 
 const Main = () => {
-  const [activeSidebar, setActiveSidebar] = useState(false);
+  const [mode, setMode] = useState(null);
+  const [interactiveLayerIds, setInteractiveLayerIds] = useState([]);
+  const [activeSidebar, setActiveSidebar] = useState(true);
   const [activeTable, setActiveTable] = useState(null);
   const [drawingMode, setDrawingMode] = useState(false);
   const [featureList, setFeatureList] = useState([]);
@@ -20,6 +23,16 @@ const Main = () => {
   });
   const [habitatType, setHabitatType] = useState(null);
   const [hexGrid, setHexGrid] = useState(false);
+
+  const autoDraw = async () => {
+    setMode(new DrawPolygonMode());
+    // Use crosshair as cursor style when drawing new shapes over SCA boundary
+    setInteractiveLayerIds(["SECASlayer"]);
+  };
+
+  const editMode = async () => {
+    setMode(new EditingMode());
+  };
 
   return (
     <div>
@@ -37,6 +50,8 @@ const Main = () => {
         setHabitatType={setHabitatType}
         hexGrid={hexGrid}
         setHexGrid={setHexGrid}
+        autoDraw={autoDraw}
+        editMode={editMode}
       />
       <AoiDetailTable
         activeTable={activeTable}
@@ -53,6 +68,8 @@ const Main = () => {
           <MdMenu />
         </Button>
         <Map
+          mode={mode}
+          setMode={setMode}
           drawingMode={drawingMode}
           setFeatureList={setFeatureList}
           aoiSelected={aoiSelected}
@@ -61,6 +78,10 @@ const Main = () => {
           setViewport={setViewport}
           habitatType={habitatType}
           hexGrid={hexGrid}
+          autoDraw={autoDraw}
+          interactiveLayerIds={interactiveLayerIds}
+          setInteractiveLayerIds={setInteractiveLayerIds}
+          editMode={editMode}
         />
       </div>
     </div>

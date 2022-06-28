@@ -21,22 +21,20 @@ const Map = ({
   setViewport,
   habitatType,
   hexGrid,
+  mode,
+  setMode,
+  autoDraw,
+  interactiveLayerIds,
 }) => {
   const map = useRef(null);
   const [filter, setFilter] = useState(["in", "OBJECTID", ""]);
   const [hoverInfo, setHoverInfo] = useState(null);
   const [legendInfo, setLegendInfo] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const [hoveredProperty, setHoveredProperty] = useState(null);
   const [hoveredGeometry, setHoveredGeometry] = useState(null);
-  const [mode, setMode] = useState(null);
   const [selectedFeatureIndex, setSelectedFeatureIndex] = useState(null);
-
-  var avmButton = document.getElementById("avmButton");
-  // var selectHabitatType = document.getElementById("selectHabitatType");
-  var selectedOption = document.getElementsByClassName(
-    "select__multi-value__label"
-  );
 
   const aoi = Object.values(useSelector((state) => state.aoi)).filter(
     (aoi) => aoi.id === aoiSelected
@@ -185,7 +183,13 @@ const Map = ({
     );
   };
 
+  const getCursor = ({ isHovering, isDragging }) => {
+    console.log(isDragging);
+    return isDragging ? "grabbing" : isHovering ? "crosshair" : "default";
+  };
+
   const onHover = (e) => {
+    setHovered(true);
     if (e.features) {
       const featureHovered = e.features[0];
       if (featureHovered) {
@@ -197,6 +201,10 @@ const Map = ({
 
   const onSelect = (options) => {
     setSelectedFeatureIndex(options && options.selectedFeatureIndex);
+  };
+
+  const makeDraw = async () => {
+    setMode(new DrawPolygonMode());
   };
 
   const editorRef = useRef(null);
@@ -242,6 +250,45 @@ const Map = ({
     }
   }, [editAOI, aoi, drawingMode, aoiSelected]);
 
+  const renderDrawTools = () => {
+    // Copy from mapbox
+    return (
+      <div className="mapboxgl-ctrl-top-right">
+        <div className="mapboxgl-ctrl-group mapboxgl-ctrl">
+          <button
+            className="mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_polygon"
+            title="Polygon tool (p)"
+            onClick={makeDraw}
+          />
+
+          <button
+            className="mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_trash"
+            title="Delete"
+            onClick={onDelete}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  // const onViewStateChange = (e) => {
+  // 	// console.log(e);
+  // 	let windowContent = document.getElementById("floatingWindow");
+  // 	// let popupWindow = document.getElementsByClassName("map.tooltip");
+  // 	windowContent.style.display = 'block';
+  // 	// console.log(popupWindow);
+  // 	if (e.viewState.zoom >= 10) {
+  // 		windowContent.innerHTML = "<p>Click to explore the details of a single hexagonal area.</p>"
+  // 								+"<p>Current zoom level :"
+  // 								+e.viewState.zoom.toFixed(1)+"</p>"
+  // 	}
+  // 	else {
+  // 		windowContent.innerHTML = "<p>Please zoom in to level 10 to explore the details of a single hexagonal area.</p>"
+  // 								+"<p>Current zoom level :"
+  // 								+e.viewState.zoom.toFixed(1)+"</p>"
+  // 	}
+  // }
+
   return (
     <MapGL
       {...viewport}
@@ -256,10 +303,12 @@ const Map = ({
       mapboxApiAccessToken={MAPBOX_TOKEN}
       ref={map}
       onHover={onHover}
+      getCursor={getCursor}
+      interactiveLayerIds={interactiveLayerIds}
     >
       <Editor
         ref={editorRef}
-        style={{ width: "100%", height: "100%" }}
+        style={{ cursor: "crosshari", width: "100%", height: "100%" }}
         clickRadius={12}
         mode={mode}
         onSelect={onSelect}
@@ -302,7 +351,7 @@ const Map = ({
         >
           <Layer
             {...dataLayer}
-            // id = "SECASlayer"
+            id="SECASlayer"
             value="SECASlayer"
             paint={{
               "fill-outline-color": "#484896",
@@ -321,7 +370,7 @@ const Map = ({
         >
           <Layer
             {...dataLayer}
-            // id = "SECASlayer"
+            id="SECASlayer"
             value="SECASlayer"
             paint={{
               "fill-outline-color": "gray",

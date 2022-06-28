@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useSelector } from "react";
 import { Button, Container, FormControl, InputGroup } from "react-bootstrap";
 import axios from "axios";
 import { calculateArea, aggregate, getStatus } from "../helper/aggregateHex";
@@ -18,6 +18,7 @@ const AddDraw = ({
   countdown,
   timeoutHandler,
   resetButton,
+  setHabitatType,
 }) => {
   const dispatch = useDispatch();
   const [drawData, setDrawData] = useState("");
@@ -25,9 +26,43 @@ const AddDraw = ({
   const handleNameChange = (e) => {
     setDrawData(e.target.value);
   };
+
   const handleSubmit = async () => {
-    //
-    setView("hfc");
+    if (!drawData) {
+      setAlerttext("A name for this area of interest is required.");
+    } else if (featureList.length === 0) {
+      setAlerttext("At least one polygon is required.");
+    } else {
+      setAlerttext(false);
+      const newList = featureList;
+      // console.log(newList);
+      const data = {
+        type: "MultiPolygon",
+        coordinates: newList.map((feature) => feature.geometry.coordinates),
+      };
+
+      // For development on local server
+      // const res = await axios.post('http://localhost:5000/data', { data });
+      // For production on Heroku
+      const res = await axios.post("https://secas-backend.herokuapp.com/data", {
+        data,
+      });
+      const planArea = calculateArea(newList);
+      dispatch(
+        input_aoi({
+          name: drawData,
+          geometry: newList,
+          area: planArea,
+          hexagons: res.data.data,
+          // rawScore: aggregate(res.data.data, planArea),
+          // scaleScore: getStatus(aggregate(res.data.data, planArea)),
+          id: uuid(),
+        })
+      );
+      setDrawingMode(false);
+      setHabitatType("none");
+      setView("view");
+    }
   };
 
   return (

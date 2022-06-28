@@ -16,8 +16,7 @@ const AddZip = ({ setAlerttext, setView, resetButton }) => {
       const handleSubmitShapefile = async (
         geometry,
         geometryType,
-        aoiNumber,
-        aoiName
+        aoiNumber
       ) => {
         setAlerttext(false);
         // Coordinates must be a single array for the area to be correctly calculated
@@ -35,24 +34,23 @@ const AddZip = ({ setAlerttext, setView, resetButton }) => {
         // For development on local server
         // const res = await axios.post('http://localhost:5000/data', { data });
         // For production on Heroku
-
         const res = await axios.post(
-          "https://sca-cpt-backend.herokuapp.com/data",
+          "https://secas-backend.herokuapp.com/data",
           { data }
         );
         const planArea = calculateArea(newList);
         dispatch(
           input_aoi({
-            name: aoiName ? aoiName : "Area of Interest " + aoiNumber,
+            name: "Area of Interest " + aoiNumber,
             geometry: newList,
+            area: planArea,
             hexagons: res.data.data,
-            rawScore: aggregate(res.data.data, planArea),
-            scaleScore: getStatus(aggregate(res.data.data, planArea)),
+            // rawScore: aggregate(res.data.data, planArea),
+            // scaleScore: getStatus(aggregate(res.data.data, planArea)),
             id: uuid(),
           })
         );
         setView("view");
-        dispatch(setLoader(false));
       };
 
       for (let file of acceptedFiles) {
@@ -89,9 +87,7 @@ const AddZip = ({ setAlerttext, setView, resetButton }) => {
         };
         reader.readAsArrayBuffer(file);
       }
-      dispatch(setLoader(true));
     },
-
     [dispatch]
   );
 

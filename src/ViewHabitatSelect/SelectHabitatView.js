@@ -25,12 +25,12 @@ const SelectHabitatView = ({ setHabitatType, setView }) => {
           }}
           menuPortalTarget={document.body}
           options={[
-            // { value: 'hab1', label: 'Open Pine Woodland BDH' },
+            { value: "hab3", label: "Open Pine Woodland BDH" },
             // { value: 'hab2', label: 'Forested Wetland' },
-            { value: "hab3", label: "Upland Hardwoods - Forest" },
-            { value: "hab4", label: "Upland Hardwoods - Woodland" },
-            { value: "hab5", label: "Mixed Forest" },
-            { value: "hab6", label: "Grass" },
+            // { value: "hab3", label: "Upland Hardwoods - Forest" },
+            // { value: "hab4", label: "Upland Hardwoods - Woodland" },
+            // { value: "hab5", label: "Mixed Forest" },
+            // { value: "hab6", label: "Grass" },
             // { value: 'hab7', label: 'Tidal Marsh' },
             // { value: 'hab8', label: 'Big Rivers' },
             // { value: 'hab9', label: 'Streams and Rivers' }

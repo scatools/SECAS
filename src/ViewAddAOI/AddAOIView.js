@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { ButtonGroup, Container, ToggleButton } from "react-bootstrap";
 import AddZip from "./AddZip";
 import AddDraw from "./AddDraw";
@@ -11,6 +11,7 @@ const AddAOIView = ({
   setAlerttext,
   setView,
   autoDraw,
+  setHabitatType,
 }) => {
   const [inputMode, setInputMode] = useState("draw");
   const [timeoutError, setTimeoutError] = useState(false);
@@ -35,6 +36,14 @@ const AddAOIView = ({
     console.log(countdown);
     window.location.reload(true);
   };
+
+  useEffect(() => {
+    if (inputMode === "draw") {
+      setDrawingMode(true);
+      autoDraw();
+      setAoiSelected(false);
+    }
+  }, [inputMode]);
 
   return (
     <>
@@ -84,6 +93,7 @@ const AddAOIView = ({
           countdown={countdown}
           timeoutHandler={timeoutHandler}
           resetButton={resetButton}
+          setHabitatType={setHabitatType}
         />
       )}
 
