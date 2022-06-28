@@ -41,7 +41,7 @@ const Sidebar = ({
   editAOI,
   setEditAOI,
   setViewport,
-  setHabitatType,
+  setMapOverlay,
   hexGrid,
   setHexGrid,
   autoDraw,
@@ -100,10 +100,7 @@ const Sidebar = ({
         <SidebarMode view={view} setView={setView} />
         <hr />
         {view === "visualize" && (
-          <SelectHabitatView
-            setHabitatType={setHabitatType}
-            setView={setView}
-          />
+          <SelectHabitatView setMapOverlay={setMapOverlay} setView={setView} />
         )}
 
         {view === "add" && (
@@ -114,13 +111,14 @@ const Sidebar = ({
             setAlerttext={setAlerttext}
             setView={setView}
             autoDraw={autoDraw}
-            setHabitatType={setHabitatType}
+            setMapOverlay={setMapOverlay}
           />
         )}
 
         {view === "view" && (
           <Container>
             <SidebarViewDetail
+              setMapOverlay={setMapOverlay}
               aoiSelected={aoiSelected}
               setAoiSelected={setAoiSelected}
               setActiveTable={setActiveTable}

@@ -2,7 +2,7 @@ import React from "react";
 import Select from "react-select";
 import { Container, Button } from "react-bootstrap";
 
-const SelectHabitatView = ({ setHabitatType, setView }) => {
+const SelectHabitatView = ({ setMapOverlay, setView }) => {
   const handleNext = () => {
     setView("add");
   };
@@ -19,7 +19,7 @@ const SelectHabitatView = ({ setHabitatType, setView }) => {
         <span>Habitat Type:</span>
         <br></br>
         <Select
-          id="selectHabitatType"
+          id="selectmapOverlay"
           styles={{
             menuPortal: (base) => ({ ...base, zIndex: 9 }),
           }}
@@ -38,9 +38,9 @@ const SelectHabitatView = ({ setHabitatType, setView }) => {
           isMulti={false}
           isClearable={false}
           placeholder="Select Habitat..."
-          name="selectHabitatType"
+          name="selectmapOverlay"
           onChange={(selectedOption) => {
-            setHabitatType(selectedOption.value);
+            setMapOverlay(selectedOption.value);
           }}
           className="basic-multi-select"
           classNamePrefix="select"

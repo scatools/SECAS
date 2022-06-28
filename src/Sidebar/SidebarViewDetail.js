@@ -15,8 +15,10 @@ import { normalization } from "../helper/aggregateHex";
 import axios from "axios";
 import area from "@turf/area";
 import SidebarViewGroup from "./SidebarViewGroup";
+import Checkbox from "../Checkbox";
 
 const SidebarViewDetail = ({
+  setMapOverlay,
   aoiSelected,
   setAoiSelected,
   setActiveTable,
@@ -112,6 +114,7 @@ const SidebarViewDetail = ({
         setAoiSelected={setAoiSelected}
         setViewport={setViewport}
       />
+      View Blueprint: <Checkbox setMapOverlay={setMapOverlay} />
       {aoi && (
         <Container className="aoi-details">
           <h2>{aoi.name} Details:</h2>

@@ -11,7 +11,7 @@ const AddAOIView = ({
   setAlerttext,
   setView,
   autoDraw,
-  setHabitatType,
+  setMapOverlay,
 }) => {
   const [inputMode, setInputMode] = useState("draw");
   const [timeoutError, setTimeoutError] = useState(false);
@@ -93,7 +93,7 @@ const AddAOIView = ({
           countdown={countdown}
           timeoutHandler={timeoutHandler}
           resetButton={resetButton}
-          setHabitatType={setHabitatType}
+          setMapOverlay={setMapOverlay}
         />
       )}
 

@@ -21,7 +21,7 @@ const Main = () => {
     longitude: -95,
     zoom: 5,
   });
-  const [habitatType, setHabitatType] = useState(null);
+  const [mapOverlay, setMapOverlay] = useState(null);
   const [hexGrid, setHexGrid] = useState(false);
 
   const autoDraw = async () => {
@@ -47,7 +47,7 @@ const Main = () => {
         editAOI={editAOI}
         setEditAOI={setEditAOI}
         setViewport={setViewport}
-        setHabitatType={setHabitatType}
+        setMapOverlay={setMapOverlay}
         hexGrid={hexGrid}
         setHexGrid={setHexGrid}
         autoDraw={autoDraw}
@@ -76,7 +76,7 @@ const Main = () => {
           editAOI={editAOI}
           viewport={viewport}
           setViewport={setViewport}
-          habitatType={habitatType}
+          mapOverlay={mapOverlay}
           hexGrid={hexGrid}
           autoDraw={autoDraw}
           interactiveLayerIds={interactiveLayerIds}

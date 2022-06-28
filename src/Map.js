@@ -19,7 +19,7 @@ const Map = ({
   editAOI,
   viewport,
   setViewport,
-  habitatType,
+  mapOverlay,
   hexGrid,
   mode,
   setMode,
@@ -342,7 +342,7 @@ const Map = ({
         hexGrid &&
         hoveredProperty.overallScore &&
         renderPopup()}
-      {!habitatType && (
+      {!mapOverlay && (
         <Source
           type="vector"
           url="mapbox://chuck0520.4fzqbp42"
@@ -361,7 +361,7 @@ const Map = ({
           />
         </Source>
       )}
-      {habitatType && (
+      {mapOverlay && (
         <Source
           type="vector"
           url="mapbox://chuck0520.4fzqbp42"
@@ -380,7 +380,7 @@ const Map = ({
           />
         </Source>
       )}
-      {habitatType === "hab2" && (
+      {mapOverlay === "hab2" && (
         <>
           <Source
             type="raster"
@@ -397,7 +397,7 @@ const Map = ({
           <Legend legendInfo="FW"></Legend>
         </>
       )}
-      {habitatType === "hab3" && (
+      {mapOverlay === "hab3" && (
         <>
           <Source
             type="raster"
@@ -414,7 +414,7 @@ const Map = ({
           <Legend legendInfo="UHF"></Legend>
         </>
       )}
-      {habitatType === "hab4" && (
+      {mapOverlay === "hab4" && (
         <>
           <Source
             type="raster"
@@ -431,7 +431,7 @@ const Map = ({
           <Legend legendInfo="UHW"></Legend>
         </>
       )}
-      {habitatType === "hab5" && (
+      {mapOverlay === "hab5" && (
         <>
           <Source
             type="raster"
@@ -444,7 +444,7 @@ const Map = ({
           <Legend legendInfo="MF"></Legend>
         </>
       )}
-      {habitatType === "hab6" && (
+      {mapOverlay === "hab6" && (
         <>
           <Source
             type="raster"

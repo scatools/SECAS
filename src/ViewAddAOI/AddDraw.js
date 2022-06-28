@@ -18,7 +18,7 @@ const AddDraw = ({
   countdown,
   timeoutHandler,
   resetButton,
-  setHabitatType,
+  setMapOverlay,
 }) => {
   const dispatch = useDispatch();
   const [drawData, setDrawData] = useState("");
@@ -60,7 +60,7 @@ const AddDraw = ({
         })
       );
       setDrawingMode(false);
-      setHabitatType("none");
+      setMapOverlay("none");
       setView("view");
     }
   };
