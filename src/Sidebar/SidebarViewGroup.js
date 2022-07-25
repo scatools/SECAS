@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { ButtonGroup, ToggleButton } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { WebMercatorViewport } from "react-map-gl";
+import { WebMercatorViewport } from '@deck.gl/core';
 import bbox from "@turf/bbox";
 
 const SidebarViewGroup = ({ aoiSelected, setAoiSelected, setViewport }) => {
