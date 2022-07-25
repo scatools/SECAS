@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
-import { ButtonGroup, Container, ToggleButton } from "react-bootstrap";
-import AddZip from "./AddZip";
+import React, { useEffect, useRef, useState } from "react";
+import { Container, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
 import AddDraw from "./AddDraw";
-import shp from "shpjs";
+import AddZip from "./AddZip";
 
 const AddAOIView = ({
   setDrawingMode,
@@ -49,10 +48,11 @@ const AddAOIView = ({
     <>
       <p>Add Area of Interest</p>
       <Container className="d-flex">
-        <ButtonGroup toggle className="m-auto">
+        <ToggleButtonGroup name="importSwitch" className="m-auto">
           <ToggleButton
             type="radio"
             variant="outline-secondary"
+            id="draw"
             name="draw"
             value="draw"
             checked={inputMode === "draw"}
@@ -66,6 +66,7 @@ const AddAOIView = ({
           <ToggleButton
             type="radio"
             variant="outline-secondary"
+            id="shapefile"
             name="shapefile"
             value="shapefile"
             checked={inputMode === "shapefile"}
@@ -76,7 +77,7 @@ const AddAOIView = ({
           >
             by Zipped Shapefile
           </ToggleButton>
-        </ButtonGroup>
+        </ToggleButtonGroup>
       </Container>
       <hr />
 
@@ -88,10 +89,6 @@ const AddAOIView = ({
           setAlerttext={setAlerttext}
           setView={setView}
           autoDraw={autoDraw}
-          timeoutError={timeoutError}
-          setTimeoutError={setTimeoutError}
-          countdown={countdown}
-          timeoutHandler={timeoutHandler}
           resetButton={resetButton}
           setMapOverlay={setMapOverlay}
         />
@@ -101,10 +98,6 @@ const AddAOIView = ({
         <AddZip
           setAlerttext={setAlerttext}
           setView={setView}
-          timeoutError={timeoutError}
-          setTimeoutError={setTimeoutError}
-          countdown={countdown}
-          timeoutHandler={timeoutHandler}
           resetButton={resetButton}
         />
       )}

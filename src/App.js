@@ -6,23 +6,23 @@ import LoadingOverlay from "react-loading-overlay";
 
 function App(props) {
   return (
-    <LoadingOverlay
-      className="myLoading"
-      active={props.isActive}
-      styles={{
-        overlay: (base) => ({
-          ...base,
-          position: "fixed",
-        }),
-      }}
-      spinner
-      text="Loading..."
-    >
+    // <LoadingOverlay
+    //   className="myLoading"
+    //   active={props.isActive}
+    //   styles={{
+    //     overlay: (base) => ({
+    //       ...base,
+    //       position: "fixed",
+    //     }),
+    //   }}
+    //   spinner
+    //   text="Loading..."
+    // >
       <div className="App">
         <NavBar />
         <Routes />
       </div>
-    </LoadingOverlay>
+    // </LoadingOverlay>
   );
 }
 

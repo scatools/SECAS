@@ -17,13 +17,14 @@ const Main = () => {
   const [aoiSelected, setAoiSelected] = useState(null);
   const [editAOI, setEditAOI] = useState(false);
   const [viewport, setViewport] = useState({
+    longitude: -90,
     latitude: 35,
-    longitude: -95,
-    zoom: 5,
+    zoom: 5
   });
   const [mapOverlay, setMapOverlay] = useState(null);
   const [hexGrid, setHexGrid] = useState(false);
   const [hexOpacity, setHexOpacity] = useState(50);
+  const [dualMap, setDualMap]=useState(false);
 
   const autoDraw = async () => {
     setMode(new DrawPolygonMode());
@@ -55,6 +56,7 @@ const Main = () => {
         editMode={editMode}
         hexOpacity={hexOpacity}
         setHexOpacity={setHexOpacity}
+        setDualMap={setDualMap}
       />
       <AoiDetailTable
         activeTable={activeTable}
@@ -71,8 +73,6 @@ const Main = () => {
           <MdMenu />
         </Button>
         <Map
-          mode={mode}
-          setMode={setMode}
           drawingMode={drawingMode}
           setFeatureList={setFeatureList}
           aoiSelected={aoiSelected}
@@ -81,11 +81,9 @@ const Main = () => {
           setViewport={setViewport}
           mapOverlay={mapOverlay}
           hexGrid={hexGrid}
-          autoDraw={autoDraw}
           interactiveLayerIds={interactiveLayerIds}
-          setInteractiveLayerIds={setInteractiveLayerIds}
-          editMode={editMode}
           hexOpacity={hexOpacity}
+          dualMap={dualMap}
         />
       </div>
     </div>

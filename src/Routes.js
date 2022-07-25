@@ -1,16 +1,12 @@
 import React from 'react';
-import {Route,Switch,Redirect} from 'react-router-dom';
+import { Route, Routes as Switch, Navigate } from 'react-router-dom';
 import Main from './Main';
 
 const Routes = () =>{
     return (
         <Switch>
-            <Route exact path="/">
-                <Main/>
-            </Route>
-            <Route>
-                <Redirect to="/"/>
-            </Route>
+            <Route exact path="/" element={<Main/>} />
+            <Route element={<Navigate to="/"/>} /> 
         </Switch>
     )
 }

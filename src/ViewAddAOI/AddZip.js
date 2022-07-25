@@ -35,7 +35,7 @@ const AddZip = ({ setAlerttext, setView, resetButton }) => {
         // const res = await axios.post('http://localhost:5000/data', { data });
         // For production on Heroku
         const res = await axios.post(
-          "https://secas-backend.herokuapp.com/data",
+          "https://secas-backend.herokuapp.com/data/current",
           { data }
         );
         const planArea = calculateArea(newList);
@@ -94,7 +94,7 @@ const AddZip = ({ setAlerttext, setView, resetButton }) => {
   return (
     <div>
       <Container className="m-auto file-drop">
-        <Dropzone onDrop={onDrop} accept=".zip">
+        <Dropzone onDrop={onDrop} accept={{"application/zip": [".zip"]}}>
           {({ getRootProps, getInputProps }) => (
             <div {...getRootProps()}>
               <input {...getInputProps()} />

@@ -1,22 +1,17 @@
-import React, { useState, useEffect } from "react";
-import {
-  Card,
-  Button,
-  InputGroup,
-  FormControl,
-  Container,
-} from "react-bootstrap";
-import RangeSlider from "react-bootstrap-range-slider";
+import React, { useEffect, useState } from "react";
+import { Button, Container, FormControl, InputGroup } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
+import RangeSlider from "react-bootstrap-range-slider";
 import { MdViewList, MdEdit, MdDelete } from "react-icons/md";
 import { HiDocumentReport } from "react-icons/hi";
 import { GiHexes } from "react-icons/gi";
+import Switch from "react-switch";
+import { v4 as uuid } from "uuid";
+import area from "@turf/area";
+import axios from "axios";
 import { delete_aoi, edit_aoi } from "../action";
 import { normalization } from "../helper/aggregateHex";
-import axios from "axios";
-import area from "@turf/area";
 import SidebarViewGroup from "./SidebarViewGroup";
-import Checkbox from "../Checkbox";
 
 const SidebarViewDetail = ({
   setMapOverlay,
@@ -33,13 +28,17 @@ const SidebarViewDetail = ({
   setViewport,
   hexOpacity,
   setHexOpacity,
+  setDualMap
 }) => {
+  const [aoiName, setAoiName] = useState("");
+  const [overlayChecked, setOverlayChecked] = useState(false);
+  const [conditionChecked, setConditionChecked] = useState(false);
+  const [futureScore, setFutureScore] = useState(null);
   const aoiList = Object.values(useSelector((state) => state.aoi)).filter(
     (aoi) => aoi.id === aoiSelected
   );
   const aoi = aoiList[0];
   const dispatch = useDispatch();
-  const [aoiName, setAoiName] = useState("");
 
   const calculateArea = (input) => {
     let totalArea = 0;
@@ -110,6 +109,47 @@ const SidebarViewDetail = ({
     tempElement.click();
   };
 
+  const onOverLayChange = () => {
+    if (!overlayChecked) {
+      setMapOverlay("hab5");
+    } else {
+      setMapOverlay("none");
+    };
+    setOverlayChecked(!overlayChecked);
+  };
+
+  const onConditionChange = () => {
+    if (!conditionChecked) {
+      setDualMap(true);
+    } else {
+      setDualMap(false);
+    };
+    setConditionChecked(!conditionChecked);
+  };
+
+  const getFutureScore = async () => {
+    const newList = aoi.geometry;
+    const data = {
+      type: "MultiPolygon",
+      coordinates: newList.map((feature) => feature.geometry.coordinates),
+    };
+    const res = await axios.post("https://secas-backend.herokuapp.com/data/future", {
+      data
+    });
+    const aoiFuture = {
+      id: uuid(),
+      geometry: aoi.geometry,
+      hexagons: res.data.data
+    };
+    setFutureScore(calculateScore(aoiFuture));
+  };
+
+  useEffect(() => {
+    if (aoi && conditionChecked) {
+      getFutureScore();
+    };
+  },[aoi, conditionChecked])
+
   return (
     <Container>
       <SidebarViewGroup
@@ -117,25 +157,61 @@ const SidebarViewDetail = ({
         setAoiSelected={setAoiSelected}
         setViewport={setViewport}
       />
-      View Blueprint: <Checkbox setMapOverlay={setMapOverlay} />
       {aoi && (
         <Container className="aoi-details">
           <h2>{aoi.name} Details:</h2>
-
-          {/* <ul>
+          <h4>Current Condition Score: {calculateScore(aoi)}</h4>
+          <ul>
             <li>
               This area of interest has an area of{" "}
-              {Math.round(aoi[0].area * 100) / 100} km<sup>2</sup>
+              {Math.round(aoi.area * 100) / 100} km<sup>2</sup>
             </li>
             <li>
-              This area of interest contains {aoi[0].hexagons.length} hexagons
+              This area of interest contains {aoi.hexagons.length} hexagons
             </li>
             <li>
-              This area has an overall HFC Score of <b>{calculateScore(aoi)}</b>{" "}
+              This area has an overall HFC Score of 
+              {" "}<b style={{color: "limegreen"}}>{calculateScore(aoi)}</b>{" "}
               under current condition
             </li>
-          </ul> */}
-          <h3>Current Condition Score: {calculateScore(aoi)}</h3>
+            {conditionChecked && futureScore && (
+              <li>
+                This area has an overall HFC Score of 
+                {" "}<b style={{color: "coral"}}>{futureScore}</b>{" "}
+                under future condition
+              </li>
+            )}
+          </ul>
+          <div className="d-flex justify-content-between" style={{margin: "10px", width: "80%"}}>
+            <label>Future Condition</label>
+            <Switch
+              checked={conditionChecked}
+              onChange={onConditionChange}
+              onColor="#86d3ff"
+              onHandleColor="#2693e6"
+              handleDiameter={20}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+              height={15}
+              width={36}
+            />
+            <label>SECAS Blueprint Layer</label>
+            <Switch
+              checked={overlayChecked}
+              onChange={onOverLayChange}
+              onColor="#86d3ff"
+              onHandleColor="#2693e6"
+              handleDiameter={20}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+              height={15}
+              width={36}
+            />
+          </div>
           <Button
             variant="dark"
             className="ml-2 mb-2"
@@ -182,7 +258,7 @@ const SidebarViewDetail = ({
           {editAOI && (
             <>
               <hr />
-              <InputGroup className="mb-3" style={{ width: "60%" }}>
+              <InputGroup className="mb-3" style={{width: "60%"}}>
                 <InputGroup.Prepend>
                   <InputGroup.Text id="basic-addon1">
                     Plan Name:
@@ -206,8 +282,8 @@ const SidebarViewDetail = ({
             </>
           )}
           {hexGrid && (
-            <div>
-              <h4>Opacity: </h4>
+            <div className="d-flex justify-content-between" style={{margin: "10px", width: "80%"}}>
+              <h6>Opacity: </h6>
               <RangeSlider
                 step={1}
                 value={hexOpacity}
