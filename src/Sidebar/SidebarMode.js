@@ -5,9 +5,9 @@ const SidebarMode = ({ view, setView }) => {
   return (
     <ToggleButtonGroup name="modeSwitch" className="d-flex justify-content-center">
       <ToggleButton
+        id="visualize"
         type="radio"
         variant="outline-secondary"
-        id="visualize"
         name="visualize"
         value="visualize"
         checked={view === "visualize"}
@@ -16,9 +16,9 @@ const SidebarMode = ({ view, setView }) => {
         Visualize
       </ToggleButton>
       <ToggleButton
+        id="add"
         type="radio"
         variant="outline-secondary"
-        id="add"
         name="add"
         value="add"
         checked={view === "add"}
@@ -27,9 +27,9 @@ const SidebarMode = ({ view, setView }) => {
         Add AOI
       </ToggleButton>
       <ToggleButton
+        id="view"
         type="radio"
         variant="outline-secondary"
-        id="view"
         name="view"
         value="view"
         checked={view === "view"}

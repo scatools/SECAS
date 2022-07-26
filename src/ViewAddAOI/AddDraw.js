@@ -13,9 +13,8 @@ const AddDraw = ({
   featureList,
   setAlerttext,
   setView,
-  autoDraw,
   resetButton,
-  setMapOverlay,
+  setHabitatLayer,
 }) => {
   const dispatch = useDispatch();
   const [drawData, setDrawData] = useState("");
@@ -40,9 +39,12 @@ const AddDraw = ({
       // For development on local server
       // const res = await axios.post('http://localhost:5000/data', { data });
       // For production on Heroku
-      const res = await axios.post("https://secas-backend.herokuapp.com/data/current", {
-        data,
-      });
+      const res = await axios.post(
+        "https://secas-backend.herokuapp.com/data/current",
+        {
+          data,
+        }
+      );
       const planArea = calculateArea(newList);
       dispatch(
         input_aoi({
@@ -54,7 +56,7 @@ const AddDraw = ({
         })
       );
       setDrawingMode(false);
-      setMapOverlay("none");
+      setHabitatLayer("none");
       setView("view");
     }
   };
@@ -77,7 +79,6 @@ const AddDraw = ({
           style={{ float: "left" }}
           onClick={() => {
             setDrawingMode(true);
-            autoDraw();
             setAoiSelected(false);
           }}
         >

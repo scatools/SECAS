@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { MdMenu } from "react-icons/md";
 import "./main.css";
-import Map from "./Map";
 import Sidebar from "./Sidebar/Sidebar";
 import AoiDetailTable from "./AoiDetailTable";
+import MapView from "./Map/MapView";
 
 const Main = () => {
   const [mode, setMode] = useState(null);
+  const [isDual, setIsDual] = useState(false);
   const [interactiveLayerIds, setInteractiveLayerIds] = useState([]);
   const [activeSidebar, setActiveSidebar] = useState(true);
   const [activeTable, setActiveTable] = useState(null);
@@ -15,15 +16,15 @@ const Main = () => {
   const [featureList, setFeatureList] = useState([]);
   const [aoiSelected, setAoiSelected] = useState(null);
   const [editAOI, setEditAOI] = useState(false);
-  const [viewport, setViewport] = useState({
-    longitude: -90,
-    latitude: 35,
-    zoom: 5
+  const [viewState, setViewState] = useState({
+    latitude: 34.3,
+    longitude: -96.5,
+    zoom: 4.9,
   });
-  const [mapOverlay, setMapOverlay] = useState(null);
+  const [habitatLayer, setHabitatLayer] = useState(null);
   const [hexGrid, setHexGrid] = useState(false);
   const [hexOpacity, setHexOpacity] = useState(50);
-  const [dualMap, setDualMap]=useState(false);
+  const [dualMap, setDualMap] = useState(false);
 
   return (
     <div>
@@ -37,8 +38,9 @@ const Main = () => {
         setAoiSelected={setAoiSelected}
         editAOI={editAOI}
         setEditAOI={setEditAOI}
-        setViewport={setViewport}
-        setMapOverlay={setMapOverlay}
+        setViewState={setViewState}
+        habitatLayer={habitatLayer}
+        setHabitatLayer={setHabitatLayer}
         hexGrid={hexGrid}
         setHexGrid={setHexGrid}
         hexOpacity={hexOpacity}
@@ -59,14 +61,14 @@ const Main = () => {
         >
           <MdMenu />
         </Button>
-        <Map
+        <MapView
           drawingMode={drawingMode}
           setFeatureList={setFeatureList}
           aoiSelected={aoiSelected}
           editAOI={editAOI}
-          viewport={viewport}
-          setViewport={setViewport}
-          mapOverlay={mapOverlay}
+          viewState={viewState}
+          setViewState={setViewState}
+          habitatLayer={habitatLayer}
           hexGrid={hexGrid}
           interactiveLayerIds={interactiveLayerIds}
           hexOpacity={hexOpacity}

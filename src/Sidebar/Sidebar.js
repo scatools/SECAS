@@ -17,14 +17,14 @@ const Sidebar = ({
   setAoiSelected,
   editAOI,
   setEditAOI,
-  setViewport,
-  setMapOverlay,
+  setViewState,
+  habitatLayer,
+  setHabitatLayer,
   hexGrid,
   setHexGrid,
-  autoDraw,
   hexOpacity,
   setHexOpacity,
-  setDualMap
+  setDualMap,
 }) => {
   const [view, setView] = useState("visualize");
   const [alerttext, setAlerttext] = useState(false);
@@ -46,7 +46,11 @@ const Sidebar = ({
         <SidebarMode view={view} setView={setView} />
         <br />
         {view === "visualize" && (
-          <SelectHabitatView setMapOverlay={setMapOverlay} setView={setView} />
+          <SelectHabitatView
+            habitatLayer={habitatLayer}
+            setHabitatLayer={setHabitatLayer}
+            setView={setView}
+          />
         )}
 
         {view === "add" && (
@@ -56,15 +60,14 @@ const Sidebar = ({
             featureList={featureList}
             setAlerttext={setAlerttext}
             setView={setView}
-            autoDraw={autoDraw}
-            setMapOverlay={setMapOverlay}
+            setHabitatLayer={setHabitatLayer}
           />
         )}
 
         {view === "view" && (
           <Container>
             <SidebarViewDetail
-              setMapOverlay={setMapOverlay}
+              setHabitatLayer={setHabitatLayer}
               aoiSelected={aoiSelected}
               setAoiSelected={setAoiSelected}
               setActiveTable={setActiveTable}
@@ -75,7 +78,7 @@ const Sidebar = ({
               setAlerttext={setAlerttext}
               hexGrid={hexGrid}
               setHexGrid={setHexGrid}
-              setViewport={setViewport}
+              setViewState={setViewState}
               hexOpacity={hexOpacity}
               setHexOpacity={setHexOpacity}
               setDualMap={setDualMap}

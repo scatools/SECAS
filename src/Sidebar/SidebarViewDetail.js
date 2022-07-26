@@ -14,7 +14,7 @@ import { normalization } from "../helper/aggregateHex";
 import SidebarViewGroup from "./SidebarViewGroup";
 
 const SidebarViewDetail = ({
-  setMapOverlay,
+  setHabitatLayer,
   aoiSelected,
   setAoiSelected,
   setActiveTable,
@@ -25,10 +25,10 @@ const SidebarViewDetail = ({
   setAlerttext,
   hexGrid,
   setHexGrid,
-  setViewport,
+  setViewState,
   hexOpacity,
   setHexOpacity,
-  setDualMap
+  setDualMap,
 }) => {
   const [aoiName, setAoiName] = useState("");
   const [overlayChecked, setOverlayChecked] = useState(false);
@@ -111,10 +111,10 @@ const SidebarViewDetail = ({
 
   const onOverLayChange = () => {
     if (!overlayChecked) {
-      setMapOverlay("hab5");
+      setHabitatLayer("blueprint");
     } else {
-      setMapOverlay("none");
-    };
+      setHabitatLayer("none");
+    }
     setOverlayChecked(!overlayChecked);
   };
 
@@ -123,7 +123,7 @@ const SidebarViewDetail = ({
       setDualMap(true);
     } else {
       setDualMap(false);
-    };
+    }
     setConditionChecked(!conditionChecked);
   };
 
@@ -133,13 +133,16 @@ const SidebarViewDetail = ({
       type: "MultiPolygon",
       coordinates: newList.map((feature) => feature.geometry.coordinates),
     };
-    const res = await axios.post("https://secas-backend.herokuapp.com/data/future", {
-      data
-    });
+    const res = await axios.post(
+      "https://secas-backend.herokuapp.com/data/future",
+      {
+        data,
+      }
+    );
     const aoiFuture = {
       id: uuid(),
       geometry: aoi.geometry,
-      hexagons: res.data.data
+      hexagons: res.data.data,
     };
     setFutureScore(calculateScore(aoiFuture));
   };
@@ -147,15 +150,15 @@ const SidebarViewDetail = ({
   useEffect(() => {
     if (aoi && conditionChecked) {
       getFutureScore();
-    };
-  },[aoi, conditionChecked])
+    }
+  }, [aoi, conditionChecked]);
 
   return (
     <Container>
       <SidebarViewGroup
         aoiSelected={aoiSelected}
         setAoiSelected={setAoiSelected}
-        setViewport={setViewport}
+        setViewState={setViewState}
       />
       {aoi && (
         <Container className="aoi-details">
@@ -170,19 +173,22 @@ const SidebarViewDetail = ({
               This area of interest contains {aoi.hexagons.length} hexagons
             </li>
             <li>
-              This area has an overall HFC Score of 
-              {" "}<b style={{color: "limegreen"}}>{calculateScore(aoi)}</b>{" "}
-              under current condition
+              This area has an overall HFC Score of{" "}
+              <b style={{ color: "limegreen" }}>{calculateScore(aoi)}</b> under
+              current condition
             </li>
             {conditionChecked && futureScore && (
               <li>
-                This area has an overall HFC Score of 
-                {" "}<b style={{color: "coral"}}>{futureScore}</b>{" "}
-                under future condition
+                This area has an overall HFC Score of{" "}
+                <b style={{ color: "coral" }}>{futureScore}</b> under future
+                condition
               </li>
             )}
           </ul>
-          <div className="d-flex justify-content-between" style={{margin: "10px", width: "80%"}}>
+          <div
+            className="d-flex justify-content-between"
+            style={{ margin: "10px", width: "80%" }}
+          >
             <label>Future Condition</label>
             <Switch
               checked={conditionChecked}
@@ -258,7 +264,7 @@ const SidebarViewDetail = ({
           {editAOI && (
             <>
               <hr />
-              <InputGroup className="mb-3" style={{width: "60%"}}>
+              <InputGroup className="mb-3" style={{ width: "60%" }}>
                 <InputGroup.Prepend>
                   <InputGroup.Text id="basic-addon1">
                     Plan Name:
@@ -282,7 +288,10 @@ const SidebarViewDetail = ({
             </>
           )}
           {hexGrid && (
-            <div className="d-flex justify-content-between" style={{margin: "10px", width: "80%"}}>
+            <div
+              className="d-flex justify-content-between"
+              style={{ margin: "10px", width: "80%" }}
+            >
               <h6>Opacity: </h6>
               <RangeSlider
                 step={1}

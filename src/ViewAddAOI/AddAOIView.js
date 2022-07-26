@@ -9,8 +9,7 @@ const AddAOIView = ({
   featureList,
   setAlerttext,
   setView,
-  autoDraw,
-  setMapOverlay,
+  setHabitatLayer,
 }) => {
   const [inputMode, setInputMode] = useState("draw");
   const [timeoutError, setTimeoutError] = useState(false);
@@ -39,7 +38,6 @@ const AddAOIView = ({
   useEffect(() => {
     if (inputMode === "draw") {
       setDrawingMode(true);
-      autoDraw();
       setAoiSelected(false);
     }
   }, [inputMode]);
@@ -79,7 +77,6 @@ const AddAOIView = ({
           </ToggleButton>
         </ToggleButtonGroup>
       </Container>
-      <hr />
 
       {inputMode === "draw" && (
         <AddDraw
@@ -88,9 +85,8 @@ const AddAOIView = ({
           featureList={featureList}
           setAlerttext={setAlerttext}
           setView={setView}
-          autoDraw={autoDraw}
           resetButton={resetButton}
-          setMapOverlay={setMapOverlay}
+          setHabitatLayer={setHabitatLayer}
         />
       )}
 
