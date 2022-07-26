@@ -5,7 +5,6 @@ import "./main.css";
 import Map from "./Map";
 import Sidebar from "./Sidebar/Sidebar";
 import AoiDetailTable from "./AoiDetailTable";
-import { DrawPolygonMode, EditingMode } from "react-map-gl-draw";
 
 const Main = () => {
   const [mode, setMode] = useState(null);
@@ -26,16 +25,6 @@ const Main = () => {
   const [hexOpacity, setHexOpacity] = useState(50);
   const [dualMap, setDualMap]=useState(false);
 
-  const autoDraw = async () => {
-    setMode(new DrawPolygonMode());
-    // Use crosshair as cursor style when drawing new shapes over SCA boundary
-    setInteractiveLayerIds(["SECASlayer"]);
-  };
-
-  const editMode = async () => {
-    setMode(new EditingMode());
-  };
-
   return (
     <div>
       <Sidebar
@@ -52,8 +41,6 @@ const Main = () => {
         setMapOverlay={setMapOverlay}
         hexGrid={hexGrid}
         setHexGrid={setHexGrid}
-        autoDraw={autoDraw}
-        editMode={editMode}
         hexOpacity={hexOpacity}
         setHexOpacity={setHexOpacity}
         setDualMap={setDualMap}
