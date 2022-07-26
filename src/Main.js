@@ -4,8 +4,6 @@ import { MdMenu } from "react-icons/md";
 import "./main.css";
 import Sidebar from "./Sidebar/Sidebar";
 import AoiDetailTable from "./AoiDetailTable";
-import { DrawPolygonMode, EditingMode } from "react-map-gl-draw";
-import DualMap from "./Map/DualMap";
 import MapView from "./Map/MapView";
 
 const Main = () => {
@@ -26,16 +24,7 @@ const Main = () => {
   const [habitatLayer, setHabitatLayer] = useState(null);
   const [hexGrid, setHexGrid] = useState(false);
   const [hexOpacity, setHexOpacity] = useState(50);
-
-  const autoDraw = async () => {
-    setMode(new DrawPolygonMode());
-    // Use crosshair as cursor style when drawing new shapes over SCA boundary
-    setInteractiveLayerIds(["SECASlayer"]);
-  };
-
-  const editMode = async () => {
-    setMode(new EditingMode());
-  };
+  const [dualMap, setDualMap] = useState(false);
 
   return (
     <div>
@@ -54,10 +43,9 @@ const Main = () => {
         setHabitatLayer={setHabitatLayer}
         hexGrid={hexGrid}
         setHexGrid={setHexGrid}
-        autoDraw={autoDraw}
-        editMode={editMode}
         hexOpacity={hexOpacity}
         setHexOpacity={setHexOpacity}
+        setDualMap={setDualMap}
       />
       <AoiDetailTable
         activeTable={activeTable}
@@ -73,27 +61,19 @@ const Main = () => {
         >
           <MdMenu />
         </Button>
-        {isDual ? (
-          <DualMap viewState={viewState} setViewState={setViewState} />
-        ) : (
-          <MapView
-            mode={mode}
-            setMode={setMode}
-            drawingMode={drawingMode}
-            setFeatureList={setFeatureList}
-            aoiSelected={aoiSelected}
-            editAOI={editAOI}
-            viewState={viewState}
-            setViewState={setViewState}
-            habitatLayer={habitatLayer}
-            hexGrid={hexGrid}
-            autoDraw={autoDraw}
-            interactiveLayerIds={interactiveLayerIds}
-            setInteractiveLayerIds={setInteractiveLayerIds}
-            editMode={editMode}
-            hexOpacity={hexOpacity}
-          />
-        )}
+        <MapView
+          drawingMode={drawingMode}
+          setFeatureList={setFeatureList}
+          aoiSelected={aoiSelected}
+          editAOI={editAOI}
+          viewState={viewState}
+          setViewState={setViewState}
+          habitatLayer={habitatLayer}
+          hexGrid={hexGrid}
+          interactiveLayerIds={interactiveLayerIds}
+          hexOpacity={hexOpacity}
+          dualMap={dualMap}
+        />
       </div>
     </div>
   );

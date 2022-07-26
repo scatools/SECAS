@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { WebMercatorViewport } from "viewport-mercator-project";
 import bbox from "@turf/bbox";
 
-const SidebarViewGroup = ({ aoiSelected, setAoiSelected, setViewport }) => {
+const SidebarViewGroup = ({ aoiSelected, setAoiSelected, setViewState }) => {
   const aoiList = Object.values(useSelector((state) => state.aoi));
 
   const zoomToAOI = (aoi) => {
@@ -24,7 +24,7 @@ const SidebarViewGroup = ({ aoiSelected, setAoiSelected, setViewport }) => {
       height: 600,
     }).fitBounds(viewportBbox, { padding: 100 });
     // console.log(newViewport);
-    setViewport({
+    setViewState({
       latitude: newViewport.latitude,
       longitude: newViewport.longitude - 0.5 * (aoiBbox[2] - aoiBbox[0]),
       zoom: newViewport.zoom,

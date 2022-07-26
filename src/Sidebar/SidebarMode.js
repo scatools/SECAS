@@ -1,9 +1,9 @@
 import React from "react";
-import { ButtonGroup, ToggleButton } from "react-bootstrap";
+import { ToggleButton, ToggleButtonGroup } from "react-bootstrap";
 
 const SidebarMode = ({ view, setView }) => {
   return (
-    <ButtonGroup className="d-flex justify-content-center">
+    <ToggleButtonGroup name="modeSwitch" className="d-flex justify-content-center">
       <ToggleButton
         id="visualize"
         type="radio"
@@ -37,7 +37,7 @@ const SidebarMode = ({ view, setView }) => {
       >
         Assess Condition
       </ToggleButton>
-    </ButtonGroup>
+    </ToggleButtonGroup>
   );
 };
 

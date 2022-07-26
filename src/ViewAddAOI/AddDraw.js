@@ -1,10 +1,10 @@
-import React, { useState, useSelector } from "react";
+import React, { useState } from "react";
 import { Button, Container, FormControl, InputGroup } from "react-bootstrap";
-import axios from "axios";
-import { calculateArea, aggregate, getStatus } from "../helper/aggregateHex";
-import { v4 as uuid } from "uuid";
-import { input_aoi, setLoader } from "../action";
 import { useDispatch } from "react-redux";
+import { v4 as uuid } from "uuid";
+import axios from "axios";
+import { calculateArea } from "../helper/aggregateHex";
+import { input_aoi, setLoader } from "../action";
 import TimeoutError from "../TimeoutError";
 
 const AddDraw = ({
@@ -13,10 +13,6 @@ const AddDraw = ({
   featureList,
   setAlerttext,
   setView,
-  autoDraw,
-  timeoutError,
-  countdown,
-  timeoutHandler,
   resetButton,
   setHabitatLayer,
 }) => {
@@ -35,7 +31,6 @@ const AddDraw = ({
     } else {
       setAlerttext(false);
       const newList = featureList;
-      // console.log(newList);
       const data = {
         type: "MultiPolygon",
         coordinates: newList.map((feature) => feature.geometry.coordinates),
@@ -44,9 +39,12 @@ const AddDraw = ({
       // For development on local server
       // const res = await axios.post('http://localhost:5000/data', { data });
       // For production on Heroku
-      const res = await axios.post("https://secas-backend.herokuapp.com/data", {
-        data,
-      });
+      const res = await axios.post(
+        "https://secas-backend.herokuapp.com/data/current",
+        {
+          data,
+        }
+      );
       const planArea = calculateArea(newList);
       dispatch(
         input_aoi({
@@ -54,8 +52,6 @@ const AddDraw = ({
           geometry: newList,
           area: planArea,
           hexagons: res.data.data,
-          // rawScore: aggregate(res.data.data, planArea),
-          // scaleScore: getStatus(aggregate(res.data.data, planArea)),
           id: uuid(),
         })
       );
@@ -67,10 +63,8 @@ const AddDraw = ({
 
   return (
     <Container className="mt-3">
-      {/* {timeoutError && <TimeoutError countdown={countdown} />} */}
       <InputGroup className="m-auto" style={{ width: "80%" }}>
         <InputGroup.Text id="basic-addon1">Plan Name:</InputGroup.Text>
-
         <FormControl
           name="planName"
           value={drawData}
@@ -78,13 +72,13 @@ const AddDraw = ({
           placeholder="Name area of interest here..."
         />
       </InputGroup>
+      <br />
       <Container>
         <Button
           variant="dark"
           style={{ float: "left" }}
           onClick={() => {
             setDrawingMode(true);
-            autoDraw();
             setAoiSelected(false);
           }}
         >
