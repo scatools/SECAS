@@ -2,13 +2,15 @@ import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { MdMenu } from "react-icons/md";
 import "./main.css";
-import Map from "./Map";
 import Sidebar from "./Sidebar/Sidebar";
 import AoiDetailTable from "./AoiDetailTable";
 import { DrawPolygonMode, EditingMode } from "react-map-gl-draw";
+import DualMap from "./Map/DualMap";
+import MapView from "./Map/MapView";
 
 const Main = () => {
   const [mode, setMode] = useState(null);
+  const [isDual, setIsDual] = useState(false);
   const [interactiveLayerIds, setInteractiveLayerIds] = useState([]);
   const [activeSidebar, setActiveSidebar] = useState(true);
   const [activeTable, setActiveTable] = useState(null);
@@ -16,12 +18,12 @@ const Main = () => {
   const [featureList, setFeatureList] = useState([]);
   const [aoiSelected, setAoiSelected] = useState(null);
   const [editAOI, setEditAOI] = useState(false);
-  const [viewport, setViewport] = useState({
-    latitude: 35,
-    longitude: -95,
-    zoom: 5,
+  const [viewState, setViewState] = useState({
+    latitude: 34.3,
+    longitude: -96.5,
+    zoom: 4.9,
   });
-  const [mapOverlay, setMapOverlay] = useState(null);
+  const [habitatLayer, setHabitatLayer] = useState(null);
   const [hexGrid, setHexGrid] = useState(false);
   const [hexOpacity, setHexOpacity] = useState(50);
 
@@ -47,8 +49,9 @@ const Main = () => {
         setAoiSelected={setAoiSelected}
         editAOI={editAOI}
         setEditAOI={setEditAOI}
-        setViewport={setViewport}
-        setMapOverlay={setMapOverlay}
+        setViewState={setViewState}
+        habitatLayer={habitatLayer}
+        setHabitatLayer={setHabitatLayer}
         hexGrid={hexGrid}
         setHexGrid={setHexGrid}
         autoDraw={autoDraw}
@@ -70,23 +73,27 @@ const Main = () => {
         >
           <MdMenu />
         </Button>
-        <Map
-          mode={mode}
-          setMode={setMode}
-          drawingMode={drawingMode}
-          setFeatureList={setFeatureList}
-          aoiSelected={aoiSelected}
-          editAOI={editAOI}
-          viewport={viewport}
-          setViewport={setViewport}
-          mapOverlay={mapOverlay}
-          hexGrid={hexGrid}
-          autoDraw={autoDraw}
-          interactiveLayerIds={interactiveLayerIds}
-          setInteractiveLayerIds={setInteractiveLayerIds}
-          editMode={editMode}
-          hexOpacity={hexOpacity}
-        />
+        {isDual ? (
+          <DualMap viewState={viewState} setViewState={setViewState} />
+        ) : (
+          <MapView
+            mode={mode}
+            setMode={setMode}
+            drawingMode={drawingMode}
+            setFeatureList={setFeatureList}
+            aoiSelected={aoiSelected}
+            editAOI={editAOI}
+            viewState={viewState}
+            setViewState={setViewState}
+            habitatLayer={habitatLayer}
+            hexGrid={hexGrid}
+            autoDraw={autoDraw}
+            interactiveLayerIds={interactiveLayerIds}
+            setInteractiveLayerIds={setInteractiveLayerIds}
+            editMode={editMode}
+            hexOpacity={hexOpacity}
+          />
+        )}
       </div>
     </div>
   );

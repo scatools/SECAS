@@ -3,8 +3,9 @@ import { ButtonGroup, ToggleButton } from "react-bootstrap";
 
 const SidebarMode = ({ view, setView }) => {
   return (
-    <ButtonGroup toggle className="d-flex justify-content-center">
+    <ButtonGroup className="d-flex justify-content-center">
       <ToggleButton
+        id="visualize"
         type="radio"
         variant="outline-secondary"
         name="visualize"
@@ -15,6 +16,7 @@ const SidebarMode = ({ view, setView }) => {
         Visualize
       </ToggleButton>
       <ToggleButton
+        id="add"
         type="radio"
         variant="outline-secondary"
         name="add"
@@ -25,6 +27,7 @@ const SidebarMode = ({ view, setView }) => {
         Add AOI
       </ToggleButton>
       <ToggleButton
+        id="view"
         type="radio"
         variant="outline-secondary"
         name="view"

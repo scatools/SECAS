@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import NavBar from "./NavBar";
-import Routes from "./Routes";
+import Router from "./Router";
 import LoadingOverlay from "react-loading-overlay";
 
 function App(props) {
@@ -20,7 +20,7 @@ function App(props) {
     >
       <div className="App">
         <NavBar />
-        <Routes />
+        <Router />
       </div>
     </LoadingOverlay>
   );

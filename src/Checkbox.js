@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
-const Checkbox = ({ setMapOverlay }) => {
+const Checkbox = ({ setHabitatLayer }) => {
   const [checked, setChecked] = useState(false);
 
   const handleChange = () => {
     setChecked(!checked);
-    if (!checked) setMapOverlay("hab5");
-    else setMapOverlay("none");
+    if (!checked) setHabitatLayer("hab5");
+    else setHabitatLayer("none");
   };
 
   return <input type="checkbox" checked={checked} onChange={handleChange} />;

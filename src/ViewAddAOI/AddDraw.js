@@ -18,7 +18,7 @@ const AddDraw = ({
   countdown,
   timeoutHandler,
   resetButton,
-  setMapOverlay,
+  setHabitatLayer,
 }) => {
   const dispatch = useDispatch();
   const [drawData, setDrawData] = useState("");
@@ -60,7 +60,7 @@ const AddDraw = ({
         })
       );
       setDrawingMode(false);
-      setMapOverlay("none");
+      setHabitatLayer("none");
       setView("view");
     }
   };
@@ -69,9 +69,8 @@ const AddDraw = ({
     <Container className="mt-3">
       {/* {timeoutError && <TimeoutError countdown={countdown} />} */}
       <InputGroup className="m-auto" style={{ width: "80%" }}>
-        <InputGroup.Prepend>
-          <InputGroup.Text id="basic-addon1">Plan Name:</InputGroup.Text>
-        </InputGroup.Prepend>
+        <InputGroup.Text id="basic-addon1">Plan Name:</InputGroup.Text>
+
         <FormControl
           name="planName"
           value={drawData}
@@ -79,7 +78,6 @@ const AddDraw = ({
           placeholder="Name area of interest here..."
         />
       </InputGroup>
-      <hr />
       <Container>
         <Button
           variant="dark"

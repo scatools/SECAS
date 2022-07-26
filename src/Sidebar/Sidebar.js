@@ -41,7 +41,8 @@ const Sidebar = ({
   editAOI,
   setEditAOI,
   setViewport,
-  setMapOverlay,
+  habitatLayer,
+  setHabitatLayer,
   hexGrid,
   setHexGrid,
   autoDraw,
@@ -98,11 +99,13 @@ const Sidebar = ({
 
       <div className="ControlWrapper">
         <h5>&nbsp;&nbsp;Options:</h5>
-        <hr />
         <SidebarMode view={view} setView={setView} />
-        <hr />
         {view === "visualize" && (
-          <SelectHabitatView setMapOverlay={setMapOverlay} setView={setView} />
+          <SelectHabitatView
+            habitatLayer={habitatLayer}
+            setHabitatLayer={setHabitatLayer}
+            setView={setView}
+          />
         )}
 
         {view === "add" && (
@@ -113,14 +116,14 @@ const Sidebar = ({
             setAlerttext={setAlerttext}
             setView={setView}
             autoDraw={autoDraw}
-            setMapOverlay={setMapOverlay}
+            setHabitatLayer={setHabitatLayer}
           />
         )}
 
         {view === "view" && (
           <Container>
             <SidebarViewDetail
-              setMapOverlay={setMapOverlay}
+              setHabitatLayer={setHabitatLayer}
               aoiSelected={aoiSelected}
               setAoiSelected={setAoiSelected}
               setActiveTable={setActiveTable}

@@ -19,7 +19,7 @@ import SidebarViewGroup from "./SidebarViewGroup";
 import Checkbox from "../Checkbox";
 
 const SidebarViewDetail = ({
-  setMapOverlay,
+  setHabitatLayer,
   aoiSelected,
   setAoiSelected,
   setActiveTable,
@@ -117,7 +117,7 @@ const SidebarViewDetail = ({
         setAoiSelected={setAoiSelected}
         setViewport={setViewport}
       />
-      View Blueprint: <Checkbox setMapOverlay={setMapOverlay} />
+      View Blueprint: <Checkbox setHabitatLayer={setHabitatLayer} />
       {aoi && (
         <Container className="aoi-details">
           <h2>{aoi.name} Details:</h2>
