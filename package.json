@@ -39,7 +39,8 @@
     "redux": "^4.2.0",
     "redux-thunk": "^2.4.1",
     "shpjs": "^4.0.2",
-    "start": "^5.1.0"
+    "start": "^5.1.0",
+    "uuid": "^8.3.2"
   },
   "scripts": {
     "start": "react-scripts start",
