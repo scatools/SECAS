@@ -455,6 +455,18 @@ const MapView = ({
             <Legend legendInfo="G"></Legend>
           </>
         )}
+        {habitatLayer === "blueprint" && (
+          <>
+            <Source
+              type="raster"
+              url="mapbox://chuck0520.dkcwxuvl"
+              maxzoom={22}
+              minzoom={0}
+            >
+              <Layer type="raster" id="Blueprint" value="Blueprint" />
+            </Source>
+          </>
+        )}
         {aoi && hexGrid && renderHexGrid(aoi.hexagons)}
         {aoi && hexGrid && hoveredProperty && renderPopup()}
       </MapGL>
@@ -601,6 +613,18 @@ const MapView = ({
                 <Layer type="raster" id="Grass" value="Grass" />
               </Source>
               <Legend legendInfo="G"></Legend>
+            </>
+          )}
+          {habitatLayer === "blueprint" && (
+            <>
+              <Source
+                type="raster"
+                url="mapbox://chuck0520.dkcwxuvl"
+                maxzoom={22}
+                minzoom={0}
+              >
+                <Layer type="raster" id="Blueprint" value="Blueprint" />
+              </Source>
             </>
           )}
           {aoi && hexGrid && futureHexGrid && renderHexGrid(futureHexGrid)}

@@ -111,7 +111,7 @@ const SidebarViewDetail = ({
 
   const onOverLayChange = () => {
     if (!overlayChecked) {
-      setHabitatLayer("hab5");
+      setHabitatLayer("blueprint");
     } else {
       setHabitatLayer("none");
     }
