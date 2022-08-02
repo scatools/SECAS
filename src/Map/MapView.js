@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import MapGL, { Layer, Popup, Source } from "react-map-gl";
+import Map, { Layer, Popup, Source } from "react-map-gl";
 import { useSelector } from "react-redux";
 import { Table } from "react-bootstrap";
 import bbox from "@turf/bbox";
@@ -55,14 +55,14 @@ const MapView = ({
   const aoi = aoiList[0];
 
   const LeftMapStyle = {
-    position: "fixed",
+    position: "absolute",
     top: "5.7vh",
     width: dualMap ? "50vw" : "100vw",
     height: "94.3vh",
   };
 
   const RightMapStyle = {
-    position: "fixed",
+    position: "absolute",
     top: "5.7vh",
     left: dualMap ? "50vw" : "100vw",
     width: "100vw",
@@ -297,176 +297,186 @@ const MapView = ({
 
   return (
     <>
-      <MapGL
-        id="left-map"
-        {...viewState}
-        padding={leftMapPadding}
-        onMoveStart={onLeftMoveStart}
-        onMove={activeMap === "left" && onMove}
-        style={LeftMapStyle}
-        mapStyle="mapbox://styles/mapbox/light-v9"
-        mapboxAccessToken={MAPBOX_TOKEN}
-        interactiveLayerIds={interactiveLayerIds}
-      >
-        {drawingMode && (
-          <DrawControl
-            displayControlsDefault={false}
-            controls={{
-              polygon: true,
-              trash: true,
-            }}
-            defaultMode="simple_select"
-            onCreate={onUpdate}
-            onUpdate={onUpdate}
-            onDelete={onDelete}
-          />
-        )}
-        {aoi && !editAOI && (
-          <Source
-            type="geojson"
-            data={{
-              type: "FeatureCollection",
-              features: aoi.geometry,
-            }}
-          >
-            <Layer
-              id="data"
-              type="fill"
-              paint={{
-                "fill-color": hexGrid ? "transparent" : "#fee08b",
-                "fill-outline-color": "#484896",
-                "fill-opacity": 0.5,
+      <div>
+        <Map
+          className="resizeable"
+          id="left-map"
+          {...viewState}
+          padding={leftMapPadding}
+          onMoveStart={onLeftMoveStart}
+          onMove={activeMap === "left" && onMove}
+          onMouseDown={onHover}
+          style={LeftMapStyle}
+          mapStyle="mapbox://styles/mapbox/light-v9"
+          mapboxAccessToken={MAPBOX_TOKEN}
+          interactiveLayerIds={interactiveLayerIds}
+        >
+          {drawingMode && (
+            <DrawControl
+              displayControlsDefault={false}
+              controls={{
+                polygon: "true",
+                trash: "true",
               }}
+              defaultMode="simple_select"
+              onCreate={onUpdate}
+              onUpdate={onUpdate}
+              onDelete={onDelete}
             />
-          </Source>
-        )}
-        {!habitatLayer && (
-          <Source
-            type="vector"
-            url="mapbox://chuck0520.4fzqbp42"
-            maxzoom={22}
-            minzoom={0}
-          >
-            <Layer
-              {...dataLayer}
-              id="SECASlayer"
-              value="SECASlayer"
-              paint={{
-                "fill-outline-color": "#484896",
-                "fill-color": "#6E599F",
-                "fill-opacity": 0.5,
-              }}
-            />
-          </Source>
-        )}
-        {habitatLayer && (
-          <Source
-            type="vector"
-            url="mapbox://chuck0520.4fzqbp42"
-            maxzoom={22}
-            minzoom={0}
-          >
-            <Layer
-              {...dataLayer}
-              id="SECASlayer"
-              value="SECASlayer"
-              paint={{
-                "fill-outline-color": "gray",
-                "fill-color": "transparent",
-                "fill-opacity": 1,
-              }}
-            />
-          </Source>
-        )}
-        {habitatLayer === "hab2" && (
-          <>
+          )}
+          <div className="resizer resizer-r"></div>
+          {aoi && !editAOI && (
             <Source
-              type="raster"
-              url="mapbox://chuck0520.3dbvy7bi"
+              type="geojson"
+              data={{
+                type: "FeatureCollection",
+                features: aoi.geometry,
+              }}
+            >
+              <Layer
+                id="data"
+                type="fill"
+                paint={{
+                  "fill-color": hexGrid ? "transparent" : "#fee08b",
+                  "fill-outline-color": "#484896",
+                  "fill-opacity": 0.5,
+                }}
+              />
+            </Source>
+          )}
+          {!habitatLayer && (
+            <Source
+              type="vector"
+              url="mapbox://chuck0520.4fzqbp42"
               maxzoom={22}
               minzoom={0}
             >
               <Layer
-                type="raster"
-                id="Forested_Wetland"
-                value="Forested_Wetland"
+                {...dataLayer}
+                id="SECASlayer"
+                value="SECASlayer"
+                paint={{
+                  "fill-outline-color": "#484896",
+                  "fill-color": "#6E599F",
+                  "fill-opacity": 0.5,
+                }}
               />
             </Source>
-            <Legend legendInfo="FW"></Legend>
-          </>
-        )}
-        {habitatLayer === "hab3" && (
-          <>
+          )}
+          {habitatLayer && (
             <Source
-              type="raster"
-              url="mapbox://chuck0520.813oo4df"
+              type="vector"
+              url="mapbox://chuck0520.4fzqbp42"
               maxzoom={22}
               minzoom={0}
             >
               <Layer
-                type="raster"
-                id="Upland_Hardwoods_Forest"
-                value="Upland_Hardwoods_Forest"
+                {...dataLayer}
+                id="SECASlayer"
+                value="SECASlayer"
+                paint={{
+                  "fill-outline-color": "gray",
+                  "fill-color": "transparent",
+                  "fill-opacity": 1,
+                }}
               />
             </Source>
-            <Legend legendInfo="UHF"></Legend>
-          </>
-        )}
-        {habitatLayer === "hab4" && (
-          <>
-            <Source
-              type="raster"
-              url="mapbox://chuck0520.6kkntksf"
-              maxzoom={22}
-              minzoom={0}
-            >
-              <Layer
+          )}
+          {habitatLayer === "hab2" && (
+            <>
+              <Source
                 type="raster"
-                id="Upland_Hardwoods_Woodland"
-                value="Upland_Hardwoods_Woodland"
-              />
-            </Source>
-            <Legend legendInfo="UHW"></Legend>
-          </>
-        )}
-        {habitatLayer === "hab5" && (
-          <>
-            <Source
-              type="raster"
-              url="mapbox://chuck0520.c4pm2rl8"
-              maxzoom={22}
-              minzoom={0}
-            >
-              <Layer type="raster" id="Mixed_Forest" value="Mixed_Forest" />
-            </Source>
-            <Legend legendInfo="MF"></Legend>
-          </>
-        )}
-        {habitatLayer === "hab6" && (
-          <>
-            <Source
-              type="raster"
-              url="mapbox://chuck0520.bwuspx5h"
-              maxzoom={22}
-              minzoom={0}
-            >
-              <Layer type="raster" id="Grass" value="Grass" />
-            </Source>
-            <Legend legendInfo="G"></Legend>
-          </>
-        )}
-        {aoi && hexGrid && renderHexGrid(aoi.hexagons)}
-        {aoi && hexGrid && hoveredProperty && renderPopup()}
-      </MapGL>
+                url="mapbox://chuck0520.3dbvy7bi"
+                maxzoom={22}
+                minzoom={0}
+              >
+                <Layer
+                  type="raster"
+                  id="Forested_Wetland"
+                  value="Forested_Wetland"
+                />
+              </Source>
+              <Legend legendInfo="FW"></Legend>
+            </>
+          )}
+          {habitatLayer === "hab3" && (
+            <>
+              <Source
+                type="raster"
+                url="mapbox://chuck0520.813oo4df"
+                maxzoom={22}
+                minzoom={0}
+              >
+                <Layer
+                  type="raster"
+                  id="Upland_Hardwoods_Forest"
+                  value="Upland_Hardwoods_Forest"
+                />
+              </Source>
+              <Legend legendInfo="UHF"></Legend>
+            </>
+          )}
+          {habitatLayer === "hab4" && (
+            <>
+              <Source
+                type="raster"
+                url="mapbox://chuck0520.6kkntksf"
+                maxzoom={22}
+                minzoom={0}
+              >
+                <Layer
+                  type="raster"
+                  id="Upland_Hardwoods_Woodland"
+                  value="Upland_Hardwoods_Woodland"
+                />
+              </Source>
+              <Legend legendInfo="UHW"></Legend>
+            </>
+          )}
+          {habitatLayer === "hab5" && (
+            <>
+              <Source
+                type="raster"
+                url="mapbox://chuck0520.dkcwxuvl"
+                maxzoom={22}
+                minzoom={0}
+              >
+                <Layer
+                  type="raster"
+                  beforeId="data"
+                  id="Mixed_Forest"
+                  value="Mixed_Forest"
+                />
+              </Source>
+              <Legend legendInfo="MF"></Legend>
+            </>
+          )}
+          {habitatLayer === "hab6" && (
+            <>
+              <Source
+                type="raster"
+                url="mapbox://chuck0520.bwuspx5h"
+                maxzoom={22}
+                minzoom={0}
+              >
+                <Layer type="raster" id="Grass" value="Grass" />
+              </Source>
+              <Legend legendInfo="G"></Legend>
+            </>
+          )}
+          {aoi && hexGrid && renderHexGrid(aoi.currentHexagons)}
+          {aoi && hexGrid && hoveredProperty && renderPopup()}
+        </Map>
+      </div>
       {dualMap && (
-        <MapGL
+        <Map
           id="right-map"
           {...viewState}
           padding={rightMapPadding}
           onMoveStart={onRightMoveStart}
           onMove={activeMap === "right" && onMove}
           style={RightMapStyle}
-          mapStyle="mapbox://styles/mapbox/dark-v9"
+          mapStyle="mapbox://styles/mapbox/light-v9"
           mapboxAccessToken={MAPBOX_TOKEN}
         >
           {aoi && !editAOI && (
@@ -581,7 +591,7 @@ const MapView = ({
             <>
               <Source
                 type="raster"
-                url="mapbox://chuck0520.c4pm2rl8"
+                url="mapbox://chuck0520.dkcwxuvl"
                 maxzoom={22}
                 minzoom={0}
               >
@@ -603,9 +613,9 @@ const MapView = ({
               <Legend legendInfo="G"></Legend>
             </>
           )}
-          {aoi && hexGrid && futureHexGrid && renderHexGrid(futureHexGrid)}
+          {aoi && hexGrid && futureHexGrid && renderHexGrid(aoi.futureHexagons)}
           {aoi && hexGrid && hoveredProperty && renderPopup()}
-        </MapGL>
+        </Map>
       )}
     </>
   );

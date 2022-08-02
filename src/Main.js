@@ -9,7 +9,7 @@ import MapView from "./Map/MapView";
 const Main = () => {
   const [mode, setMode] = useState(null);
   const [isDual, setIsDual] = useState(false);
-  const [interactiveLayerIds, setInteractiveLayerIds] = useState([]);
+  const [interactiveLayerIds, setInteractiveLayerIds] = useState(["hex"]);
   const [activeSidebar, setActiveSidebar] = useState(true);
   const [activeTable, setActiveTable] = useState(null);
   const [drawingMode, setDrawingMode] = useState(false);
