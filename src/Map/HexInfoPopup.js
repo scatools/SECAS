@@ -34,7 +34,7 @@ const HexInfoPopup = ({
       >
         X
       </div>
-      <h2>Hexagon Score</h2>
+      <h2 style={{ color: "white" }}>Hexagon Score</h2>
       <Table striped bordered size="sm" variant="dark">
         <thead>
           <tr>

@@ -388,7 +388,7 @@ const MapView = ({
           padding={leftMapPadding}
           onMoveStart={onLeftMoveStart}
           onMove={activeMap === "left" && onMove}
-          onMouseDown={onClick}
+          onClick={onClick}
           // onMouseUp={popUp}
           style={LeftMapStyle}
           mapStyle="mapbox://styles/mapbox/light-v9"
