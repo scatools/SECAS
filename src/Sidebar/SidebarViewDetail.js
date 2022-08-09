@@ -17,6 +17,7 @@ const SidebarViewDetail = ({
   setHabitatLayer,
   aoiSelected,
   setAoiSelected,
+  setActiveSidebar,
   setActiveTable,
   setDrawingMode,
   editAOI,
@@ -125,12 +126,11 @@ const SidebarViewDetail = ({
   const onConditionChange = () => {
     if (!conditionChecked) {
       setDualMap(true);
+      setActiveSidebar(false);
     } else {
       setDualMap(false);
     }
     setConditionChecked(!conditionChecked);
-
-    zoomToAOI(aoi);
   };
 
   if (aoi) {

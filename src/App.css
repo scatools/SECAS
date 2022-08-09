@@ -208,3 +208,14 @@ button.sidebarControlBtn.btn.btn-secondary {
   top: 0;
   width: 5px;
 }
+
+.Popup-table-center {
+  position: fixed;
+  z-index: 9999;
+  width: 27vw !important;
+  bottom: 0;
+  margin: 0 !important;
+  left: 0;
+  height: 100vh;
+  background: #292a2b;
+}

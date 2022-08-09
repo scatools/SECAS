@@ -5,13 +5,17 @@ import "./main.css";
 import Sidebar from "./Sidebar/Sidebar";
 import AoiDetailTable from "./AoiDetailTable";
 import MapView from "./Map/MapView";
+import { WebMercatorViewport } from "viewport-mercator-project";
+import bbox from "@turf/bbox";
 
 const Main = () => {
   const [mode, setMode] = useState(null);
   const [isDual, setIsDual] = useState(false);
-  const [interactiveLayerIds, setInteractiveLayerIds] = useState([
-    "future-hex",
+  const [currentInteractiveLayerIds, setCurrentInteractiveLayerIds] = useState([
     "current-hex",
+  ]);
+  const [futureInteractiveLayerIds, setFutureInteractiveLayerIds] = useState([
+    "future-hex",
   ]);
   const [activeSidebar, setActiveSidebar] = useState(true);
   const [activeTable, setActiveTable] = useState(null);
@@ -28,6 +32,32 @@ const Main = () => {
   const [hexGrid, setHexGrid] = useState(false);
   const [hexOpacity, setHexOpacity] = useState(50);
   const [dualMap, setDualMap] = useState(false);
+
+  const zoomToAOI = (aoi) => {
+    if (aoi) {
+      // Use Turf to get the bounding box of the collections of features
+      let aoiBbox = bbox({
+        type: "FeatureCollection",
+        features: aoi.geometry,
+      });
+      // Format of the bounding box needs to be an array of two opposite corners ([[lon,lat],[lon,lat]])
+      let viewportBbox = [
+        [aoiBbox[0], aoiBbox[1]],
+        [aoiBbox[2], aoiBbox[3]],
+      ];
+      // Use WebMercatorViewport to get center longitude/latitude and zoom level
+      let newViewport = new WebMercatorViewport({
+        width: 800,
+        height: 600,
+      }).fitBounds(viewportBbox, { padding: 100 });
+      setViewState({
+        latitude: newViewport.latitude,
+        longitude: newViewport.longitude - 0.5 * (aoiBbox[2] - aoiBbox[0]),
+        zoom: newViewport.zoom,
+      });
+      console.log(newViewport);
+    }
+  };
 
   return (
     <div>
@@ -49,6 +79,7 @@ const Main = () => {
         hexOpacity={hexOpacity}
         setHexOpacity={setHexOpacity}
         setDualMap={setDualMap}
+        zoomToAOI={zoomToAOI}
       />
       <AoiDetailTable
         activeTable={activeTable}
@@ -73,9 +104,11 @@ const Main = () => {
           setViewState={setViewState}
           habitatLayer={habitatLayer}
           hexGrid={hexGrid}
-          interactiveLayerIds={interactiveLayerIds}
+          currentInteractiveLayerIds={currentInteractiveLayerIds}
+          futureInteractiveLayerIds={futureInteractiveLayerIds}
           hexOpacity={hexOpacity}
           dualMap={dualMap}
+          setActiveSidebar={setActiveSidebar}
         />
       </div>
     </div>
