@@ -189,3 +189,22 @@ button.sidebarControlBtn.btn.btn-secondary {
 .mt-4 .h4 {
   font-size: 20px;
 }
+
+/*Resizing future condition maps */
+
+.resizeable {
+  position: absolute;
+}
+
+.resizer {
+  position: absolute;
+  background: black;
+}
+
+.resizer-r {
+  cursor: col-resize;
+  height: 100%;
+  right: 0;
+  top: 0;
+  width: 5px;
+}

@@ -34,9 +34,17 @@ const AddZip = ({ setAlerttext, setView, resetButton }) => {
         // For development on local server
         // const res = await axios.post('http://localhost:5000/data', { data });
         // For production on Heroku
-        const res = await axios.post(
+        const currentRes = await axios.post(
           "https://secas-backend.herokuapp.com/data/current",
-          { data }
+          {
+            data,
+          }
+        );
+        const futureRes = await axios.post(
+          "https://secas-backend.herokuapp.com/data/future",
+          {
+            data,
+          }
         );
         const planArea = calculateArea(newList);
         dispatch(
@@ -44,7 +52,8 @@ const AddZip = ({ setAlerttext, setView, resetButton }) => {
             name: "Area of Interest " + aoiNumber,
             geometry: newList,
             area: planArea,
-            hexagons: res.data.data,
+            currentHexagons: currentRes.data.data,
+            futureHexagons: futureRes.data.data,
             // rawScore: aggregate(res.data.data, planArea),
             // scaleScore: getStatus(aggregate(res.data.data, planArea)),
             id: uuid(),
@@ -94,7 +103,7 @@ const AddZip = ({ setAlerttext, setView, resetButton }) => {
   return (
     <div>
       <Container className="m-auto file-drop">
-        <Dropzone onDrop={onDrop} accept={{"application/zip": [".zip"]}}>
+        <Dropzone onDrop={onDrop} accept={{ "application/zip": [".zip"] }}>
           {({ getRootProps, getInputProps }) => (
             <div {...getRootProps()}>
               <input {...getInputProps()} />

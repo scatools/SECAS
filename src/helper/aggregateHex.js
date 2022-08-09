@@ -122,8 +122,8 @@ export function normalization(input) {
   return normalizationResult;
 }
 
-export function calculateScore(aoiList) {
-  const hexScoreList = aoiList[0].hexagons.map((hex) => {
+export function calculateScore(aoiList, timeFrame = "currentHexagons") {
+  const hexScoreList = aoiList[0][timeFrame].map((hex) => {
     let scoreList = normalization(hex);
     return scoreList;
   });
