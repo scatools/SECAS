@@ -29,16 +29,20 @@ const SidebarViewDetail = ({
   hexOpacity,
   setHexOpacity,
   setDualMap,
+  zoomToAOI,
 }) => {
   const [aoiName, setAoiName] = useState("");
   const [overlayChecked, setOverlayChecked] = useState(false);
   const [conditionChecked, setConditionChecked] = useState(false);
-  const [futureScore, setFutureScore] = useState(null);
   const aoiList = Object.values(useSelector((state) => state.aoi)).filter(
     (aoi) => aoi.id === aoiSelected
   );
   const aoi = aoiList[0];
   const dispatch = useDispatch();
+  let currentScore = 0;
+  let futureScore = 0;
+  let currentStyle = {};
+  let futureStyle = {};
 
   const calculateArea = (input) => {
     let totalArea = 0;
@@ -51,8 +55,8 @@ const SidebarViewDetail = ({
     return totalArea;
   };
 
-  const calculateScore = (aoi) => {
-    const hexScoreList = aoi.hexagons.map((hex) => {
+  const calculateScore = (hexagons) => {
+    const hexScoreList = hexagons.map((hex) => {
       let scoreList = normalization(hex);
       let scoreArray = Object.values(scoreList);
       let averageScore =
@@ -125,65 +129,60 @@ const SidebarViewDetail = ({
       setDualMap(false);
     }
     setConditionChecked(!conditionChecked);
+
+    zoomToAOI(aoi);
   };
 
-  const getFutureScore = async () => {
-    const newList = aoi.geometry;
-    const data = {
-      type: "MultiPolygon",
-      coordinates: newList.map((feature) => feature.geometry.coordinates),
-    };
-    const res = await axios.post(
-      "https://secas-backend.herokuapp.com/data/future",
-      {
-        data,
-      }
-    );
-    const aoiFuture = {
-      id: uuid(),
-      geometry: aoi.geometry,
-      hexagons: res.data.data,
-    };
-    setFutureScore(calculateScore(aoiFuture));
-  };
+  if (aoi) {
+    currentScore = calculateScore(aoi.currentHexagons);
+    futureScore = calculateScore(aoi.futureHexagons);
+    currentStyle =
+      currentScore < futureScore ? { color: "coral" } : { color: "limegreen" };
+    futureStyle =
+      futureScore < currentScore ? { color: "coral" } : { color: "limegreen" };
+  }
 
   useEffect(() => {
-    if (aoi && conditionChecked) {
-      getFutureScore();
-    }
-  }, [aoi, conditionChecked]);
+    setHexGrid(true);
+  }, []);
 
   return (
     <Container>
       <SidebarViewGroup
         aoiSelected={aoiSelected}
         setAoiSelected={setAoiSelected}
-        setViewState={setViewState}
+        zoomToAOI={zoomToAOI}
       />
       {aoi && (
         <Container className="aoi-details">
           <h2>{aoi.name} Details:</h2>
-          <h4>Current Condition Score: {calculateScore(aoi)}</h4>
+          <h4>
+            Current Condition Score:{" "}
+            <span style={currentStyle}>{currentScore}</span>
+          </h4>
+          <h4>
+            Future Condition Score:{" "}
+            <span style={futureStyle}>{futureScore}</span>
+          </h4>
           <ul>
             <li>
               This area of interest has an area of{" "}
               {Math.round(aoi.area * 100) / 100} km<sup>2</sup>
             </li>
             <li>
-              This area of interest contains {aoi.hexagons.length} hexagons
+              This area of interest contains {aoi.currentHexagons.length}{" "}
+              hexagons
             </li>
+            {/* <li>
+              This area has an overall HFC Score of{" "}
+              <b style={currentStyle}>{currentScore}</b> under current condition
+            </li>
+
             <li>
               This area has an overall HFC Score of{" "}
-              <b style={{ color: "limegreen" }}>{calculateScore(aoi)}</b> under
-              current condition
-            </li>
-            {conditionChecked && futureScore && (
-              <li>
-                This area has an overall HFC Score of{" "}
-                <b style={{ color: "coral" }}>{futureScore}</b> under future
-                condition
-              </li>
-            )}
+              <b style={futureStyle}>{futureScore}</b> under future condition
+              with no action
+            </li> */}
           </ul>
           <div
             className="d-flex justify-content-between"
@@ -203,7 +202,7 @@ const SidebarViewDetail = ({
               height={15}
               width={36}
             />
-            <label>SECAS Blueprint Layer</label>
+            <label>Southeast Blueprint Layer</label>
             <Switch
               checked={overlayChecked}
               onChange={onOverLayChange}

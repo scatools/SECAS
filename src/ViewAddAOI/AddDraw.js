@@ -39,8 +39,14 @@ const AddDraw = ({
       // For development on local server
       // const res = await axios.post('http://localhost:5000/data', { data });
       // For production on Heroku
-      const res = await axios.post(
+      const currentRes = await axios.post(
         "https://secas-backend.herokuapp.com/data/current",
+        {
+          data,
+        }
+      );
+      const futureRes = await axios.post(
+        "https://secas-backend.herokuapp.com/data/future",
         {
           data,
         }
@@ -51,10 +57,12 @@ const AddDraw = ({
           name: drawData,
           geometry: newList,
           area: planArea,
-          hexagons: res.data.data,
+          currentHexagons: currentRes.data.data,
+          futureHexagons: futureRes.data.data,
           id: uuid(),
         })
       );
+
       setDrawingMode(false);
       setHabitatLayer("none");
       setView("view");
