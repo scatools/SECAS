@@ -155,9 +155,6 @@ const SidebarViewDetail = ({
       />
       {aoi && (
         <Container className="aoi-details">
-          {/* {(currentScore = calculateScore(aoi.currentHexagons))}
-          {(futureScore = calculateScore(aoi.futureHexagons))} */}
-          futureScore = calculateScore(aoi.futureHexagons)
           <h2>{aoi.name} Details:</h2>
           <h4>
             Current Condition Score:{" "}

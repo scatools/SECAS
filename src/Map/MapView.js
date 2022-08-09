@@ -91,7 +91,7 @@ const MapView = ({
   const onRightMoveStart = useCallback(() => setActiveMap("right"), []);
   const onMove = useCallback((evt) => setViewState(evt.viewState), []);
 
-  const renderHexGrid = (hexGrid) => {
+  const renderHexGrid = (hexGrid, id) => {
     const hexFeatureList = hexGrid.map((hex) => {
       let scoreList = normalization(hex);
       let scoreArray = Object.values(scoreList);
@@ -124,7 +124,7 @@ const MapView = ({
     return (
       <Source type="geojson" data={hexData}>
         <Layer
-          id="hex"
+          id={id + "-hex"}
           type="fill"
           paint={{
             "fill-color": {
@@ -242,6 +242,7 @@ const MapView = ({
   };
 
   const onHover = (e) => {
+    console.log(e.features);
     setHovered(true);
     if (e.features) {
       const featureHovered = e.features[0];
@@ -446,6 +447,9 @@ const MapView = ({
                   beforeId="data"
                   id="Mixed_Forest"
                   value="Mixed_Forest"
+                  paint={{
+                    "raster-opacity": 0.5,
+                  }}
                 />
               </Source>
               <Legend legendInfo="MF"></Legend>
@@ -464,7 +468,7 @@ const MapView = ({
               <Legend legendInfo="G"></Legend>
             </>
           )}
-          {aoi && hexGrid && renderHexGrid(aoi.currentHexagons)}
+          {aoi && hexGrid && renderHexGrid(aoi.currentHexagons, "current")}
           {aoi && hexGrid && hoveredProperty && renderPopup()}
         </Map>
       </div>
@@ -595,7 +599,14 @@ const MapView = ({
                 maxzoom={22}
                 minzoom={0}
               >
-                <Layer type="raster" id="Mixed_Forest" value="Mixed_Forest" />
+                <Layer
+                  type="raster"
+                  id="Mixed_Forest"
+                  value="Mixed_Forest"
+                  paint={{
+                    "raster-opacity": 0.5,
+                  }}
+                />
               </Source>
               <Legend legendInfo="MF"></Legend>
             </>
@@ -613,7 +624,10 @@ const MapView = ({
               <Legend legendInfo="G"></Legend>
             </>
           )}
-          {aoi && hexGrid && futureHexGrid && renderHexGrid(aoi.futureHexagons)}
+          {aoi &&
+            hexGrid &&
+            futureHexGrid &&
+            renderHexGrid(aoi.futureHexagons, "future")}
           {aoi && hexGrid && hoveredProperty && renderPopup()}
         </Map>
       )}
