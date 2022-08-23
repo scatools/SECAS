@@ -82,17 +82,17 @@ const AoiDetailTable = ({ activeTable, setActiveTable }) => {
                   </td>
                 </tr>
                 <tr>
-                  <td>Open Pine Site Condition:</td>
+                  <td>Site Integrity:</td>
                   <td>{currentScoreObject.scoreH1}</td>
                   <td>{futureScoreObject.scoreH1}</td>
                 </tr>
                 <tr>
-                  <td>Open Pine Species:</td>
+                  <td>Biodiversity:</td>
                   <td>{currentScoreObject.scoreH2}</td>
                   <td>{futureScoreObject.scoreH2}</td>
                 </tr>
                 <tr>
-                  <td>Toby's Fire:</td>
+                  <td>Southeast Fire:</td>
                   <td>{currentScoreObject.scoreH3}</td>
                   <td>{futureScoreObject.scoreH3}</td>
                 </tr>
@@ -107,7 +107,7 @@ const AoiDetailTable = ({ activeTable, setActiveTable }) => {
                   </td>
                 </tr>
                 <tr>
-                  <td>Forest Carbon:</td>
+                  <td>Ecosystem Services:</td>
                   <td>{currentScoreObject.scoreF1}</td>
                   <td>{futureScoreObject.scoreF1}</td>
                 </tr>
@@ -122,12 +122,12 @@ const AoiDetailTable = ({ activeTable, setActiveTable }) => {
                   </td>
                 </tr>
                 <tr>
-                  <td>Open Pine Landscape Condition: </td>
+                  <td>Fragmentation Index: </td>
                   <td>{currentScoreObject.scoreC1}</td>
                   <td>{futureScoreObject.scoreC1}</td>
                 </tr>
                 <tr>
-                  <td>TNC Resilience:</td>
+                  <td>Resilience:</td>
                   <td>{currentScoreObject.scoreC2}</td>
                   <td>{futureScoreObject.scoreC2}</td>
                 </tr>
