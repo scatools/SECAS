@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Container, FormControl, InputGroup } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import RangeSlider from "react-bootstrap-range-slider";
 import { MdViewList, MdEdit, MdDelete } from "react-icons/md";
 import { HiDocumentReport } from "react-icons/hi";
@@ -39,6 +40,7 @@ const SidebarViewDetail = ({
   );
   const aoi = aoiList[0];
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   let currentScore = 0;
   let futureScore = 0;
   let currentStyle = {};
@@ -99,6 +101,10 @@ const SidebarViewDetail = ({
       );
       setDrawingMode(false);
     }
+  };
+
+  const handleReport = () => {
+    navigate("/report");
   };
 
   const handleDownload = () => {
@@ -247,7 +253,7 @@ const SidebarViewDetail = ({
           >
             <MdDelete /> &nbsp; Delete
           </Button>
-          <Button variant="dark" className="ml-2 mb-2" onClick={handleDownload}>
+          <Button variant="dark" className="ml-2 mb-2" onClick={handleReport}>
             <HiDocumentReport /> &nbsp; Report
           </Button>
           <Button

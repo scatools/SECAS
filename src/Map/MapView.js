@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Map, { Layer, Popup, Source } from "react-map-gl";
 import { useSelector } from "react-redux";
 import { Table } from "react-bootstrap";
@@ -179,15 +173,15 @@ const MapView = ({
               </td>
             </tr>
             <tr>
-              <td>Open Pine Site Condition:</td>
+              <td>Site Integrity:</td>
               <td>{hoveredProperty.scoreH1}</td>
             </tr>
             <tr>
-              <td>Open Pine Species:</td>
+              <td>Biodiversity:</td>
               <td>{hoveredProperty.scoreH2}</td>
             </tr>
             <tr>
-              <td>Toby's Fire:</td>
+              <td>Southeast Fire:</td>
               <td>{hoveredProperty.scoreH3}</td>
             </tr>
             <tr>
@@ -200,7 +194,7 @@ const MapView = ({
               </td>
             </tr>
             <tr>
-              <td>Forest Carbon:</td>
+              <td>Ecosystem Services:</td>
               <td>{hoveredProperty.scoreF1}</td>
             </tr>
             <tr>
@@ -213,11 +207,11 @@ const MapView = ({
               </td>
             </tr>
             <tr>
-              <td>Open Pine Landscape Condition: </td>
+              <td>Fragmentation Index: </td>
               <td>{hoveredProperty.scoreC1}</td>
             </tr>
             <tr>
-              <td>TNC Resilience:</td>
+              <td>Resilience:</td>
               <td>{hoveredProperty.scoreC2}</td>
             </tr>
             <tr>

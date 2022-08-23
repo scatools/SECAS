@@ -6,7 +6,7 @@ import Sidebar from "./Sidebar/Sidebar";
 import AoiDetailTable from "./AoiDetailTable";
 import MapView from "./Map/MapView";
 
-const Main = () => {
+const Main = ({ aoiSelected, setAoiSelected }) => {
   const [mode, setMode] = useState(null);
   const [isDual, setIsDual] = useState(false);
   const [interactiveLayerIds, setInteractiveLayerIds] = useState([
@@ -17,7 +17,6 @@ const Main = () => {
   const [activeTable, setActiveTable] = useState(null);
   const [drawingMode, setDrawingMode] = useState(false);
   const [featureList, setFeatureList] = useState([]);
-  const [aoiSelected, setAoiSelected] = useState(null);
   const [editAOI, setEditAOI] = useState(false);
   const [viewState, setViewState] = useState({
     latitude: 34.3,
