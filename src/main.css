@@ -101,6 +101,10 @@ color: #fff;
   z-index: 4;
 }
 
+#floating-layer-controls:hover {
+  cursor: move;
+}
+
 .floating-toggle-switch {
   display: block;
 }
