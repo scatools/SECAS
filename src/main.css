@@ -81,21 +81,36 @@ color: #fff;
 } */
 
 /* ---------------------------------------------------
-    FLOATING WINDOW STYLE
+    FLOATING LAYER CONTROLS
 ----------------------------------------------------- */
 
-/* #floatingWindow {
-    position: absolute;
-    top: 80px;
-    right: 20px;
-    color: #fff;
-    background-color: rgba(0,0,0,.5);
-    border: 2px white solid;
-    width: 300px;
-    height: 100px;
-    padding: 0px;
-    border-radius: 4px;
-    box-shadow: 6px 6px 5px gray;
-    transition: box-shadow 1s;
-    z-index: 4;
-} */
+#floating-layer-controls {
+  display: flex;
+  flex-wrap: wrap;
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 2px white solid;
+  width: 400px;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 6px 6px 5px gray;
+  transition: box-shadow 1s;
+  z-index: 4;
+}
+
+.floating-toggle-switch {
+  display: block;
+}
+
+.floating-toggle-switch div {
+  padding-left: 7px;
+}
+
+.range-slider-container {
+  margin-top: 7px;
+  display: block;
+  width: 100%;
+}
