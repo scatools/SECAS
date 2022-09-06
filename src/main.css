@@ -39,6 +39,10 @@ color: #fff;
   transition: all 0.3s;
 }
 
+#popup-dismiss {
+  color: white;
+}
+
 #dismiss:hover,
 #popup-dismiss:hover {
   background: #fff;

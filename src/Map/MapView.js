@@ -326,9 +326,10 @@ const MapView = ({
       console.log(feature.properties);
       setClickedProperty(feature.properties);
       setClickedGeometry(feature.geometry);
+
+      setActiveSidebar(false);
+      setHexInfoPopupView(true);
     }
-    setActiveSidebar(false);
-    setHexInfoPopupView(true);
   };
 
   const onUpdate = useCallback((e) => {
@@ -395,6 +396,7 @@ const MapView = ({
           mapboxAccessToken={MAPBOX_TOKEN}
           interactiveLayerIds={currentInteractiveLayerIds}
         >
+          {/* <h2 id="current-title">Current</h2> */}
           {drawingMode && (
             <DrawControl
               displayControlsDefault={false}
@@ -568,6 +570,7 @@ const MapView = ({
           interactiveLayerIds={futureInteractiveLayerIds}
           onClick={onClick}
         >
+          {/* <h2 id="future-no-action-title">Future With No Action</h2> */}
           {aoi && !editAOI && (
             <Source
               type="geojson"
