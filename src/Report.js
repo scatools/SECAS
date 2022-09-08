@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Map, { Layer, Popup, Source } from "react-map-gl";
 import { Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import MultiSwitch from "react-multi-switch-toggle";
 import Chart from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 import { GoArrowDown } from "react-icons/go";
@@ -10,7 +11,8 @@ import axios from "axios";
 import { dataLayer } from "./Map/map-style";
 import DrawControl from "./Map/DrawControl";
 import Legend from "./Map/Legend";
-import { calculateScore, normalization } from "./helper/aggregateHex";
+import {  calculateScore, getRawValue } from "./helper/aggregateHex";
+import "./App.css";
 
 //NECESSARY FOR ANTHONY'S TO COMPILE
 import mapboxgl from "mapbox-gl";
@@ -22,10 +24,13 @@ const MAPBOX_TOKEN =
   "pk.eyJ1IjoiY2h1Y2swNTIwIiwiYSI6ImNrMDk2NDFhNTA0bW0zbHVuZTk3dHQ1cGUifQ.dkjP73KdE6JMTiLcUoHvUA";
 
 const Report = ({ aoiSelected }) => {
+  const [selectedSwitch, setSelectedSwitch] = useState(0);
   let aoiList = useSelector((state) => state.aoi);
   let aoi = Object.values(aoiList).filter((aoi) => aoi.id === aoiSelected);
   let currentScoreObject = calculateScore(aoi, "currentHexagons");
   let futureScoreObject = calculateScore(aoi, "futureHexagons");
+  let currentValueObject = getRawValue(aoi, "currentHexagons");
+  let futureValueObject = getRawValue(aoi, "futureHexagons");
   let chartData = {
     labels: ["Health", "Function", "Connectivity"],
     datasets: [
@@ -71,88 +76,196 @@ const Report = ({ aoiSelected }) => {
       </td>
     );
   };
+  
+  const onToggle = (value) => {
+    setSelectedSwitch(value);
+  };
 
   return (
     <div className="AoiTable" style={{ padding: "20px", marginTop: "50px" }}>
       {aoi && (
         <>
-          <h2>HFC Scores</h2>
-          <Table striped bordered size="sm" variant="light">
-            <thead>
-              <tr>
-                <th>Measures</th>
-                <th>Current</th>
-                <th>Future</th>
-                <th>Impact</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colSpan="4">
-                  <b>Health</b>
-                </td>
-              </tr>
-              <tr>
-                <td>Site Integrity:</td>
-                <td>{currentScoreObject.scoreH1}</td>
-                <td>{futureScoreObject.scoreH1}</td>
-                {calculateImpact(currentScoreObject.scoreH1, futureScoreObject.scoreH1)}
-              </tr>
-              <tr>
-                <td>Biodiversity:</td>
-                <td>{currentScoreObject.scoreH2}</td>
-                <td>{futureScoreObject.scoreH2}</td>
-                {calculateImpact(currentScoreObject.scoreH2, futureScoreObject.scoreH2)}
-              </tr>
-              <tr>
-                <td>Southeast Fire:</td>
-                <td>{currentScoreObject.scoreH3}</td>
-                <td>{futureScoreObject.scoreH3}</td>
-                {calculateImpact(currentScoreObject.scoreH3, futureScoreObject.scoreH3)}
-              </tr>
-              <tr>
-                <td>Conservation Management:</td>
-                <td>{currentScoreObject.scoreH4}</td>
-                <td>{futureScoreObject.scoreH4}</td>
-                {calculateImpact(currentScoreObject.scoreH4, futureScoreObject.scoreH4)}
-              </tr>
-              <tr>
-                <td colSpan="4">
-                  <b>Function</b>
-                </td>
-              </tr>
-              <tr>
-                <td>Ecosystem Services:</td>
-                <td>{currentScoreObject.scoreF1}</td>
-                <td>{futureScoreObject.scoreF1}</td>
-                {calculateImpact(currentScoreObject.scoreF1, futureScoreObject.scoreF1)}
-              </tr>
-              <tr>
-                <td>Working Lands:</td>
-                <td>{currentScoreObject.scoreF2}</td>
-                <td>{futureScoreObject.scoreF2}</td>
-                {calculateImpact(currentScoreObject.scoreF2, futureScoreObject.scoreF2)}
-              </tr>
-              <tr>
-                <td colSpan="4">
-                  <b>Connectivity</b>
-                </td>
-              </tr>
-              <tr>
-                <td>Fragmentation Index: </td>
-                <td>{currentScoreObject.scoreC1}</td>
-                <td>{futureScoreObject.scoreC1}</td>
-                {calculateImpact(currentScoreObject.scoreC1, futureScoreObject.scoreC1)}
-              </tr>
-              <tr>
-                <td>Resilience:</td>
-                <td>{currentScoreObject.scoreC2}</td>
-                <td>{futureScoreObject.scoreC2}</td>
-                {calculateImpact(currentScoreObject.scoreC2, futureScoreObject.scoreC2)}
-              </tr>
-            </tbody>
-          </Table>
-          <h2>HFC Score Chart</h2>
+          <h2>AOI Indicator Values & Scores</h2>
+          <div className="tableSwitch">
+            <MultiSwitch
+              texts={["Scaled Scores", "Raw Values"]}
+              selectedSwitch={selectedSwitch}
+              bgColor={"gray"}
+              onToggleCallback={onToggle}
+              height={"38px"}
+              fontSize={"15px"}
+              fontColor={"white"}
+              selectedFontColor={"#6e599f"}
+              selectedSwitchColor={"white"}
+              borderWidth={0}
+              eachSwitchWidth={100}
+            />
+          </div>
+          <br />
+          {selectedSwitch === 0 && (
+            <Table striped bordered size="sm" variant="light">
+              <thead>
+                <tr>
+                  <th>Indicator</th>
+                  <th>Current</th>
+                  <th>Future</th>
+                  <th>Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colSpan="4">
+                    <b>Health</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Site Integrity:</td>
+                  <td>{currentScoreObject.scoreH1}</td>
+                  <td>{futureScoreObject.scoreH1}</td>
+                  {calculateImpact(currentScoreObject.scoreH1, futureScoreObject.scoreH1)}
+                </tr>
+                <tr>
+                  <td>Biodiversity:</td>
+                  <td>{currentScoreObject.scoreH2}</td>
+                  <td>{futureScoreObject.scoreH2}</td>
+                  {calculateImpact(currentScoreObject.scoreH2, futureScoreObject.scoreH2)}
+                </tr>
+                <tr>
+                  <td>Southeast Fire:</td>
+                  <td>{currentScoreObject.scoreH3}</td>
+                  <td>{futureScoreObject.scoreH3}</td>
+                  {calculateImpact(currentScoreObject.scoreH3, futureScoreObject.scoreH3)}
+                </tr>
+                <tr>
+                  <td>Conservation Management:</td>
+                  <td>{currentScoreObject.scoreH4}</td>
+                  <td>{futureScoreObject.scoreH4}</td>
+                  {calculateImpact(currentScoreObject.scoreH4, futureScoreObject.scoreH4)}
+                </tr>
+                <tr>
+                  <td colSpan="4">
+                    <b>Function</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Ecosystem Services:</td>
+                  <td>{currentScoreObject.scoreF1}</td>
+                  <td>{futureScoreObject.scoreF1}</td>
+                  {calculateImpact(currentScoreObject.scoreF1, futureScoreObject.scoreF1)}
+                </tr>
+                <tr>
+                  <td>Working Lands:</td>
+                  <td>{currentScoreObject.scoreF2}</td>
+                  <td>{futureScoreObject.scoreF2}</td>
+                  {calculateImpact(currentScoreObject.scoreF2, futureScoreObject.scoreF2)}
+                </tr>
+                <tr>
+                  <td colSpan="4">
+                    <b>Connectivity</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Fragmentation Index: </td>
+                  <td>{currentScoreObject.scoreC1}</td>
+                  <td>{futureScoreObject.scoreC1}</td>
+                  {calculateImpact(currentScoreObject.scoreC1, futureScoreObject.scoreC1)}
+                </tr>
+                <tr>
+                  <td>Resilience:</td>
+                  <td>{currentScoreObject.scoreC2}</td>
+                  <td>{futureScoreObject.scoreC2}</td>
+                  {calculateImpact(currentScoreObject.scoreC2, futureScoreObject.scoreC2)}
+                </tr>
+              </tbody>
+            </Table>
+          )}
+          {selectedSwitch === 1 && (
+            <Table striped bordered size="sm" variant="light">
+              <thead>
+                <tr>
+                  <th>Indicator</th>
+                  <th>Current</th>
+                  <th>Future</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colSpan="3">
+                    <b>Health</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Site Integrity:</td>
+                  <td>
+                    {currentValueObject.valueH1 === 0 ? "Not Open Pine" : 1 ? "Low" : 2 ? "Moderate" : "High"}
+                    {" (" + currentValueObject.valueH1 + ")"}
+                  </td>
+                  <td>
+                    {futureValueObject.valueH1 === 0 ? "Not Open Pine" : 1 ? "Low" : 2 ? "Moderate" : "High"}
+                    {" (" + futureValueObject.valueH1 + ")"}
+                  </td>
+                </tr>
+                <tr>
+                  <td>Biodiversity:</td>
+                  <td>{currentValueObject.valueH2 + " Open Pine Species"}</td>
+                  <td>{futureValueObject.valueH2 + " Open Pine Species"}</td>
+                </tr>
+                <tr>
+                  <td>Southeast Fire:</td>
+                  <td>{currentValueObject.valueH3 + " Occurrences / 20 Years"}</td>
+                  <td>{futureValueObject.valueH3 + " Occurrences / 20 Years"}</td>
+                </tr>
+                <tr>
+                  <td>Conservation Management:</td>
+                  <td>
+                    {currentValueObject.valueH4 === 0 ? "Unprotected" : 1 ? "Biodiversity Protected - GAP Status 1" : 2 ? "Biodiversity Protected - GAP Status 2" : "Multi-Use - GAP Status 3"}
+                    {" (" + currentValueObject.valueH4 + ")"}
+                  </td>
+                  <td>
+                    {futureValueObject.valueH4 === 0 ? "Unprotected" : 1 ? "Biodiversity Protected - GAP Status 1" : 2 ? "Biodiversity Protected - GAP Status 2" : "Multi-Use - GAP Status 3"}
+                    {" (" + futureValueObject.valueH4 + ")"}
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan="3">
+                    <b>Function</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Ecosystem Services:</td>
+                  <td>{currentValueObject.valueF1}</td>
+                  <td>{futureValueObject.valueF1}</td>
+                </tr>
+                <tr>
+                  <td>Working Lands:</td>
+                  <td>{currentValueObject.valueF2*100 + "%"}</td>
+                  <td>{futureValueObject.valueF2*100 + "%"}</td>
+                </tr>
+                <tr>
+                  <td colSpan="3">
+                    <b>Connectivity</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Fragmentation Index: </td>
+                  <td>
+                    {currentValueObject.valueC1 === 0 ? "Not Open Pine" : 1 ? "Low" : 2 ? "Moderate" : "High"}
+                    {" (" + currentValueObject.valueC1 + ")"}
+                  </td>
+                  <td>
+                    {futureValueObject.valueC1 === 0 ? "Not Open Pine" : 1 ? "Low" : 2 ? "Moderate" : "High"}
+                    {" (" + futureValueObject.valueC1 + ")"}
+                  </td>
+                </tr>
+                <tr>
+                  <td>Resilience:</td>
+                  <td>{currentValueObject.valueC2*100 + "%"}</td>
+                  <td>{futureValueObject.valueC2*100 + "%"}</td>
+                </tr>
+              </tbody>
+            </Table>
+          )}
+          <h2>AOI Score Chart by HFC Goal</h2>
           <Bar
             data={chartData}
             options={{

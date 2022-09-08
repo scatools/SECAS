@@ -190,7 +190,7 @@ button.sidebarControlBtn.btn.btn-secondary {
   font-size: 20px;
 }
 
-/*Resizing future condition maps */
+/* Resizing future condition maps */
 
 .resizeable {
   position: absolute;
@@ -202,9 +202,78 @@ button.sidebarControlBtn.btn.btn-secondary {
 }
 
 .resizer-r {
-  cursor: col-resize;
   height: 100%;
   right: 0;
   top: 0;
   width: 5px;
+}
+
+.Popup-table-center {
+  position: fixed;
+  z-index: 9999;
+  width: 27.9vw;
+  bottom: 0;
+  margin: 0;
+  left: calc(50% - (29vw / 2));
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 2px white solid;
+  border-radius: 4px;
+  box-shadow: 6px 6px 5px grey;
+  transition: box-shadow 1s;
+  padding: 3px;
+}
+
+.Popup-table-center:hover {
+  cursor: move;
+}
+
+.Popup-table-center .table.table-dark.table-sm {
+  background-color: rgba(0, 0, 0, 0.5);
+  --bs-table-bg: rgba(0, 0, 0, 0.1);
+  --bs-table-striped-bg: rgba(0, 0, 0, 0.3);
+  margin-bottom: 0;
+}
+
+#future-no-action-title {
+  position: fixed;
+  text-shadow: 0px 0px 2px white;
+  top: 75px;
+  left: 25%;
+  z-index: 9999;
+}
+
+#current-title {
+  position: fixed;
+  text-shadow: 0px 0px 2px white;
+  top: 75px;
+  left: 25%;
+  z-index: 9999;
+}
+
+/* Report */
+
+.tableSwitch {
+  position: fixed;
+  top: 77px;
+  right: 30px;
+  z-index: 1;
+  padding: 0px;
+  margin: 0px;
+  text-align: end;
+  transition: all ease 0.3s;
+}
+
+.multi-switch-container {
+  height: 42px !important;
+  width: 205px !important;
+}
+
+/* span.multi-switch-handle.multi-switch-handle-move {
+  top: 0;
+} */
+
+.multi-switch-content:hover {
+  background: lightsteelblue;
+  border-radius: 30px;
+  top: 0;
 }

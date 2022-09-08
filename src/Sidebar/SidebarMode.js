@@ -13,7 +13,7 @@ const SidebarMode = ({ view, setView }) => {
         checked={view === "visualize"}
         onChange={(e) => setView(e.currentTarget.value)}
       >
-        Visualize
+        Visualize Habitat
       </ToggleButton>
       <ToggleButton
         id="add"
@@ -24,7 +24,7 @@ const SidebarMode = ({ view, setView }) => {
         checked={view === "add"}
         onChange={(e) => setView(e.currentTarget.value)}
       >
-        Add AOI
+        Import AOI
       </ToggleButton>
       <ToggleButton
         id="view"
@@ -35,7 +35,18 @@ const SidebarMode = ({ view, setView }) => {
         checked={view === "view"}
         onChange={(e) => setView(e.currentTarget.value)}
       >
-        Assess Condition
+        Summarize AOI
+      </ToggleButton>
+      <ToggleButton
+        id="act"
+        type="radio"
+        variant="outline-secondary"
+        name="act"
+        value="act"
+        checked={view === "act"}
+        onChange={(e) => setView(e.currentTarget.value)}
+      >
+        Take Actions
       </ToggleButton>
     </ToggleButtonGroup>
   );
