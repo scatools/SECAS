@@ -31,6 +31,7 @@ const SidebarViewDetail = ({
   setHexOpacity,
   setDualMap,
   zoomToAOI,
+  setView
 }) => {
   const [aoiName, setAoiName] = useState("");
   const [overlayChecked, setOverlayChecked] = useState(false);
@@ -306,6 +307,9 @@ const SidebarViewDetail = ({
               />
             </div>
           )}
+          <Button variant="primary" onClick={() => {setView("act")}}>
+            Take Actions
+          </Button>
         </Container>
       )}
     </Container>

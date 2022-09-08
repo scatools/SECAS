@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Container } from "react-bootstrap";
-import SidebarMode from "./SidebarMode";
-import AddAOIView from "../ViewAddAOI/AddAOIView";
-import SidebarViewDetail from "./SidebarViewDetail";
-import SelectHabitatView from "../ViewHabitatSelect/SelectHabitatView";
-import "../main.css";
-import "./sidebar.css";
 import { WebMercatorViewport } from "viewport-mercator-project";
 import bbox from "@turf/bbox";
+import SidebarMode from "./SidebarMode";
+import SidebarViewDetail from "./SidebarViewDetail";
+import SelectHabitatView from "../ViewHabitatSelect/SelectHabitatView";
+import AddAOIView from "../ViewAddAOI/AddAOIView";
+import TakeActionView from "../ViewTakeAction/TakeActionView";
+import "../main.css";
+import "./sidebar.css";
 
 const Sidebar = ({
   activeSidebar,
@@ -85,8 +86,8 @@ const Sidebar = ({
             setAoiSelected={setAoiSelected}
             featureList={featureList}
             setAlerttext={setAlerttext}
-            setView={setView}
             setHabitatLayer={setHabitatLayer}
+            setView={setView}
           />
         )}
 
@@ -109,8 +110,13 @@ const Sidebar = ({
               hexOpacity={hexOpacity}
               setHexOpacity={setHexOpacity}
               setDualMap={setDualMap}
+              setView={setView}
             />
           </Container>
+        )}
+
+        {view === "act" && (
+          <TakeActionView />
         )}
       </div>
     </div>
