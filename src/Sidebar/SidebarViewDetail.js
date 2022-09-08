@@ -6,6 +6,7 @@ import RangeSlider from "react-bootstrap-range-slider";
 import { MdViewList, MdEdit, MdDelete } from "react-icons/md";
 import { HiDocumentReport } from "react-icons/hi";
 import { GiHexes } from "react-icons/gi";
+import Draggable from "react-draggable";
 import Switch from "react-switch";
 import { v4 as uuid } from "uuid";
 import area from "@turf/area";
@@ -18,6 +19,7 @@ const SidebarViewDetail = ({
   setHabitatLayer,
   aoiSelected,
   setAoiSelected,
+  setActiveSidebar,
   setActiveTable,
   setDrawingMode,
   editAOI,
@@ -132,12 +134,11 @@ const SidebarViewDetail = ({
   const onConditionChange = () => {
     if (!conditionChecked) {
       setDualMap(true);
+      setActiveSidebar(false);
     } else {
       setDualMap(false);
     }
     setConditionChecked(!conditionChecked);
-
-    zoomToAOI(aoi);
   };
 
   if (aoi) {
@@ -312,6 +313,73 @@ const SidebarViewDetail = ({
           </Button>
         </Container>
       )}
+      <Draggable cancel=".dont-drag-me">
+        <div id="floating-layer-controls">
+          <label className="floating-toggle-switch">
+            Future Condition
+            <Switch
+              checked={conditionChecked}
+              onChange={onConditionChange}
+              onColor="#86d3ff"
+              onHandleColor="#2693e6"
+              handleDiameter={20}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+              height={15}
+              width={36}
+            />
+          </label>
+          <label className="floating-toggle-switch">
+            Southeast Blueprint Layer
+            <Switch
+              checked={overlayChecked}
+              onChange={onOverLayChange}
+              onColor="#86d3ff"
+              onHandleColor="#2693e6"
+              handleDiameter={20}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+              height={15}
+              width={36}
+            />
+          </label>
+          <label className="floating-toggle-switch">
+            <GiHexes /> &nbsp;
+            {hexGrid ? "Hide Hexagon Grid" : "Show Hexagon Grid"}
+            <Switch
+              checked={hexGrid}
+              onChange={() => {
+                setHexGrid(!hexGrid);
+              }}
+              onColor="#86d3ff"
+              onHandleColor="#2693e6"
+              handleDiameter={20}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+              height={15}
+              width={36}
+            />
+          </label>
+          {hexGrid && (
+            <div className="range-slider-container">
+              <h6>Hex Grid Opacity: </h6>
+              <RangeSlider
+                className="dont-drag-me"
+                step={1}
+                value={hexOpacity}
+                onChange={(e) => setHexOpacity(e.target.value)}
+                variant="primary"
+              />
+            </div>
+          )}
+        </div>
+      </Draggable>
     </Container>
   );
 };
