@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Map, { Layer, Popup, Source } from "react-map-gl";
 import { useSelector } from "react-redux";
 import { Table } from "react-bootstrap";
@@ -555,7 +561,12 @@ const MapView = ({
                 maxzoom={22}
                 minzoom={0}
               >
-                <Layer type="raster" id="Blueprint" value="Blueprint" />
+                <Layer
+                  beforeId="data"
+                  type="raster"
+                  id="Blueprint"
+                  value="Blueprint"
+                />
               </Source>
             </>
           )}
