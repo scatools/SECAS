@@ -48,7 +48,7 @@ const AoiDetailTable = ({ activeTable, setActiveTable }) => {
         },
       ],
     };
-  };
+  }
 
   return (
     <div
@@ -139,11 +139,11 @@ const AoiDetailTable = ({ activeTable, setActiveTable }) => {
                 plugins: {
                   legend: {
                     display: true,
-                    position: "bottom"
+                    position: "bottom",
                   },
                   title: {
                     display: true,
-                    text: "AOI Scores"
+                    text: "AOI Scores",
                   },
                 },
               }}
