@@ -6,19 +6,19 @@ import { Bar } from "react-chartjs-2";
 import { calculateScore } from "./helper/aggregateHex";
 
 const AoiDetailTable = ({ activeTable, setActiveTable }) => {
-  let aoi, currentState, futureState, currentScoreObject, futureScoreObject;
+  let aoi, chartData, currentScoreObject, futureScoreObject;
   let aoiList = useSelector((state) => state.aoi);
 
   if (activeTable) {
     aoi = Object.values(aoiList).filter((aoi) => aoi.id === activeTable);
     currentScoreObject = calculateScore(aoi, "currentHexagons");
     futureScoreObject = calculateScore(aoi, "futureHexagons");
-    currentState = {
+    chartData = {
       labels: ["Health", "Function", "Connectivity"],
       datasets: [
         {
-          label: "Score",
-          backgroundColor: "rgba(75,192,192,1)",
+          label: "Current",
+          backgroundColor: "limegreen",
           borderColor: "rgba(0,0,0,1)",
           borderWidth: 1,
           data: [
@@ -31,13 +31,9 @@ const AoiDetailTable = ({ activeTable, setActiveTable }) => {
             (currentScoreObject.scoreC1 + currentScoreObject.scoreC2) / 2,
           ],
         },
-      ],
-    };
-    futureState = {
-      labels: ["Health", "Function", "Connectivity"],
-      datasets: [
         {
-          backgroundColor: "rgba(75,192,192,1)",
+          label: "Future",
+          backgroundColor: "coral",
           borderColor: "rgba(0,0,0,1)",
           borderWidth: 1,
           data: [
@@ -52,7 +48,7 @@ const AoiDetailTable = ({ activeTable, setActiveTable }) => {
         },
       ],
     };
-  }
+  };
 
   return (
     <div
@@ -86,17 +82,17 @@ const AoiDetailTable = ({ activeTable, setActiveTable }) => {
                   </td>
                 </tr>
                 <tr>
-                  <td>Open Pine Site Condition:</td>
+                  <td>Site Integrity:</td>
                   <td>{currentScoreObject.scoreH1}</td>
                   <td>{futureScoreObject.scoreH1}</td>
                 </tr>
                 <tr>
-                  <td>Open Pine Species:</td>
+                  <td>Biodiversity:</td>
                   <td>{currentScoreObject.scoreH2}</td>
                   <td>{futureScoreObject.scoreH2}</td>
                 </tr>
                 <tr>
-                  <td>Toby's Fire:</td>
+                  <td>Southeast Fire:</td>
                   <td>{currentScoreObject.scoreH3}</td>
                   <td>{futureScoreObject.scoreH3}</td>
                 </tr>
@@ -111,7 +107,7 @@ const AoiDetailTable = ({ activeTable, setActiveTable }) => {
                   </td>
                 </tr>
                 <tr>
-                  <td>Forest Carbon:</td>
+                  <td>Ecosystem Services:</td>
                   <td>{currentScoreObject.scoreF1}</td>
                   <td>{futureScoreObject.scoreF1}</td>
                 </tr>
@@ -126,46 +122,33 @@ const AoiDetailTable = ({ activeTable, setActiveTable }) => {
                   </td>
                 </tr>
                 <tr>
-                  <td>Open Pine Landscape Condition: </td>
+                  <td>Fragmentation Index: </td>
                   <td>{currentScoreObject.scoreC1}</td>
                   <td>{futureScoreObject.scoreC1}</td>
                 </tr>
                 <tr>
-                  <td>TNC Resilience:</td>
+                  <td>Resilience:</td>
                   <td>{currentScoreObject.scoreC2}</td>
                   <td>{futureScoreObject.scoreC2}</td>
                 </tr>
               </tbody>
             </Table>
             <Bar
-              data={currentState}
+              data={chartData}
               options={{
                 plugins: {
                   legend: {
-                    display: false,
+                    display: true,
+                    position: "bottom"
                   },
                   title: {
                     display: true,
-                    text: "Current AOI Scores",
+                    text: "AOI Scores"
                   },
                 },
               }}
             />
             <hr />
-            <Bar
-              data={futureState}
-              options={{
-                plugins: {
-                  legend: {
-                    display: false,
-                  },
-                  title: {
-                    display: true,
-                    text: "Future AOI Scores",
-                  },
-                },
-              }}
-            />
           </>
         )}
       </div>

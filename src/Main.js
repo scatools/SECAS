@@ -8,7 +8,7 @@ import MapView from "./Map/MapView";
 import { WebMercatorViewport } from "viewport-mercator-project";
 import bbox from "@turf/bbox";
 
-const Main = () => {
+const Main = ({ aoiSelected, setAoiSelected }) => {
   const [mode, setMode] = useState(null);
   const [isDual, setIsDual] = useState(false);
   const [currentInteractiveLayerIds, setCurrentInteractiveLayerIds] = useState([
@@ -21,7 +21,6 @@ const Main = () => {
   const [activeTable, setActiveTable] = useState(null);
   const [drawingMode, setDrawingMode] = useState(false);
   const [featureList, setFeatureList] = useState([]);
-  const [aoiSelected, setAoiSelected] = useState(null);
   const [editAOI, setEditAOI] = useState(false);
   const [viewState, setViewState] = useState({
     latitude: 34.3,

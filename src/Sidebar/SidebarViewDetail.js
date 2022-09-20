@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Button, Container, FormControl, InputGroup } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import RangeSlider from "react-bootstrap-range-slider";
 import { MdViewList, MdEdit, MdDelete } from "react-icons/md";
 import { HiDocumentReport } from "react-icons/hi";
 import { GiHexes } from "react-icons/gi";
+import Draggable from "react-draggable";
 import Switch from "react-switch";
 import { v4 as uuid } from "uuid";
 import area from "@turf/area";
@@ -12,7 +14,6 @@ import axios from "axios";
 import { delete_aoi, edit_aoi } from "../action";
 import { normalization } from "../helper/aggregateHex";
 import SidebarViewGroup from "./SidebarViewGroup";
-import Draggable from "react-draggable";
 
 const SidebarViewDetail = ({
   setHabitatLayer,
@@ -32,6 +33,7 @@ const SidebarViewDetail = ({
   setHexOpacity,
   setDualMap,
   zoomToAOI,
+  setView
 }) => {
   const [aoiName, setAoiName] = useState("");
   const [overlayChecked, setOverlayChecked] = useState(false);
@@ -41,6 +43,7 @@ const SidebarViewDetail = ({
   );
   const aoi = aoiList[0];
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   let currentScore = 0;
   let futureScore = 0;
   let currentStyle = {};
@@ -103,6 +106,10 @@ const SidebarViewDetail = ({
     }
   };
 
+  const handleReport = () => {
+    navigate("/report");
+  };
+
   const handleDownload = () => {
     let pageHTMLObject = document.getElementsByClassName("AoiTable")[0];
     let pageHTML = pageHTMLObject.outerHTML;
@@ -117,7 +124,7 @@ const SidebarViewDetail = ({
 
   const onOverLayChange = () => {
     if (!overlayChecked) {
-      setHabitatLayer("hab5");
+      setHabitatLayer("blueprint");
     } else {
       setHabitatLayer("none");
     }
@@ -248,7 +255,7 @@ const SidebarViewDetail = ({
           >
             <MdDelete /> &nbsp; Delete
           </Button>
-          <Button variant="dark" className="ml-2 mb-2" onClick={handleDownload}>
+          <Button variant="dark" className="ml-2 mb-2" onClick={handleReport}>
             <HiDocumentReport /> &nbsp; Report
           </Button>
           <Button
@@ -301,6 +308,9 @@ const SidebarViewDetail = ({
               />
             </div>
           )}
+          <Button variant="primary" onClick={() => {setView("act")}}>
+            Take Actions
+          </Button>
         </Container>
       )}
       <Draggable cancel=".dont-drag-me">

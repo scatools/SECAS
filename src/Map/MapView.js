@@ -1,11 +1,5 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import Map, { Layer, Popup, Source, MapRef } from "react-map-gl";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Map, { Layer, Popup, Source } from "react-map-gl";
 import { useSelector } from "react-redux";
 import { Table } from "react-bootstrap";
 import bbox from "@turf/bbox";
@@ -523,7 +517,7 @@ const MapView = ({
             <>
               <Source
                 type="raster"
-                url="mapbox://chuck0520.dkcwxuvl"
+                url="mapbox://chuck0520.c4pm2rl8"
                 maxzoom={22}
                 minzoom={0}
               >
@@ -551,6 +545,18 @@ const MapView = ({
                 <Layer type="raster" id="Grass" value="Grass" />
               </Source>
               <Legend legendInfo="G"></Legend>
+            </>
+          )}
+          {habitatLayer === "blueprint" && (
+            <>
+              <Source
+                type="raster"
+                url="mapbox://chuck0520.dkcwxuvl"
+                maxzoom={22}
+                minzoom={0}
+              >
+                <Layer type="raster" id="Blueprint" value="Blueprint" />
+              </Source>
             </>
           )}
           {aoi && hexGrid && renderHexGrid(aoi.currentHexagons, "current")}
@@ -683,7 +689,7 @@ const MapView = ({
             <>
               <Source
                 type="raster"
-                url="mapbox://chuck0520.dkcwxuvl"
+                url="mapbox://chuck0520.c4pm2rl8"
                 maxzoom={22}
                 minzoom={0}
               >
@@ -712,8 +718,20 @@ const MapView = ({
               <Legend legendInfo="G"></Legend>
             </>
           )}
+          {habitatLayer === "blueprint" && (
+            <>
+              <Source
+                type="raster"
+                url="mapbox://chuck0520.dkcwxuvl"
+                maxzoom={22}
+                minzoom={0}
+              >
+                <Layer type="raster" id="Blueprint" value="Blueprint" />
+              </Source>
+            </>
+          )}
           {aoi && hexGrid && renderHexGrid(aoi.futureHexagons, "future")}
-          {/* {aoi && hexGrid && clickedProperty && renderPopup()} */}
+          {/* {aoi && hexGrid && hoveredProperty && renderPopup()} */}
         </Map>
       )}
     </>
