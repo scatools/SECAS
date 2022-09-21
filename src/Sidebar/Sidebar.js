@@ -28,6 +28,7 @@ const Sidebar = ({
   hexOpacity,
   setHexOpacity,
   setDualMap,
+  setHexIdInBlue,
   zoomToAOI,
 }) => {
   const [view, setView] = useState("visualize");
@@ -118,7 +119,10 @@ const Sidebar = ({
         )}
 
         {view === "act" && (
-          <TakeActionView />
+          <TakeActionView
+            aoiSelected={aoiSelected}
+            setHexIdInBlue={setHexIdInBlue}
+          />
         )}
       </div>
     </div>

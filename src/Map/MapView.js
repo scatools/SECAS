@@ -33,6 +33,7 @@ const MapView = ({
   futureInteractiveLayerIds,
   hexOpacity,
   dualMap,
+  hexIdInBlue,
   setActiveSidebar,
 }) => {
   const [filter, setFilter] = useState(["in", "OBJECTID", ""]);
@@ -204,6 +205,36 @@ const MapView = ({
               1,
               parseInt(hexOpacity) / 100,
             ],
+          }}
+        />
+      </Source>
+    );
+  };
+
+  const renderHexInBlue = (hexGrid, hexIdList) => {
+    const hexFeatureList = hexGrid.filter((hex) => 
+      hexIdList.includes(hex.gid)
+    ).map((hex) => {
+      return {
+        type: "Feature",
+        geometry: JSON.parse(hex.geometry),
+        properties: { gid: hex.gid },
+      };
+    });
+
+    const hexData = {
+      type: "FeatureCollection",
+      features: hexFeatureList,
+    };
+
+    return (
+      <Source type="geojson" data={hexData}>
+        <Layer
+          id="hex-in-blue"
+          type="fill"
+          paint={{
+            "fill-color": "transparent",
+            "fill-outline-color": "yellow"
           }}
         />
       </Source>
@@ -561,6 +592,7 @@ const MapView = ({
           )}
           {aoi && hexGrid && renderHexGrid(aoi.currentHexagons, "current")}
           {/* {aoi && hexGrid && clickedProperty && renderPopup()} */}
+          {!!hexIdInBlue.length && renderHexInBlue(aoi.currentHexagons, hexIdInBlue)}
         </Map>
       </div>
       {dualMap && (
@@ -732,6 +764,9 @@ const MapView = ({
           )}
           {aoi && hexGrid && renderHexGrid(aoi.futureHexagons, "future")}
           {/* {aoi && hexGrid && hoveredProperty && renderPopup()} */}
+          {
+
+          }
         </Map>
       )}
     </>

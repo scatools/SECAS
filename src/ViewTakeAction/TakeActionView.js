@@ -1,9 +1,32 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Accordion, Button } from "react-bootstrap";
 import RangeSlider from "react-bootstrap-range-slider";
 
-const TakeActionView = () => {
-  const [percentBlue, setPercentBlue] = useState(50);
+const TakeActionView = ({ aoiSelected, setHexIdInBlue }) => {
+  const [filterBlue, setFilterBlue] = useState(50);
+  const aoiList = Object.values(useSelector((state) => state.aoi)).filter(
+    (aoi) => aoi.id === aoiSelected
+  );
+  const aoi = aoiList[0];
+
+  const percentBlueList = aoi["currentHexagons"].map((hex) => {
+    return {
+      id: hex.gid,
+      percentBlue : parseFloat(hex.lightblue) + parseFloat(hex.darkblue)
+    };
+  });
+  
+  const onChange = (e) => {
+    setFilterBlue(e.target.value);
+    setHexIdInBlue([]);
+    percentBlueList.map((item) => {
+      if (item.percentBlue >= e.target.value/100) {
+        setHexIdInBlue(idList => [...idList, item.id]);
+      };
+    });
+  };
+
   return(
     <>
       <Accordion defaultActiveKey="0">
@@ -21,8 +44,8 @@ const TakeActionView = () => {
             </Button>
             <RangeSlider
               step={1}
-              value={percentBlue}
-              onChange={(e) => setPercentBlue(e.target.value)}
+              value={filterBlue}
+              onChange={onChange}
               variant="secondary"
             />
           </Accordion.Body>
