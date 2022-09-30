@@ -49,8 +49,12 @@ const MapView = ({
   const [currentHexData, setCurrentHexData] = useState();
   const [futureHexData, setFutureHexData] = useState();
   const [hexInfoPopupView, setHexInfoPopupView] = useState(false);
-
-  let testHexData;
+  const [selectedHexIdList, setSelectedHexIdList] = useState(hexIdInBlue);
+  const [boxSelection, setBoxSelection] = useState(false);
+  const [boxXY, setBoxXY] = useState([[],[]]);
+  const [boxCoordinates, setBoxCoordinates] = useState([[],[]]);
+  const [dragPan, setDragPan] = useState(true);
+  const [boxZoom, setBoxZoom] = useState(true);
 
   const aoiList = Object.values(useSelector((state) => state.aoi)).filter(
     (aoi) => aoi.id === aoiSelected
@@ -58,6 +62,8 @@ const MapView = ({
   const aoi = aoiList[0];
 
   const mapRef = useRef();
+  
+  let box, boxX, boxY;
 
   const zoomToAOI = (aoi) => {
     // Use Turf to get the bounding box of the collections of features
@@ -211,7 +217,7 @@ const MapView = ({
     );
   };
 
-  const renderHexInBlue = (hexGrid, hexIdList) => {
+  const renderSelectedHex = (hexGrid, hexIdList) => {
     const hexFeatureList = hexGrid.filter((hex) => 
       hexIdList.includes(hex.gid)
     ).map((hex) => {
@@ -234,11 +240,37 @@ const MapView = ({
           type="fill"
           paint={{
             "fill-color": "transparent",
-            "fill-outline-color": "yellow"
+            "fill-outline-color": "blue"
           }}
         />
       </Source>
     );
+  };
+  
+  const renderBoxSelection = (coords) => {
+    const boxData = {
+      type: "FeatureCollection",
+      features: [{
+        type: "Feature",
+        geometry: {
+          type: "Polygon",
+          coordinates: coords
+        }
+      }]
+    };
+
+    return (
+      <Source type="geojson" data={boxData}>
+        <Layer
+          id="box-selection"
+          type="fill"
+          paint={{
+            "fill-color": "transparent",
+            "fill-outline-color": "blue"
+          }}
+        />
+      </Source>
+    )
   };
 
   const renderPopup = () => {
@@ -330,7 +362,7 @@ const MapView = ({
 
   const getCursor = ({ isHovering, isDragging }) => {
     console.log(isDragging);
-    return isDragging ? "grabbing" : isHovering ? "crosshair" : "default";
+    return isDragging ? "grabbing" : isHovering ? "pointer" : "default";
   };
 
   const onHover = (e) => {
@@ -344,8 +376,8 @@ const MapView = ({
     }
   };
 
-  const onClick = (event) => {
-    const feature = event.features[0];
+  const onClick = (e) => {
+    const feature = e.features[0];
     console.log(feature);
     if (feature) {
       console.log(feature.properties);
@@ -379,6 +411,69 @@ const MapView = ({
     });
   }, []);
 
+  const onMouseDown = useCallback((e) => {
+    if (e.originalEvent.shiftKey) {
+      setDragPan(false);
+      setBoxZoom(true);
+      setBoxSelection(true);
+      boxX = e.originalEvent.x;
+      boxY = e.originalEvent.y;
+      setBoxXY([
+        [e.originalEvent.x, e.originalEvent.y],
+        [e.originalEvent.x, e.originalEvent.y]
+      ]);
+      setBoxCoordinates([
+        [e.lngLat.lng, e.lngLat.lat],
+        [e.lngLat.lng, e.lngLat.lat],
+        [e.lngLat.lng, e.lngLat.lat],
+        [e.lngLat.lng, e.lngLat.lat],
+        [e.lngLat.lng, e.lngLat.lat]
+      ]);
+    }
+  }, []);
+
+  const onMouseUp = useCallback((e) => {
+    if (e.originalEvent.shiftKey) {
+      setDragPan(true);
+      setBoxZoom(true);
+      setBoxSelection(false);
+      setBoxXY(box => {
+        const bbox = [[...box][0], [e.originalEvent.x, e.originalEvent.y]];
+        const features = mapRef.current.queryRenderedFeatures(bbox, {layers: ["current-hex"]});
+        setSelectedHexIdList(features.map(item => item.properties.gid));
+        return ([[],[]]);
+      });
+      setBoxCoordinates(coords => [
+        [...coords][0],
+        [[...coords][0][0], e.lngLat.lat],
+        [e.lngLat.lng, [...coords][0][1]],
+        [e.lngLat.lng, e.lngLat.lat],
+        [...coords][0]
+      ]);
+    }
+  }, []);
+
+  const onMouseMove = useCallback((e) => {
+    if (e.originalEvent.shiftKey) {
+      const canvas = mapRef.current.getCanvasContainer();
+      if (!box) {
+        box = document.createElement('div');
+        box.classList.add('boxdraw');
+        canvas.appendChild(box);
+      }
+      
+      const minX = Math.min(boxX, e.originalEvent.x),
+      maxX = Math.max(boxX, e.originalEvent.x),
+      minY = Math.min(boxY, e.originalEvent.y),
+      maxY = Math.max(boxY, e.originalEvent.y);
+      
+      const pos = `translate(${minX}px, ${minY}px)`;
+      box.style.transform = pos;
+      box.style.width = maxX - minX + 'px';
+      box.style.height = maxY - minY + 'px';
+    }
+  }, []);
+
   useEffect(() => {
     if (aoi) {
       calcHexValues(aoi.currentHexagons, "current");
@@ -390,9 +485,8 @@ const MapView = ({
   }, [aoi, dualMap]);
 
   useEffect(() => {
-    console.log(currentHexData);
-    console.log(futureHexData);
-  }, [currentHexData, futureHexData]);
+    setSelectedHexIdList(hexIdInBlue);
+  }, [hexIdInBlue]);
 
   return (
     <>
@@ -415,7 +509,12 @@ const MapView = ({
           onMoveStart={onLeftMoveStart}
           onMove={activeMap === "left" && onMove}
           onClick={onClick}
-          // onMouseUp={popUp}
+          onMouseDown={onMouseDown}
+          onMouseUp={onMouseUp}
+          // onMouseMove={onMouseMove}
+          dragPan={dragPan}
+          boxZoom={boxZoom}
+          getCursor={getCursor}
           style={LeftMapStyle}
           mapStyle="mapbox://styles/mapbox/light-v9"
           mapboxAccessToken={MAPBOX_TOKEN}
@@ -592,7 +691,8 @@ const MapView = ({
           )}
           {aoi && hexGrid && renderHexGrid(aoi.currentHexagons, "current")}
           {/* {aoi && hexGrid && clickedProperty && renderPopup()} */}
-          {!!hexIdInBlue.length && renderHexInBlue(aoi.currentHexagons, hexIdInBlue)}
+          {!!selectedHexIdList.length && renderSelectedHex(aoi.currentHexagons, selectedHexIdList)}
+          {/* {boxSelection && renderBoxSelection(boxCoordinates)} */}
         </Map>
       </div>
       {dualMap && (
