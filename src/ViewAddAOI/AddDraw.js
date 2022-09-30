@@ -65,7 +65,7 @@ const AddDraw = ({
 
       setDrawingMode(false);
       setHabitatLayer("none");
-      setView("view");
+      setView("viewAOI");
     }
   };
 

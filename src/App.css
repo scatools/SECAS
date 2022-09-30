@@ -277,3 +277,40 @@ button.sidebarControlBtn.btn.btn-secondary {
   border-radius: 30px;
   top: 0;
 }
+
+.accordion {
+  background-color: transparent !important;
+  border-radius: 10px;
+}
+
+.accordion-header button {
+  background-color: #3e4042 !important;
+  font-size: 22px;
+  color: black;
+  transition: all ease 0.3s;
+  border-radius: 10px !important;
+  border-color: transparent !important;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: #606060 !important;
+  color: whitesmoke !important;
+  border-color: transparent !important;
+}
+
+.accordion-item {
+  background: #919ca8 !important;
+  border-radius: 10px !important;
+  border-color: transparent !important;
+}
+
+.accordion-body p {
+  font-size: 20px !important;
+  color: black !important;
+  border-color: transparent !important;
+}
+
+.mapboxgl-ctrl-top-right {
+  top: 20px;
+  right: 0;
+}

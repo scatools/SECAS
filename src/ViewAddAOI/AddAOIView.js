@@ -94,7 +94,7 @@ const AddAOIView = ({
         <AddZip
           setAlerttext={setAlerttext}
           setView={setView}
-          resetButton={resetButton}
+          setHabitatLayer={setHabitatLayer}
         />
       )}
     </>

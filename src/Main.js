@@ -31,6 +31,7 @@ const Main = ({ aoiSelected, setAoiSelected }) => {
   const [hexGrid, setHexGrid] = useState(false);
   const [hexOpacity, setHexOpacity] = useState(50);
   const [dualMap, setDualMap] = useState(false);
+  const [hexIdInBlue, setHexIdInBlue] = useState([]);
 
   const zoomToAOI = (aoi) => {
     if (aoi) {
@@ -78,6 +79,7 @@ const Main = ({ aoiSelected, setAoiSelected }) => {
         hexOpacity={hexOpacity}
         setHexOpacity={setHexOpacity}
         setDualMap={setDualMap}
+        setHexIdInBlue={setHexIdInBlue}
         zoomToAOI={zoomToAOI}
       />
       <AoiDetailTable
@@ -107,6 +109,7 @@ const Main = ({ aoiSelected, setAoiSelected }) => {
           futureInteractiveLayerIds={futureInteractiveLayerIds}
           hexOpacity={hexOpacity}
           dualMap={dualMap}
+          hexIdInBlue={hexIdInBlue}
           setActiveSidebar={setActiveSidebar}
         />
       </div>

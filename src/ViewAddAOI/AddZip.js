@@ -59,7 +59,7 @@ const AddZip = ({ setAlerttext, setView, resetButton }) => {
             id: uuid(),
           })
         );
-        setView("view");
+        setView("viewAOI");
       };
 
       for (let file of acceptedFiles) {

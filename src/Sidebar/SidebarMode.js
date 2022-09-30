@@ -3,50 +3,46 @@ import { ToggleButton, ToggleButtonGroup } from "react-bootstrap";
 
 const SidebarMode = ({ view, setView }) => {
   return (
-    <ToggleButtonGroup name="modeSwitch" className="d-flex justify-content-center">
+    <ToggleButtonGroup
+      type="radio"
+      name="modeSelect"
+      className="d-flex justify-content-center"
+    >
       <ToggleButton
         id="visualize"
-        type="radio"
         variant="outline-secondary"
-        name="visualize"
         value="visualize"
         checked={view === "visualize"}
         onChange={(e) => setView(e.currentTarget.value)}
       >
-        Visualize Habitat
+        Habitat Select
       </ToggleButton>
       <ToggleButton
         id="add"
-        type="radio"
         variant="outline-secondary"
-        name="add"
         value="add"
         checked={view === "add"}
         onChange={(e) => setView(e.currentTarget.value)}
       >
-        Import AOI
+        Add AOI
       </ToggleButton>
       <ToggleButton
-        id="view"
-        type="radio"
+        id="viewAOI"
         variant="outline-secondary"
-        name="view"
-        value="view"
-        checked={view === "view"}
+        value="viewAOI"
+        checked={view === "viewAOI"}
         onChange={(e) => setView(e.currentTarget.value)}
       >
-        Summarize AOI
+        Evaluate
       </ToggleButton>
       <ToggleButton
         id="act"
-        type="radio"
         variant="outline-secondary"
-        name="act"
         value="act"
         checked={view === "act"}
         onChange={(e) => setView(e.currentTarget.value)}
       >
-        Take Actions
+        Take Action
       </ToggleButton>
     </ToggleButtonGroup>
   );

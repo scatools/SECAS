@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { WebMercatorViewport } from "viewport-mercator-project";
 import bbox from "@turf/bbox";
@@ -28,10 +28,15 @@ const Sidebar = ({
   hexOpacity,
   setHexOpacity,
   setDualMap,
+  setHexIdInBlue,
   zoomToAOI,
 }) => {
   const [view, setView] = useState("visualize");
   const [alerttext, setAlerttext] = useState(false);
+
+  // useEffect(() => {
+  //   console.log(view);
+  // }, [view]);
 
   // const zoomToAOI = (aoi) => {
   //   // Use Turf to get the bounding box of the collections of features
@@ -92,7 +97,7 @@ const Sidebar = ({
           />
         )}
 
-        {view === "view" && (
+        {view === "viewAOI" && (
           <Container>
             <SidebarViewDetail
               zoomToAOI={zoomToAOI}
@@ -118,7 +123,10 @@ const Sidebar = ({
         )}
 
         {view === "act" && (
-          <TakeActionView />
+          <TakeActionView
+            aoiSelected={aoiSelected}
+            setHexIdInBlue={setHexIdInBlue}
+          />
         )}
       </div>
     </div>
