@@ -104,8 +104,8 @@ export function getRawValue(aoiList, timeFrame = "currentHexagons") {
       valueF1: parseFloat(hex.carbon),
       valueF2: parseFloat(hex.forest),
       valueC1: parseFloat(hex.landscape),
-      valueC2: parseFloat(hex.resilience)
-    }
+      valueC2: parseFloat(hex.resilience),
+    };
   });
 
   let rawValue = rawValueList.reduce(
@@ -132,15 +132,18 @@ export function getRawValue(aoiList, timeFrame = "currentHexagons") {
       valueC2: 0,
     }
   );
-  
+
   rawValue.valueH1 = Math.round(rawValue.valueH1 / rawValueList.length);
   rawValue.valueH2 = Math.round(rawValue.valueH2 / rawValueList.length);
   rawValue.valueH3 = Math.round(rawValue.valueH3 / rawValueList.length);
   rawValue.valueH4 = Math.round(rawValue.valueH4 / rawValueList.length);
-  rawValue.valueF1 = Math.round(100 * (rawValue.valueF1) / rawValueList.length) / 100;
-  rawValue.valueF2 = Math.round(100 * (rawValue.valueF2) / rawValueList.length) / 100;
+  rawValue.valueF1 =
+    Math.round((100 * rawValue.valueF1) / rawValueList.length) / 100;
+  rawValue.valueF2 =
+    Math.round((100 * rawValue.valueF2) / rawValueList.length) / 100;
   rawValue.valueC1 = Math.round(rawValue.valueC1 / rawValueList.length);
-  rawValue.valueC2 = Math.round(100 * (rawValue.valueC2) / rawValueList.length) / 100;
+  rawValue.valueC2 =
+    Math.round((100 * rawValue.valueC2) / rawValueList.length) / 100;
 
   return rawValue;
 }
@@ -194,4 +197,47 @@ export function calculateScore(aoiList, timeFrame = "currentHexagons") {
     Math.round((100 * aoiScore.scoreC2) / hexScoreList.length) / 100;
 
   return aoiScore;
+}
+
+export function calculateRestore(currentScore) {
+  return {
+    scoreH1: 1,
+    scoreH2: 1,
+    scoreH3: 1,
+    scoreH4: 1,
+    scoreF1: 1,
+    scoreF2: 1,
+    scoreC1: 1,
+    scoreC2: 1,
+  };
+}
+
+export function calculateProtect(currentScore) {
+  return {
+    scoreH1: 0.5,
+    scoreH2: 0.5,
+    scoreH3: 0.5,
+    scoreH4: 0.5,
+    scoreF1: 0.5,
+    scoreF2: 0.5,
+    scoreC1: 0.5,
+    scoreC2: 0.5,
+  };
+}
+
+export function calculateMaintain(currentScore) {
+  return currentScore;
+}
+
+export function calculateActionScore(aoi, restore, protect, maintain) {
+  return {
+    scoreH1: 0.5,
+    scoreH2: 0.5,
+    scoreH3: 0.5,
+    scoreH4: 0.5,
+    scoreF1: 0.5,
+    scoreF2: 0.5,
+    scoreC1: 0.5,
+    scoreC2: 0.5,
+  };
 }
