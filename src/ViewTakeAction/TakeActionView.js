@@ -2,7 +2,16 @@ import React, { useState } from "react";
 import ActionLocationSelect from "./ActionLocationSelect";
 import ActionSelect from "./ActionSelect";
 
-const TakeActionView = ({ aoiSelected, setHexIdInBlue }) => {
+const TakeActionView = ({
+  aoiSelected,
+  setHexIdInBlue,
+  restoreAction,
+  setRestoreAction,
+  protectAction,
+  setProtectAction,
+  maintainAction,
+  setMaintainAction
+}) => {
   const [actionView, setActionView] = useState("actionLocation");
   return (
     <>
@@ -14,7 +23,16 @@ const TakeActionView = ({ aoiSelected, setHexIdInBlue }) => {
         />
       )}
 
-      {actionView === "actionSelect" && <ActionSelect />}
+      {actionView === "actionSelect" && (
+        <ActionSelect
+          restoreAction={restoreAction}
+          setRestoreAction={setRestoreAction}
+          protectAction={protectAction}
+          setProtectAction={setProtectAction}
+          maintainAction={maintainAction}
+          setMaintainAction={setMaintainAction}
+        />
+      )}
     </>
   );
 };

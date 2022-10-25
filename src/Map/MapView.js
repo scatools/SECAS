@@ -34,6 +34,9 @@ const MapView = ({
   hexOpacity,
   dualMap,
   hexIdInBlue,
+  restoreAction,
+  protectAction,
+  maintainAction,
   setActiveSidebar,
 }) => {
   const [filter, setFilter] = useState(["in", "OBJECTID", ""]);
@@ -239,8 +242,14 @@ const MapView = ({
           id="hex-in-blue"
           type="fill"
           paint={{
-            "fill-color": "transparent",
-            "fill-outline-color": "blue"
+            "fill-color": (restoreAction || protectAction || maintainAction) ? "#057300" : "transparent",
+            "fill-outline-color": "blue",
+            "fill-opacity": [
+              "case",
+              ["boolean", ["feature-state", "hover"], false],
+              1,
+              parseInt(hexOpacity) / 100,
+            ],
           }}
         />
       </Source>
