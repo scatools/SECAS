@@ -29,7 +29,13 @@ const Sidebar = ({
   setHexOpacity,
   setDualMap,
   setHexIdInBlue,
-  zoomToAOI,
+  restoreAction,
+  setRestoreAction,
+  protectAction,
+  setProtectAction,
+  maintainAction,
+  setMaintainAction,
+  zoomToAOI
 }) => {
   const [view, setView] = useState("visualize");
   const [alerttext, setAlerttext] = useState(false);
@@ -126,6 +132,12 @@ const Sidebar = ({
           <TakeActionView
             aoiSelected={aoiSelected}
             setHexIdInBlue={setHexIdInBlue}
+            restoreAction={restoreAction}
+            setRestoreAction={setRestoreAction}
+            protectAction={protectAction}
+            setProtectAction={setProtectAction}
+            maintainAction={maintainAction}
+            setMaintainAction={setMaintainAction}
           />
         )}
       </div>

@@ -2,10 +2,14 @@ import React, { useState } from "react";
 import Switch from "react-switch";
 import FutureWithActionTable from "./FutureWithActionTable";
 
-const ActionSelect = () => {
-  const [restoreAction, setRestoreAction] = useState(false);
-  const [protectAction, setProtectAction] = useState(false);
-  const [maintainAction, setMaintainAction] = useState(false);
+const ActionSelect = ({
+  restoreAction,
+  setRestoreAction,
+  protectAction,
+  setProtectAction,
+  maintainAction,
+  setMaintainAction
+}) => {
 
   return (
     <>
