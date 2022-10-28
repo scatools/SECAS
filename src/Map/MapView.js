@@ -46,16 +46,13 @@ const MapView = ({
   const [hovered, setHovered] = useState(false);
   const [clickedProperty, setClickedProperty] = useState(null);
   const [clickedGeometry, setClickedGeometry] = useState(null);
-  const [selectedFeatureIndex, setSelectedFeatureIndex] = useState(null);
   const [mode, setMode] = useState("side-by-side");
   const [activeMap, setActiveMap] = useState("left");
   const [currentHexData, setCurrentHexData] = useState();
   const [futureHexData, setFutureHexData] = useState();
   const [hexInfoPopupView, setHexInfoPopupView] = useState(false);
   const [selectedHexIdList, setSelectedHexIdList] = useState(hexIdInBlue);
-  const [boxSelection, setBoxSelection] = useState(false);
   const [boxXY, setBoxXY] = useState([[],[]]);
-  const [boxCoordinates, setBoxCoordinates] = useState([[],[]]);
   const [dragPan, setDragPan] = useState(true);
   const [boxZoom, setBoxZoom] = useState(true);
 
@@ -66,7 +63,7 @@ const MapView = ({
 
   const mapRef = useRef();
   
-  let box, boxX, boxY;
+  let box, boxX, boxY, showBox;
 
   const zoomToAOI = (aoi) => {
     // Use Turf to get the bounding box of the collections of features
@@ -255,32 +252,6 @@ const MapView = ({
       </Source>
     );
   };
-  
-  const renderBoxSelection = (coords) => {
-    const boxData = {
-      type: "FeatureCollection",
-      features: [{
-        type: "Feature",
-        geometry: {
-          type: "Polygon",
-          coordinates: coords
-        }
-      }]
-    };
-
-    return (
-      <Source type="geojson" data={boxData}>
-        <Layer
-          id="box-selection"
-          type="fill"
-          paint={{
-            "fill-color": "transparent",
-            "fill-outline-color": "blue"
-          }}
-        />
-      </Source>
-    )
-  };
 
   const renderPopup = () => {
     let aoiBbox = bbox({
@@ -424,19 +395,12 @@ const MapView = ({
     if (e.originalEvent.shiftKey) {
       setDragPan(false);
       setBoxZoom(true);
-      setBoxSelection(true);
       boxX = e.originalEvent.x;
       boxY = e.originalEvent.y;
+      showBox = true;
       setBoxXY([
         [e.originalEvent.x, e.originalEvent.y],
         [e.originalEvent.x, e.originalEvent.y]
-      ]);
-      setBoxCoordinates([
-        [e.lngLat.lng, e.lngLat.lat],
-        [e.lngLat.lng, e.lngLat.lat],
-        [e.lngLat.lng, e.lngLat.lat],
-        [e.lngLat.lng, e.lngLat.lat],
-        [e.lngLat.lng, e.lngLat.lat]
       ]);
     }
   }, []);
@@ -445,25 +409,22 @@ const MapView = ({
     if (e.originalEvent.shiftKey) {
       setDragPan(true);
       setBoxZoom(true);
-      setBoxSelection(false);
+      showBox = false;
       setBoxXY(box => {
         const bbox = [[...box][0], [e.originalEvent.x, e.originalEvent.y]];
         const features = mapRef.current.queryRenderedFeatures(bbox, {layers: ["current-hex"]});
         setSelectedHexIdList(features.map(item => item.properties.gid));
         return ([[],[]]);
       });
-      setBoxCoordinates(coords => [
-        [...coords][0],
-        [[...coords][0][0], e.lngLat.lat],
-        [e.lngLat.lng, [...coords][0][1]],
-        [e.lngLat.lng, e.lngLat.lat],
-        [...coords][0]
-      ]);
     }
+    if (box) {
+      box.parentNode.removeChild(box);
+      box = null;
+    };
   }, []);
 
   const onMouseMove = useCallback((e) => {
-    if (e.originalEvent.shiftKey) {
+    if (e.originalEvent.shiftKey && showBox) {
       const canvas = mapRef.current.getCanvasContainer();
       if (!box) {
         box = document.createElement('div');
@@ -520,7 +481,7 @@ const MapView = ({
           onClick={onClick}
           onMouseDown={onMouseDown}
           onMouseUp={onMouseUp}
-          // onMouseMove={onMouseMove}
+          onMouseMove={onMouseMove}
           dragPan={dragPan}
           boxZoom={boxZoom}
           getCursor={getCursor}
@@ -701,7 +662,6 @@ const MapView = ({
           {aoi && hexGrid && renderHexGrid(aoi.currentHexagons, "current")}
           {/* {aoi && hexGrid && clickedProperty && renderPopup()} */}
           {!!selectedHexIdList.length && renderSelectedHex(aoi.currentHexagons, selectedHexIdList)}
-          {/* {boxSelection && renderBoxSelection(boxCoordinates)} */}
         </Map>
       </div>
       {dualMap && (
