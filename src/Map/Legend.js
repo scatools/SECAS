@@ -1,6 +1,6 @@
 import React from "react";
 
-const Legend = ({ legendInfo }) => {
+const Legend = ({ legendInfo, hexGrid=false, opacity=0.5 }) => {
   let legendTitles = {
     FW: ["Current Site Condition for \nForest Wetland"],
     UHF: ["Current Site Condition for \nUpland Hardwoods -- Forest"],
@@ -22,37 +22,80 @@ const Legend = ({ legendInfo }) => {
   return (
     <div
       className="legend"
-      style={legendInfo ? { display: "block" } : { display: "none" }}
+      style={legendInfo || hexGrid ? { display: "block" } : { display: "none" }}
     >
-      <div className="legend-title">{legendTitles[legendInfo]}</div>
-      <div className="legend-scale">
-        <ul className="legend-labels">
-          <li>
-            <span
-              style={{ background: legendColors[legendInfo][0], opacity: 0.5 }}
-            />
-            {legendLabels[0]}
-          </li>
-          <li>
-            <span
-              style={{ background: legendColors[legendInfo][1], opacity: 0.5 }}
-            />
-            {legendLabels[1]}
-          </li>
-          <li>
-            <span
-              style={{ background: legendColors[legendInfo][2], opacity: 0.5 }}
-            />
-            {legendLabels[2]}
-          </li>
-          <li>
-            <span
-              style={{ background: legendColors[legendInfo][3], opacity: 0.5 }}
-            />
-            {legendLabels[3]}
-          </li>
-        </ul>
-      </div>
+      {legendInfo && (
+        <>
+          <div className="legend-title">{legendTitles[legendInfo]}</div>
+          <div className="legend-scale">
+            <ul className="legend-labels">
+              <li>
+                <span
+                  style={{ background: legendColors[legendInfo][0], opacity: 0.5 }}
+                />
+                {legendLabels[0]}
+              </li>
+              <li>
+                <span
+                  style={{ background: legendColors[legendInfo][1], opacity: 0.5 }}
+                />
+                {legendLabels[1]}
+              </li>
+              <li>
+                <span
+                  style={{ background: legendColors[legendInfo][2], opacity: 0.5 }}
+                />
+                {legendLabels[2]}
+              </li>
+              <li>
+                <span
+                  style={{ background: legendColors[legendInfo][3], opacity: 0.5 }}
+                />
+                {legendLabels[3]}
+              </li>
+            </ul>
+          </div>
+        </>
+      )}
+      {hexGrid && (
+        <>
+          <div className="legend-title">HFC Score</div>
+          <div className="legend-scale">
+            <ul className="legend-labels">
+              <li>
+                <span
+                  style={{ background: "#95efff", opacity: opacity }}
+                />
+                0 ~ 0.1
+              </li>
+              <li>
+                <span
+                  style={{ background: "#4bd3d1", opacity: opacity }}
+                />
+                0.1 ~ 0.3
+              </li>
+              <li>
+                <span
+                  style={{ background: "#00b597", opacity: opacity }}
+                />
+                0.3 ~ 0.5
+              </li>
+              <li>
+                <span
+                  style={{ background: "#009456", opacity: opacity }}
+                />
+                0.5 ~ 0.7
+              </li>
+              <li>
+                <span
+                  style={{ background: "#057300", opacity: opacity }}
+                />
+                0.7 ~ 0.9
+              </li>
+            </ul>
+          </div>
+        </>
+      )}
     </div>
   );
 };

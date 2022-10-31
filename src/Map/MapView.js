@@ -190,30 +190,37 @@ const MapView = ({
     };
 
     return (
-      <Source type="geojson" data={hexData}>
-        <Layer
-          id={id + "-hex"}
-          type="fill"
-          paint={{
-            "fill-color": {
-              property: "overallScore",
-              stops: [
-                [0.1, "#95efff"],
-                [0.3, "#4bd3d1"],
-                [0.5, "#00b597"],
-                [0.7, "#009456"],
-                [0.9, "#057300"],
+      <>
+        <Source type="geojson" data={hexData}>
+          <Layer
+            id={id + "-hex"}
+            type="fill"
+            paint={{
+              "fill-color": {
+                property: "overallScore",
+                stops: [
+                  [0.1, "#95efff"],
+                  [0.3, "#4bd3d1"],
+                  [0.5, "#00b597"],
+                  [0.7, "#009456"],
+                  [0.9, "#057300"],
+                ],
+              },
+              "fill-opacity": [
+                "case",
+                ["boolean", ["feature-state", "hover"], false],
+                1,
+                parseInt(hexOpacity) / 100,
               ],
-            },
-            "fill-opacity": [
-              "case",
-              ["boolean", ["feature-state", "hover"], false],
-              1,
-              parseInt(hexOpacity) / 100,
-            ],
-          }}
-        />
-      </Source>
+            }}
+          />
+        </Source>
+        <Legend
+          legendInfo={null}
+          hexGrid={hexGrid}
+          opacity={parseInt(hexOpacity)/100}
+        ></Legend>
+      </>
     );
   };
 
