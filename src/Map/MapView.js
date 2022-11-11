@@ -658,7 +658,7 @@ const MapView = ({
             <>
               <Source
                 type="raster"
-                url="mapbox://chuck0520.dkcwxuvl"
+                url="mapbox://chuck0520.094805mm"
                 maxzoom={22}
                 minzoom={0}
               >
@@ -830,7 +830,7 @@ const MapView = ({
             <>
               <Source
                 type="raster"
-                url="mapbox://chuck0520.dkcwxuvl"
+                url="mapbox://chuck0520.094805mm"
                 maxzoom={22}
                 minzoom={0}
               >
