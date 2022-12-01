@@ -31,6 +31,10 @@ const Main = ({ aoiSelected, setAoiSelected }) => {
   const [hexGrid, setHexGrid] = useState(false);
   const [hexOpacity, setHexOpacity] = useState(50);
   const [dualMap, setDualMap] = useState(false);
+  const [hexIdInBlue, setHexIdInBlue] = useState([]);
+  const [restoreAction, setRestoreAction] = useState(false);
+  const [protectAction, setProtectAction] = useState(false);
+  const [maintainAction, setMaintainAction] = useState(false);
 
   const zoomToAOI = (aoi) => {
     if (aoi) {
@@ -78,6 +82,13 @@ const Main = ({ aoiSelected, setAoiSelected }) => {
         hexOpacity={hexOpacity}
         setHexOpacity={setHexOpacity}
         setDualMap={setDualMap}
+        setHexIdInBlue={setHexIdInBlue}
+        restoreAction={restoreAction}
+        setRestoreAction={setRestoreAction}
+        protectAction={protectAction}
+        setProtectAction={setProtectAction}
+        maintainAction={maintainAction}
+        setMaintainAction={setMaintainAction}
         zoomToAOI={zoomToAOI}
       />
       <AoiDetailTable
@@ -107,6 +118,10 @@ const Main = ({ aoiSelected, setAoiSelected }) => {
           futureInteractiveLayerIds={futureInteractiveLayerIds}
           hexOpacity={hexOpacity}
           dualMap={dualMap}
+          hexIdInBlue={hexIdInBlue}
+          restoreAction={restoreAction}
+          protectAction={protectAction}
+          maintainAction={maintainAction}
           setActiveSidebar={setActiveSidebar}
         />
       </div>

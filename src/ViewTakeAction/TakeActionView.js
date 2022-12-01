@@ -1,23 +1,38 @@
 import React, { useState } from "react";
-import { Accordion, Button, Container } from "react-bootstrap";
-import RangeSlider from "react-bootstrap-range-slider";
 import ActionLocationSelect from "./ActionLocationSelect";
 import ActionSelect from "./ActionSelect";
 
-const TakeActionView = ({ setView }) => {
-  const [percentBlue, setPercentBlue] = useState(50);
+const TakeActionView = ({
+  aoiSelected,
+  setHexIdInBlue,
+  restoreAction,
+  setRestoreAction,
+  protectAction,
+  setProtectAction,
+  maintainAction,
+  setMaintainAction
+}) => {
   const [actionView, setActionView] = useState("actionLocation");
   return (
     <>
       {actionView === "actionLocation" && (
         <ActionLocationSelect
-          percentBlue={percentBlue}
-          setPercentBlue={setPercentBlue}
+          aoiSelected={aoiSelected}
+          setHexIdInBlue={setHexIdInBlue}
           setActionView={setActionView}
         />
       )}
 
-      {actionView === "actionSelect" && <ActionSelect />}
+      {actionView === "actionSelect" && (
+        <ActionSelect
+          restoreAction={restoreAction}
+          setRestoreAction={setRestoreAction}
+          protectAction={protectAction}
+          setProtectAction={setProtectAction}
+          maintainAction={maintainAction}
+          setMaintainAction={setMaintainAction}
+        />
+      )}
     </>
   );
 };

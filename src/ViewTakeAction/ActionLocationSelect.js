@@ -1,12 +1,36 @@
 import React, { useState } from "react";
-import { Accordion, Button, Container } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { Accordion, Button } from "react-bootstrap";
 import RangeSlider from "react-bootstrap-range-slider";
 
 const ActionLocationSelect = ({
-  setActionView,
-  percentBlue,
-  setPercentBlue,
+  aoiSelected,
+  setHexIdInBlue,
+  setActionView
 }) => {
+  const [filterBlue, setFilterBlue] = useState(50);
+  const aoiList = Object.values(useSelector((state) => state.aoi)).filter(
+    (aoi) => aoi.id === aoiSelected
+  );
+  const aoi = aoiList[0];
+
+  const percentBlueList = aoi["currentHexagons"].map((hex) => {
+    return {
+      id: hex.gid,
+      percentBlue : parseFloat(hex.lightblue) + parseFloat(hex.darkblue)
+    };
+  });
+  
+  const onChange = (e) => {
+    setFilterBlue(e.target.value);
+    setHexIdInBlue([]);
+    percentBlueList.map((item) => {
+      if (item.percentBlue >= e.target.value/100) {
+        setHexIdInBlue(idList => [...idList, item.id]);
+      };
+    });
+  };
+
   return (
     <>
       <h2>Where to take Action?</h2>
@@ -19,11 +43,11 @@ const ActionLocationSelect = ({
               would like in the hexagons.
             </p>
             <p>Those hexagons will be selected for you to apply the actions.</p>
-            <p>{percentBlue}% Blueprint per hex</p>
+            <p>{filterBlue}% Blueprint per hex</p>
             <RangeSlider
               step={1}
-              value={percentBlue}
-              onChange={(e) => setPercentBlue(e.target.value)}
+              value={filterBlue}
+              onChange={onChange}
               variant="secondary"
             />
           </Accordion.Body>

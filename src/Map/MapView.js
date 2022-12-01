@@ -39,6 +39,10 @@ const MapView = ({
   futureInteractiveLayerIds,
   hexOpacity,
   dualMap,
+  hexIdInBlue,
+  restoreAction,
+  protectAction,
+  maintainAction,
   setActiveSidebar,
 }) => {
   const [filter, setFilter] = useState(["in", "OBJECTID", ""]);
@@ -48,14 +52,15 @@ const MapView = ({
   const [hovered, setHovered] = useState(false);
   const [clickedProperty, setClickedProperty] = useState(null);
   const [clickedGeometry, setClickedGeometry] = useState(null);
-  const [selectedFeatureIndex, setSelectedFeatureIndex] = useState(null);
   const [mode, setMode] = useState("side-by-side");
   const [activeMap, setActiveMap] = useState("left");
   const [currentHexData, setCurrentHexData] = useState();
   const [futureHexData, setFutureHexData] = useState();
   const [hexInfoPopupView, setHexInfoPopupView] = useState(false);
-
-  let testHexData;
+  const [selectedHexIdList, setSelectedHexIdList] = useState(hexIdInBlue);
+  const [boxXY, setBoxXY] = useState([[],[]]);
+  const [dragPan, setDragPan] = useState(true);
+  const [boxZoom, setBoxZoom] = useState(true);
 
   const aoiList = Object.values(useSelector((state) => state.aoi)).filter(
     (aoi) => aoi.id === aoiSelected
@@ -63,6 +68,8 @@ const MapView = ({
   const aoi = aoiList[0];
 
   const mapRef = useRef();
+  
+  let box, boxX, boxY, showBox;
 
   const zoomToAOI = (aoi) => {
     // Use Turf to get the bounding box of the collections of features
@@ -189,21 +196,64 @@ const MapView = ({
     };
 
     return (
+      <>
+        <Source type="geojson" data={hexData}>
+          <Layer
+            id={id + "-hex"}
+            type="fill"
+            paint={{
+              "fill-color": {
+                property: "overallScore",
+                stops: [
+                  [0.1, "#95efff"],
+                  [0.3, "#4bd3d1"],
+                  [0.5, "#00b597"],
+                  [0.7, "#009456"],
+                  [0.9, "#057300"],
+                ],
+              },
+              "fill-opacity": [
+                "case",
+                ["boolean", ["feature-state", "hover"], false],
+                1,
+                parseInt(hexOpacity) / 100,
+              ],
+            }}
+          />
+        </Source>
+        <Legend
+          legendInfo={null}
+          hexGrid={hexGrid}
+          opacity={parseInt(hexOpacity)/100}
+        ></Legend>
+      </>
+    );
+  };
+
+  const renderSelectedHex = (hexGrid, hexIdList) => {
+    const hexFeatureList = hexGrid.filter((hex) => 
+      hexIdList.includes(hex.gid)
+    ).map((hex) => {
+      return {
+        type: "Feature",
+        geometry: JSON.parse(hex.geometry),
+        properties: { gid: hex.gid },
+      };
+    });
+
+    const hexData = {
+      type: "FeatureCollection",
+      features: hexFeatureList,
+    };
+
+    return (
       <Source type="geojson" data={hexData}>
         <Layer
-          id={id + "-hex"}
+          id="hex-in-blue"
           type="fill"
           paint={{
-            "fill-color": {
-              property: "overallScore",
-              stops: [
-                [0.1, "#95efff"],
-                [0.3, "#4bd3d1"],
-                [0.5, "#00b597"],
-                [0.7, "#009456"],
-                [0.9, "#057300"],
-              ],
-            },
+            "fill-color": (restoreAction || protectAction || maintainAction) ? "#057300" : "transparent",
+            "fill-outline-color": "blue",
             "fill-opacity": [
               "case",
               ["boolean", ["feature-state", "hover"], false],
@@ -305,7 +355,7 @@ const MapView = ({
 
   const getCursor = ({ isHovering, isDragging }) => {
     console.log(isDragging);
-    return isDragging ? "grabbing" : isHovering ? "crosshair" : "default";
+    return isDragging ? "grabbing" : isHovering ? "pointer" : "default";
   };
 
   const onHover = (e) => {
@@ -319,8 +369,8 @@ const MapView = ({
     }
   };
 
-  const onClick = (event) => {
-    const feature = event.features[0];
+  const onClick = (e) => {
+    const feature = e.features[0];
     console.log(feature);
     if (feature) {
       console.log(feature.properties);
@@ -354,6 +404,59 @@ const MapView = ({
     });
   }, []);
 
+  const onMouseDown = useCallback((e) => {
+    if (e.originalEvent.shiftKey) {
+      setDragPan(false);
+      setBoxZoom(true);
+      boxX = e.originalEvent.x;
+      boxY = e.originalEvent.y;
+      showBox = true;
+      setBoxXY([
+        [e.originalEvent.x, e.originalEvent.y],
+        [e.originalEvent.x, e.originalEvent.y]
+      ]);
+    }
+  }, []);
+
+  const onMouseUp = useCallback((e) => {
+    if (e.originalEvent.shiftKey) {
+      setDragPan(true);
+      setBoxZoom(true);
+      showBox = false;
+      setBoxXY(box => {
+        const bbox = [[...box][0], [e.originalEvent.x, e.originalEvent.y]];
+        const features = mapRef.current.queryRenderedFeatures(bbox, {layers: ["current-hex"]});
+        setSelectedHexIdList(features.map(item => item.properties.gid));
+        return ([[],[]]);
+      });
+    }
+    if (box) {
+      box.parentNode.removeChild(box);
+      box = null;
+    };
+  }, []);
+
+  const onMouseMove = useCallback((e) => {
+    if (e.originalEvent.shiftKey && showBox) {
+      const canvas = mapRef.current.getCanvasContainer();
+      if (!box) {
+        box = document.createElement('div');
+        box.classList.add('boxdraw');
+        canvas.appendChild(box);
+      }
+      
+      const minX = Math.min(boxX, e.originalEvent.x),
+      maxX = Math.max(boxX, e.originalEvent.x),
+      minY = Math.min(boxY, e.originalEvent.y),
+      maxY = Math.max(boxY, e.originalEvent.y);
+      
+      const pos = `translate(${minX}px, ${minY}px)`;
+      box.style.transform = pos;
+      box.style.width = maxX - minX + 'px';
+      box.style.height = maxY - minY + 'px';
+    }
+  }, []);
+
   useEffect(() => {
     if (aoi) {
       calcHexValues(aoi.currentHexagons, "current");
@@ -365,9 +468,8 @@ const MapView = ({
   }, [aoi, dualMap]);
 
   useEffect(() => {
-    console.log(currentHexData);
-    console.log(futureHexData);
-  }, [currentHexData, futureHexData]);
+    setSelectedHexIdList(hexIdInBlue);
+  }, [hexIdInBlue]);
 
   return (
     <>
@@ -390,7 +492,12 @@ const MapView = ({
           onMoveStart={onLeftMoveStart}
           onMove={activeMap === "left" && onMove}
           onClick={onClick}
-          // onMouseUp={popUp}
+          onMouseDown={onMouseDown}
+          onMouseUp={onMouseUp}
+          onMouseMove={onMouseMove}
+          dragPan={dragPan}
+          boxZoom={boxZoom}
+          getCursor={getCursor}
           style={LeftMapStyle}
           mapStyle="mapbox://styles/mapbox/light-v9"
           mapboxAccessToken={MAPBOX_TOKEN}
@@ -557,7 +664,7 @@ const MapView = ({
             <>
               <Source
                 type="raster"
-                url="mapbox://chuck0520.dkcwxuvl"
+                url="mapbox://chuck0520.094805mm"
                 maxzoom={22}
                 minzoom={0}
               >
@@ -572,6 +679,7 @@ const MapView = ({
           )}
           {aoi && hexGrid && renderHexGrid(aoi.currentHexagons, "current")}
           {/* {aoi && hexGrid && clickedProperty && renderPopup()} */}
+          {!!selectedHexIdList.length && renderSelectedHex(aoi.currentHexagons, selectedHexIdList)}
         </Map>
       </div>
       {dualMap && (
@@ -733,7 +841,7 @@ const MapView = ({
             <>
               <Source
                 type="raster"
-                url="mapbox://chuck0520.dkcwxuvl"
+                url="mapbox://chuck0520.094805mm"
                 maxzoom={22}
                 minzoom={0}
               >
@@ -743,6 +851,9 @@ const MapView = ({
           )}
           {aoi && hexGrid && renderHexGrid(aoi.futureHexagons, "future")}
           {/* {aoi && hexGrid && hoveredProperty && renderPopup()} */}
+          {
+
+          }
         </Map>
       )}
     </>
