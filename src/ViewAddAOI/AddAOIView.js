@@ -21,20 +21,6 @@ const AddAOIView = ({
     setCountdown(newState);
   }
 
-  const timeoutHandler = () => {
-    setTimeoutError(true);
-    setInterval(() => {
-      updateState(ref.current - 1);
-    }, 1000);
-    window.setTimeout(resetButton, 5000);
-  };
-
-  const resetButton = () => {
-    setCountdown(5);
-    console.log(countdown);
-    window.location.reload(true);
-  };
-
   useEffect(() => {
     if (inputMode === "draw") {
       setDrawingMode(true);
@@ -85,7 +71,6 @@ const AddAOIView = ({
           featureList={featureList}
           setAlerttext={setAlerttext}
           setView={setView}
-          resetButton={resetButton}
           setHabitatLayer={setHabitatLayer}
         />
       )}

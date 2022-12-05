@@ -8,7 +8,7 @@ import { calculateArea, aggregate, getStatus } from "../helper/aggregateHex";
 import shp from "shpjs";
 import { v4 as uuid } from "uuid";
 
-const AddZip = ({ setAlerttext, setView, resetButton }) => {
+const AddZip = ({ setAlerttext, setView }) => {
   const dispatch = useDispatch();
 
   const onDrop = useCallback(

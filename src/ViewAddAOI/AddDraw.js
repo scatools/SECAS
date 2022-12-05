@@ -13,7 +13,6 @@ const AddDraw = ({
   featureList,
   setAlerttext,
   setView,
-  resetButton,
   setHabitatLayer,
 }) => {
   const dispatch = useDispatch();
@@ -23,6 +22,8 @@ const AddDraw = ({
     setDrawData(e.target.value);
   };
 
+  console.log(featureList);
+
   const handleSubmit = async () => {
     if (!drawData) {
       setAlerttext("A name for this area of interest is required.");
@@ -30,6 +31,7 @@ const AddDraw = ({
       setAlerttext("At least one polygon is required.");
     } else {
       setAlerttext(false);
+      dispatch(setLoader(true));
       const newList = featureList;
       const data = {
         type: "MultiPolygon",
@@ -63,6 +65,7 @@ const AddDraw = ({
         })
       );
 
+      dispatch(setLoader(false));
       setDrawingMode(false);
       setHabitatLayer("none");
       setView("viewAOI");
@@ -92,9 +95,7 @@ const AddDraw = ({
         >
           Add a New Shape
         </Button>
-        <Button variant="dark" style={{ float: "left" }} onClick={resetButton}>
-          Start Over
-        </Button>
+
         <Button
           variant="dark"
           style={{ float: "right" }}

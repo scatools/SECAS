@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
+import { Container, Button, Modal } from "react-bootstrap";
 import { WebMercatorViewport } from "viewport-mercator-project";
 import bbox from "@turf/bbox";
 import SidebarMode from "./SidebarMode";
@@ -9,7 +9,29 @@ import AddAOIView from "../ViewAddAOI/AddAOIView";
 import TakeActionView from "../ViewTakeAction/TakeActionView";
 import "../main.css";
 import "./sidebar.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRedo, faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
+import { setLoader } from "../action";
+import { useDispatch, useSelector } from "react-redux";
 
+const arrowIcon = (
+  <FontAwesomeIcon
+    icon={faRedo}
+    color="red"
+    size="lg"
+    flip="horizontal"
+    style={{ paddingLeft: "30px;" }}
+  />
+);
+
+const alertIcon = (
+  <FontAwesomeIcon
+    icon={faExclamationCircle}
+    color="red"
+    style={{ margin: "0 5px;" }}
+  />
+);
 const Sidebar = ({
   activeSidebar,
   setActiveSidebar,
@@ -35,10 +57,23 @@ const Sidebar = ({
   setProtectAction,
   maintainAction,
   setMaintainAction,
-  zoomToAOI
+  zoomToAOI,
 }) => {
   const [view, setView] = useState("visualize");
   const [alerttext, setAlerttext] = useState(false);
+  const [confirmShow, setConfirmShow] = useState(false);
+  let loading = useSelector((state) => state.loading.isLoading);
+
+  console.log(loading);
+
+  const confirmClose = () => setConfirmShow(false);
+  const showConfirm = () => setConfirmShow(true);
+  const resetButton = () => {
+    window.location.reload(true);
+  };
+
+  const dispatch = useDispatch();
+  const history = useNavigate();
 
   // useEffect(() => {
   //   console.log(view);
@@ -67,6 +102,8 @@ const Sidebar = ({
   //     zoom: newViewport.zoom,
   //   });
   // };
+
+  console.log(habitatLayer);
 
   return (
     <div id="sidebar" className={activeSidebar ? "active" : ""}>
@@ -141,6 +178,40 @@ const Sidebar = ({
           />
         )}
       </div>
+      {habitatLayer && (
+        <Button
+          id="resetButton"
+          variant="dark"
+          style={{ float: "left" }}
+          onClick={showConfirm}
+        >
+          Start Over {arrowIcon}
+        </Button>
+      )}
+      {/* <button
+        onClick={() => dispatch(setLoader(true))}
+        className="test"
+      ></button> */}
+
+      <Modal show={confirmShow} onHide={confirmClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <h1>WAIT{alertIcon}</h1>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>This will delete everything you've done so far.</p>
+          <p>Are you sure you'd like to continue?</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={confirmClose}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={resetButton}>
+            Yes, start over.
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
