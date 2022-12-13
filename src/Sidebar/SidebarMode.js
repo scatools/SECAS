@@ -2,7 +2,7 @@ import React from "react";
 import { ToggleButton, ButtonGroup } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
-const SidebarMode = ({ view, setView, habitatLayer }) => {
+const SidebarMode = ({ sidebarView, setSidebarView, habitatLayer }) => {
   let aoiList = useSelector((state) => state.aoi);
   let aoiListLength = Object.keys(aoiList).length;
   return (
@@ -16,8 +16,8 @@ const SidebarMode = ({ view, setView, habitatLayer }) => {
         id="visualize"
         variant="outline-secondary"
         value="visualize"
-        checked={view === "visualize"}
-        onChange={(e) => setView(e.currentTarget.value)}
+        checked={sidebarView === "visualize"}
+        onChange={(e) => setSidebarView(e.currentTarget.value)}
       >
         Habitat Select
       </ToggleButton>
@@ -26,8 +26,8 @@ const SidebarMode = ({ view, setView, habitatLayer }) => {
         id="add"
         variant="outline-secondary"
         value="add"
-        checked={view === "add"}
-        onChange={(e) => setView(e.currentTarget.value)}
+        checked={sidebarView === "add"}
+        onChange={(e) => setSidebarView(e.currentTarget.value)}
         disabled={!habitatLayer}
       >
         Add AOI
@@ -37,8 +37,8 @@ const SidebarMode = ({ view, setView, habitatLayer }) => {
         id="viewAOI"
         variant="outline-secondary"
         value="viewAOI"
-        checked={view === "viewAOI"}
-        onChange={(e) => setView(e.currentTarget.value)}
+        checked={sidebarView === "viewAOI"}
+        onChange={(e) => setSidebarView(e.currentTarget.value)}
         disabled={aoiListLength < 1}
       >
         Evaluate
@@ -48,8 +48,8 @@ const SidebarMode = ({ view, setView, habitatLayer }) => {
         id="act"
         variant="outline-secondary"
         value="act"
-        checked={view === "act"}
-        onChange={(e) => setView(e.currentTarget.value)}
+        checked={sidebarView === "act"}
+        onChange={(e) => setSidebarView(e.currentTarget.value)}
         disabled="true"
       >
         Take Action

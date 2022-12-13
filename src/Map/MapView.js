@@ -57,7 +57,7 @@ const MapView = ({
   const [currentHexData, setCurrentHexData] = useState();
   const [futureHexData, setFutureHexData] = useState();
   const [hexInfoPopupView, setHexInfoPopupView] = useState(false);
-  const [selectedHexIdList, setSelectedHexIdList] = useState(hexIdInBlue);
+  const [selectedHexIdList, _setSelectedHexIdList] = useState(hexIdInBlue);
   const [boxXY, setBoxXY] = useState([[], []]);
   const [dragPan, setDragPan] = useState(true);
   const [boxZoom, setBoxZoom] = useState(true);
@@ -424,6 +424,12 @@ const MapView = ({
     });
   }, []);
 
+  const refSelectedHexIdList = useRef(selectedHexIdList);
+  const setSelectedHexIdList = (hexList) => {
+    refSelectedHexIdList.current = hexList;
+    _setSelectedHexIdList(hexList);
+  };
+
   const onMouseDown = useCallback((e) => {
     if (e.originalEvent.shiftKey) {
       setDragPan(false);
@@ -448,7 +454,19 @@ const MapView = ({
         const features = mapRef.current.queryRenderedFeatures(bbox, {
           layers: ["current-hex"],
         });
-        setSelectedHexIdList(features.map((item) => item.properties.gid));
+        let selectedList = features.map((item) => item.properties.gid);
+        if (refSelectedHexIdList.current.length < 1) {
+          setSelectedHexIdList(selectedList);
+        } else {
+          let newSelectedList = [
+            ...refSelectedHexIdList.current,
+            ...selectedList,
+          ];
+
+          console.log(newSelectedList);
+
+          setSelectedHexIdList(newSelectedList);
+        }
         return [[], []];
       });
     }

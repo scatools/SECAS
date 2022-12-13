@@ -12,7 +12,7 @@ const AddDraw = ({
   setAoiSelected,
   featureList,
   setAlerttext,
-  setView,
+  setSidebarView,
   setHabitatLayer,
 }) => {
   const dispatch = useDispatch();
@@ -21,8 +21,6 @@ const AddDraw = ({
   const handleNameChange = (e) => {
     setDrawData(e.target.value);
   };
-
-  console.log(featureList);
 
   const handleSubmit = async () => {
     if (!drawData) {
@@ -68,7 +66,7 @@ const AddDraw = ({
       dispatch(setLoader(false));
       setDrawingMode(false);
       setHabitatLayer("none");
-      setView("viewAOI");
+      setSidebarView("viewAOI");
     }
   };
 

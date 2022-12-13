@@ -12,7 +12,7 @@ import {
   changeGoalWeights,
 } from "./action";
 
-const SelectMeasures = ({ setView }) => {
+const SelectMeasures = ({ setSidebarView }) => {
   const [show, setShow] = useState(false);
   const [restoreGoal, setRestoreGoal] = useState("");
   const [inputType, setInputType] = useState("scaled");
@@ -38,7 +38,7 @@ const SelectMeasures = ({ setView }) => {
 
   const handleNext = () => {
     if (dataI === dataMeasList.length - 1) {
-      setView("assess");
+      setSidebarView("assess");
     } else {
       setDataI(dataI + 1);
     }
@@ -46,7 +46,7 @@ const SelectMeasures = ({ setView }) => {
 
   const handleBack = () => {
     if (dataI === 0) {
-      setView("add");
+      setSidebarView("add");
     } else {
       let newI = dataI - 1;
       setDataI(newI);

@@ -59,7 +59,7 @@ const Sidebar = ({
   setMaintainAction,
   zoomToAOI,
 }) => {
-  const [view, setView] = useState("visualize");
+  const [sidebarView, setSidebarView] = useState("visualize");
   const [alerttext, setAlerttext] = useState(false);
   const [confirmShow, setConfirmShow] = useState(false);
   let loading = useSelector((state) => state.loading.isLoading);
@@ -116,31 +116,31 @@ const Sidebar = ({
         <h5>&nbsp;&nbsp;Options:</h5>
         <br />
         <SidebarMode
-          view={view}
-          setView={setView}
+          sidebarView={sidebarView}
+          setSidebarView={setSidebarView}
           habitatLayer={habitatLayer}
         />
         <br />
-        {view === "visualize" && (
+        {sidebarView === "visualize" && (
           <SelectHabitatView
             habitatLayer={habitatLayer}
             setHabitatLayer={setHabitatLayer}
-            setView={setView}
+            setSidebarView={setSidebarView}
           />
         )}
 
-        {view === "add" && (
+        {sidebarView === "add" && (
           <AddAOIView
             setDrawingMode={setDrawingMode}
             setAoiSelected={setAoiSelected}
             featureList={featureList}
             setAlerttext={setAlerttext}
             setHabitatLayer={setHabitatLayer}
-            setView={setView}
+            setSidebarView={setSidebarView}
           />
         )}
 
-        {view === "viewAOI" && (
+        {sidebarView === "viewAOI" && (
           <Container>
             <SidebarViewDetail
               zoomToAOI={zoomToAOI}
@@ -160,12 +160,12 @@ const Sidebar = ({
               setHexOpacity={setHexOpacity}
               setDualMap={setDualMap}
               setActiveSidebar={setActiveSidebar}
-              setView={setView}
+              setSidebarView={setSidebarView}
             />
           </Container>
         )}
 
-        {view === "act" && (
+        {sidebarView === "act" && (
           <TakeActionView
             aoiSelected={aoiSelected}
             setHexIdInBlue={setHexIdInBlue}

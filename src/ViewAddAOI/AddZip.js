@@ -8,7 +8,7 @@ import { calculateArea, aggregate, getStatus } from "../helper/aggregateHex";
 import shp from "shpjs";
 import { v4 as uuid } from "uuid";
 
-const AddZip = ({ setAlerttext, setView }) => {
+const AddZip = ({ setAlerttext, setSidebarView }) => {
   const dispatch = useDispatch();
 
   const onDrop = useCallback(
@@ -59,7 +59,7 @@ const AddZip = ({ setAlerttext, setView }) => {
             id: uuid(),
           })
         );
-        setView("viewAOI");
+        setSidebarView("viewAOI");
       };
 
       for (let file of acceptedFiles) {

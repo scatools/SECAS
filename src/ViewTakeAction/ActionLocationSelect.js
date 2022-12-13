@@ -6,7 +6,7 @@ import RangeSlider from "react-bootstrap-range-slider";
 const ActionLocationSelect = ({
   aoiSelected,
   setHexIdInBlue,
-  setActionView
+  setActionView,
 }) => {
   const [filterBlue, setFilterBlue] = useState(50);
   const aoiList = Object.values(useSelector((state) => state.aoi)).filter(
@@ -17,17 +17,17 @@ const ActionLocationSelect = ({
   const percentBlueList = aoi["currentHexagons"].map((hex) => {
     return {
       id: hex.gid,
-      percentBlue : parseFloat(hex.lightblue) + parseFloat(hex.darkblue)
+      percentBlue: parseFloat(hex.lightblue) + parseFloat(hex.darkblue),
     };
   });
-  
+
   const onChange = (e) => {
     setFilterBlue(e.target.value);
     setHexIdInBlue([]);
     percentBlueList.map((item) => {
-      if (item.percentBlue >= e.target.value/100) {
-        setHexIdInBlue(idList => [...idList, item.id]);
-      };
+      if (item.percentBlue >= e.target.value / 100) {
+        setHexIdInBlue((idList) => [...idList, item.id]);
+      }
     });
   };
 
@@ -55,11 +55,17 @@ const ActionLocationSelect = ({
         <Accordion.Item eventKey="1">
           <Accordion.Header>Manual Hexagon Select</Accordion.Header>
           <Accordion.Body>
-            <p>
-              Click and drag across multiple hexagons to select where you would
-              like to take action.
-            </p>
-            <p>Note: You must click within AOI boundary</p>
+            <h3>Multi-select</h3>
+            <p>While holding the Shift key:</p>
+            <ul>
+              <li>
+                Click and drag across multiple hexagons to select where you
+                would like to take action.
+              </li>
+            </ul>
+            <h3>Individual Select</h3>
+            <p>Click on an individual hex to select</p>
+            <p>To deselect and hex, click on hex again</p>
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>

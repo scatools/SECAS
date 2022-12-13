@@ -2,9 +2,13 @@ import React from "react";
 import Select from "react-select";
 import { Container, Button } from "react-bootstrap";
 
-const SelectHabitatView = ({ habitatLayer, setHabitatLayer, setView }) => {
+const SelectHabitatView = ({
+  habitatLayer,
+  setHabitatLayer,
+  setSidebarView,
+}) => {
   const handleNext = () => {
-    setView("add");
+    setSidebarView("add");
   };
 
   const dropdownOptions = [

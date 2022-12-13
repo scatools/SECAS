@@ -8,7 +8,7 @@ const AddAOIView = ({
   setAoiSelected,
   featureList,
   setAlerttext,
-  setView,
+  setSidebarView,
   setHabitatLayer,
 }) => {
   const [inputMode, setInputMode] = useState("draw");
@@ -70,7 +70,7 @@ const AddAOIView = ({
           setAoiSelected={setAoiSelected}
           featureList={featureList}
           setAlerttext={setAlerttext}
-          setView={setView}
+          setSidebarView={setSidebarView}
           setHabitatLayer={setHabitatLayer}
         />
       )}
@@ -78,7 +78,7 @@ const AddAOIView = ({
       {inputMode === "shapefile" && (
         <AddZip
           setAlerttext={setAlerttext}
-          setView={setView}
+          setSidebarView={setSidebarView}
           setHabitatLayer={setHabitatLayer}
         />
       )}
