@@ -58,7 +58,6 @@ const Main = ({ aoiSelected, setAoiSelected }) => {
         longitude: newViewport.longitude - 0.5 * (aoiBbox[2] - aoiBbox[0]),
         zoom: newViewport.zoom,
       });
-      console.log(newViewport);
     }
   };
 

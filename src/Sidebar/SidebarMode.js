@@ -1,7 +1,10 @@
 import React from "react";
 import { ToggleButton, ButtonGroup } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
-const SidebarMode = ({ view, setView }) => {
+const SidebarMode = ({ view, setView, habitatLayer }) => {
+  let aoiList = useSelector((state) => state.aoi);
+  let aoiListLength = Object.keys(aoiList).length;
   return (
     <ButtonGroup
       type="radio"
@@ -25,6 +28,7 @@ const SidebarMode = ({ view, setView }) => {
         value="add"
         checked={view === "add"}
         onChange={(e) => setView(e.currentTarget.value)}
+        disabled={!habitatLayer}
       >
         Add AOI
       </ToggleButton>
@@ -35,6 +39,7 @@ const SidebarMode = ({ view, setView }) => {
         value="viewAOI"
         checked={view === "viewAOI"}
         onChange={(e) => setView(e.currentTarget.value)}
+        disabled={aoiListLength < 1}
       >
         Evaluate
       </ToggleButton>
@@ -45,6 +50,7 @@ const SidebarMode = ({ view, setView }) => {
         value="act"
         checked={view === "act"}
         onChange={(e) => setView(e.currentTarget.value)}
+        disabled="true"
       >
         Take Action
       </ToggleButton>

@@ -49,7 +49,7 @@ const SelectHabitatView = ({ habitatLayer, setHabitatLayer, setView }) => {
         />
       </div>
       <Container className="button-cont">
-        <Button variant="primary" onClick={handleNext}>
+        <Button disabled={!habitatLayer} variant="primary" onClick={handleNext}>
           Next
         </Button>
       </Container>

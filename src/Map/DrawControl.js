@@ -2,7 +2,6 @@ import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import { useControl } from "react-map-gl";
 
 const DrawControl = (props) => {
-  console.log(props);
   useControl(
     ({ map }) => {
       map.on("draw.create", props.onCreate);

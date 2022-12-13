@@ -64,8 +64,6 @@ const Sidebar = ({
   const [confirmShow, setConfirmShow] = useState(false);
   let loading = useSelector((state) => state.loading.isLoading);
 
-  console.log(loading);
-
   const confirmClose = () => setConfirmShow(false);
   const showConfirm = () => setConfirmShow(true);
   const resetButton = () => {
@@ -103,8 +101,6 @@ const Sidebar = ({
   //   });
   // };
 
-  console.log(habitatLayer);
-
   return (
     <div id="sidebar" className={activeSidebar ? "active" : ""}>
       <div
@@ -119,7 +115,11 @@ const Sidebar = ({
       <div className="ControlWrapper">
         <h5>&nbsp;&nbsp;Options:</h5>
         <br />
-        <SidebarMode view={view} setView={setView} />
+        <SidebarMode
+          view={view}
+          setView={setView}
+          habitatLayer={habitatLayer}
+        />
         <br />
         {view === "visualize" && (
           <SelectHabitatView

@@ -97,7 +97,8 @@ const AddDraw = ({
         </Button>
 
         <Button
-          variant="dark"
+          disabled={!drawData || featureList.length === 0}
+          variant="primary"
           style={{ float: "right" }}
           onClick={handleSubmit}
         >

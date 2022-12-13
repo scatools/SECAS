@@ -255,7 +255,7 @@ const MapView = ({
             "fill-color":
               restoreAction || protectAction || maintainAction
                 ? "#057300"
-                : "transparent",
+                : "#fff",
             "fill-outline-color": "blue",
             "fill-opacity": [
               "case",
@@ -263,6 +263,14 @@ const MapView = ({
               1,
               parseInt(hexOpacity) / 100,
             ],
+          }}
+        />
+        <Layer
+          id="hex-in-blue-outline"
+          type="line"
+          paint={{
+            "line-color": "blue",
+            "line-width": 3,
           }}
         />
       </Source>
@@ -357,7 +365,6 @@ const MapView = ({
   };
 
   const getCursor = ({ isHovering, isDragging }) => {
-    console.log(isDragging);
     return isDragging ? "grabbing" : isHovering ? "pointer" : "default";
   };
 
@@ -374,14 +381,26 @@ const MapView = ({
 
   const onClick = (e) => {
     const feature = e.features[0];
-    console.log(feature);
-    if (feature) {
-      console.log(feature.properties);
+    if (feature && selectedHexIdList.length === 0) {
       setClickedProperty(feature.properties);
       setClickedGeometry(feature.geometry);
 
       setActiveSidebar(false);
       setHexInfoPopupView(true);
+    }
+    if (feature && selectedHexIdList.length > 0) {
+      const clickedHex = feature.properties.gid;
+      if (selectedHexIdList.includes(clickedHex)) {
+        const toBeRemoved = selectedHexIdList.indexOf(clickedHex);
+        let oldSelectedList = [...selectedHexIdList];
+        oldSelectedList.splice(toBeRemoved, 1);
+
+        setSelectedHexIdList(oldSelectedList);
+      } else {
+        let oldSelectedList = [...selectedHexIdList];
+        oldSelectedList.push(clickedHex);
+        setSelectedHexIdList(oldSelectedList);
+      }
     }
   };
 
@@ -391,7 +410,6 @@ const MapView = ({
       for (const f of e.features) {
         newFeatures[f.id] = f;
       }
-      console.log(newFeatures);
       return Object.values(newFeatures);
     });
   }, []);
@@ -402,7 +420,6 @@ const MapView = ({
       for (const f of e.features) {
         delete newFeatures[f.id];
       }
-      console.log(newFeatures);
       return Object.values(newFeatures);
     });
   }, []);
@@ -412,11 +429,11 @@ const MapView = ({
       setDragPan(false);
       setBoxZoom(true);
       boxX = e.originalEvent.x;
-      boxY = e.originalEvent.y;
+      boxY = e.originalEvent.layerY;
       showBox = true;
       setBoxXY([
-        [e.originalEvent.x, e.originalEvent.y],
-        [e.originalEvent.x, e.originalEvent.y],
+        [e.originalEvent.x, e.originalEvent.layerY],
+        [e.originalEvent.x, e.originalEvent.layerY],
       ]);
     }
   }, []);
@@ -427,7 +444,7 @@ const MapView = ({
       setBoxZoom(true);
       showBox = false;
       setBoxXY((box) => {
-        const bbox = [[...box][0], [e.originalEvent.x, e.originalEvent.y]];
+        const bbox = [[...box][0], [e.originalEvent.x, e.originalEvent.layerY]];
         const features = mapRef.current.queryRenderedFeatures(bbox, {
           layers: ["current-hex"],
         });
@@ -452,8 +469,8 @@ const MapView = ({
 
       const minX = Math.min(boxX, e.originalEvent.x),
         maxX = Math.max(boxX, e.originalEvent.x),
-        minY = Math.min(boxY, e.originalEvent.y),
-        maxY = Math.max(boxY, e.originalEvent.y);
+        minY = Math.min(boxY, e.originalEvent.layerY),
+        maxY = Math.max(boxY, e.originalEvent.layerY);
 
       const pos = `translate(${minX}px, ${minY}px)`;
       box.style.transform = pos;
