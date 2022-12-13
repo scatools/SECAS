@@ -1,21 +1,24 @@
-import MapboxDraw from '@mapbox/mapbox-gl-draw';
-import {useControl} from 'react-map-gl';
+import MapboxDraw from "@mapbox/mapbox-gl-draw";
+import { useControl } from "react-map-gl";
 
 const DrawControl = (props) => {
+  console.log(props);
   useControl(
-  ({map}) => {
-    map.on('draw.create', props.onCreate);
-    map.on('draw.update', props.onUpdate);
-    map.on('draw.delete', props.onDelete);
-    return new MapboxDraw(props);
-  },
-  ({map}) => {
-    map.off('draw.create', props.onCreate);
-    map.off('draw.update', props.onUpdate);
-    map.off('draw.delete', props.onDelete);
-  }, {
-    position: props.position
-  });
+    ({ map }) => {
+      map.on("draw.create", props.onCreate);
+      map.on("draw.update", props.onUpdate);
+      map.on("draw.delete", props.onDelete);
+      return new MapboxDraw(props);
+    },
+    ({ map }) => {
+      map.off("draw.create", props.onCreate);
+      map.off("draw.update", props.onUpdate);
+      map.off("draw.delete", props.onDelete);
+    },
+    {
+      position: props.position,
+    }
+  );
 
   return null;
 };
@@ -23,7 +26,7 @@ const DrawControl = (props) => {
 DrawControl.defaultProps = {
   onCreate: () => {},
   onUpdate: () => {},
-  onDelete: () => {}
+  onDelete: () => {},
 };
 
 export default DrawControl;

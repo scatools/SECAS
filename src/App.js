@@ -12,6 +12,7 @@ function App(props) {
       {loading && (
         <div className="Overlay">
           <div className="spinner-4"></div>
+          {/* <div class="classic-4"></div> */}
           <div className="loading-text">Loading...</div>
         </div>
       )}

@@ -22,6 +22,26 @@ code {
   z-index: 99999;
 } */
 
+[class*="classic"]:before {
+  content: "Loading...";
+}
+
+.classic-4 {
+  color: white;
+  font-weight: bold;
+  margin-left: 10px;
+  margin-top: 20px;
+  font-family: monospace;
+  font-size: 30px;
+  clip-path: inset(0 3ch 0 0);
+  animation: c4 1.8s steps(4) infinite;
+}
+@keyframes c4 {
+  to {
+    clip-path: inset(0 -1ch 0 0);
+  }
+}
+
 .spinner-4 {
   width: 80px;
   --b: 8px; /* the border thickness */
@@ -50,9 +70,9 @@ code {
 }
 
 .loading-text {
+  margin-top: 20px;
   font-size: 26px;
   color: white;
-  margin-top: 20px;
 }
 
 .Overlay {
