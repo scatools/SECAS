@@ -37,7 +37,7 @@ const Sidebar = ({
   setMaintainAction,
   zoomToAOI
 }) => {
-  const [view, setView] = useState("visualize");
+  const [view, setView] = useState("add");
   const [alerttext, setAlerttext] = useState(false);
 
   // useEffect(() => {
@@ -84,13 +84,13 @@ const Sidebar = ({
         <br />
         <SidebarMode view={view} setView={setView} />
         <br />
-        {view === "visualize" && (
+        {/* {view === "visualize" && (
           <SelectHabitatView
             habitatLayer={habitatLayer}
             setHabitatLayer={setHabitatLayer}
             setView={setView}
           />
-        )}
+        )} */}
 
         {view === "add" && (
           <AddAOIView

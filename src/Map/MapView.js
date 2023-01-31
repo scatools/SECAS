@@ -5,7 +5,7 @@ import { Table } from "react-bootstrap";
 import bbox from "@turf/bbox";
 import axios from "axios";
 import { dataLayer } from "./map-style";
-import { normalization } from "../helper/aggregateHex";
+import { normalization, getRestoreValues, getProtectValues, getMaintainValues } from "../helper/aggregateHex";
 import DrawControl from "./DrawControl";
 import Legend from "./Legend";
 
@@ -39,7 +39,7 @@ const MapView = ({
   maintainAction,
   setActiveSidebar,
 }) => {
-  const [filter, setFilter] = useState(["in", "OBJECTID", ""]);
+  const [filter, setFilter] = useState(["in", "gid", ""]);
   const [hoverInfo, setHoverInfo] = useState(null);
   const [legendInfo, setLegendInfo] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
@@ -62,6 +62,8 @@ const MapView = ({
   const aoi = aoiList[0];
 
   const mapRef = useRef();
+
+  const colorRamp = ["#95efff","#4bd3d1", "#00b597", "#009456", "#057300"]
   
   let box, boxX, boxY, showBox;
 
@@ -195,14 +197,15 @@ const MapView = ({
           <Layer
             id={id + "-hex"}
             type="fill"
+            filter={["!", filter]}
             paint={{
               "fill-color": {
                 property: "overallScore",
                 stops: [
-                  [0.1, "#95efff"],
-                  [0.3, "#4bd3d1"],
-                  [0.5, "#00b597"],
-                  [0.7, "#009456"],
+                  [0.1, "#ccf7ff"],
+                  [0.3, "#82d9d7"],
+                  [0.5, "#3cb99f"],
+                  [0.7, "#00975b"],
                   [0.9, "#057300"],
                 ],
               },
@@ -228,10 +231,28 @@ const MapView = ({
     const hexFeatureList = hexGrid.filter((hex) => 
       hexIdList.includes(hex.gid)
     ).map((hex) => {
+      let newHex;
+      let scoreList = normalization(hex);
+      if (restoreAction) {
+        newHex = getRestoreValues(hex);
+        scoreList = normalization(newHex);
+      } else if (protectAction) {
+        newHex = getProtectValues(hex);
+        scoreList = normalization(newHex);
+      } else if (maintainAction) {
+        newHex = getMaintainValues(hex);
+        scoreList = normalization(newHex);
+      };
+      let scoreArray = Object.values(scoreList);
+      let averageScore =
+        scoreArray.reduce((a, b) => a + b, 0) / scoreArray.length;
       return {
         type: "Feature",
         geometry: JSON.parse(hex.geometry),
-        properties: { gid: hex.gid },
+        properties: { 
+          gid: hex.gid,
+          overallScore: averageScore, 
+        },
       };
     });
 
@@ -246,7 +267,16 @@ const MapView = ({
           id="hex-in-blue"
           type="fill"
           paint={{
-            "fill-color": (restoreAction || protectAction || maintainAction) ? "#057300" : "transparent",
+            "fill-color": (restoreAction || protectAction || maintainAction) ? {
+              property: "overallScore",
+              stops: [
+                [0.1, "#ccf7ff"],
+                [0.3, "#82d9d7"],
+                [0.5, "#3cb99f"],
+                [0.7, "#00975b"],
+                [0.9, "#057300"],
+              ],
+            } : "transparent",
             "fill-outline-color": "blue",
             "fill-opacity": [
               "case",
@@ -464,6 +494,15 @@ const MapView = ({
   useEffect(() => {
     setSelectedHexIdList(hexIdInBlue);
   }, [hexIdInBlue]);
+
+  useEffect(() => {
+    if (selectedHexIdList.length > 0 && (
+      restoreAction || protectAction || maintainAction
+    )) {
+      setFilter(["in", "gid", selectedHexIdList]);
+      console.log("Filter Applied!");
+    }
+  }, [restoreAction, protectAction, maintainAction])
 
   return (
     <>

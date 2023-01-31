@@ -8,18 +8,20 @@ const SidebarMode = ({ view, setView }) => {
       name="modeSelect"
       className="d-flex justify-content-center"
     >
-      <ToggleButton
+      {/* <ToggleButton
         id="visualize"
         variant="outline-secondary"
+        className="sidebar-toggle"
         value="visualize"
         checked={view === "visualize"}
         onChange={(e) => setView(e.currentTarget.value)}
       >
         Habitat Select
-      </ToggleButton>
+      </ToggleButton> */}
       <ToggleButton
         id="add"
         variant="outline-secondary"
+        className="sidebar-toggle"
         value="add"
         checked={view === "add"}
         onChange={(e) => setView(e.currentTarget.value)}
@@ -29,15 +31,17 @@ const SidebarMode = ({ view, setView }) => {
       <ToggleButton
         id="viewAOI"
         variant="outline-secondary"
+        className="sidebar-toggle"
         value="viewAOI"
         checked={view === "viewAOI"}
         onChange={(e) => setView(e.currentTarget.value)}
       >
-        Evaluate
+        Evaluate Condition
       </ToggleButton>
       <ToggleButton
         id="act"
         variant="outline-secondary"
+        className="sidebar-toggle"
         value="act"
         checked={view === "act"}
         onChange={(e) => setView(e.currentTarget.value)}

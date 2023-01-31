@@ -199,34 +199,51 @@ export function calculateScore(aoiList, timeFrame = "currentHexagons") {
   return aoiScore;
 }
 
-export function calculateRestore(currentScore) {
-  return {
-    scoreH1: 1,
-    scoreH2: 1,
-    scoreH3: 1,
-    scoreH4: 1,
-    scoreF1: 1,
-    scoreF2: 1,
-    scoreC1: 1,
-    scoreC2: 1,
-  };
+export function getRestoreValues(hex) {
+  // Must use JSON hack (stringify then parse) or structuredClone (in Node 17) to pass the object by value
+  let newHex = JSON.parse(JSON.stringify(hex));
+  newHex.site = 4;
+  newHex.species = 3;
+  newHex.fire = 7;
+  newHex.protected = parseFloat(hex.protected);
+  newHex.carbon = parseFloat(hex.carbon) + 5;
+  newHex.forest = parseFloat(hex.forest);
+  newHex.landscape = Math.round(parseFloat(hex.landscape)) === 4 ? 4 : Math.round(parseFloat(hex.landscape)) + 1;
+  newHex.resilience = 1;
+
+  return newHex;
 }
 
-export function calculateProtect(currentScore) {
-  return {
-    scoreH1: 0.5,
-    scoreH2: 0.5,
-    scoreH3: 0.5,
-    scoreH4: 0.5,
-    scoreF1: 0.5,
-    scoreF2: 0.5,
-    scoreC1: 0.5,
-    scoreC2: 0.5,
-  };
+export function getProtectValues(hex) {
+  // Must use JSON hack (stringify then parse) or structuredClone (in Node 17) to pass the object by value
+  let newHex = JSON.parse(JSON.stringify(hex));
+  newHex.site = parseFloat(hex.site);
+  newHex.species = parseFloat(hex.species);
+  newHex.fire = parseFloat(hex.fire);
+  newHex.protected = 1;
+  newHex.carbon = parseFloat(hex.carbon);
+  newHex.forest = parseFloat(hex.forest) - 0.25;
+  newHex.landscape = parseFloat(hex.landscape);
+  newHex.resilience = parseFloat(hex.resilience);
+
+  return newHex;
 }
 
-export function calculateMaintain(currentScore) {
-  return currentScore;
+export function getMaintainValues(hex) {
+  // Must use JSON hack (stringify then parse) or structuredClone (in Node 17) to pass the object by value
+  let newHex = JSON.parse(JSON.stringify(hex));
+  newHex.site = Math.round(parseFloat(hex.site)) === 2 ? 3 : Math.round(parseFloat(hex.site));
+  newHex.species = Math.round(parseFloat(hex.species)) == 0 ? 0 : Math.round(parseFloat(hex.species)) + 1;
+  newHex.fire = 7;
+  newHex.protected = parseFloat(hex.protected);
+  newHex.carbon = parseFloat(hex.carbon);
+  newHex.forest = parseFloat(hex.forest);
+  newHex.landscape = Math.round(parseFloat(hex.landscape)) === 1 ? 1 : (
+    Math.round(parseFloat(hex.landscape)) === 4 ? 4 : Math.round(parseFloat(hex.landscape)) + 1
+  );
+  newHex.resilience = parseFloat(hex.resilience);
+
+  return newHex;
 }
 
 export function calculateActionScore(aoi, restore, protect, maintain) {
