@@ -7,6 +7,9 @@ const HexInfoPopup = ({
   clickedProperty,
   currentHexData,
   futureHexData,
+  restoreAction,
+  protectAction,
+  maintainAction,
   setHexInfoPopupView,
 }) => {
   const hexId = clickedProperty.gid;
@@ -41,7 +44,8 @@ const HexInfoPopup = ({
             <tr>
               <th>Measures</th>
               <th>Current</th>
-              <th>Future</th>
+              <th>Future Before Action</th>
+              <th>Future After Action</th>
             </tr>
           </thead>
           <tbody>

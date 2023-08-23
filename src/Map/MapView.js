@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import Map, { Layer, Popup, Source } from "react-map-gl";
 import { useSelector } from "react-redux";
 import { Table } from "react-bootstrap";
 import bbox from "@turf/bbox";
 import axios from "axios";
+import RouterContext from "../Router.js";
 import { dataLayer } from "./map-style";
 import { normalization, getRestoreValues, getProtectValues, getMaintainValues } from "../helper/aggregateHex";
 import DrawControl from "./DrawControl";
@@ -55,6 +56,7 @@ const MapView = ({
   const [boxXY, setBoxXY] = useState([[],[]]);
   const [dragPan, setDragPan] = useState(true);
   const [boxZoom, setBoxZoom] = useState(true);
+  // const {hexIdInBlue, restoreAction, protectAction, maintainAction} = useContext(RouterContext);
 
   const aoiList = Object.values(useSelector((state) => state.aoi)).filter(
     (aoi) => aoi.id === aoiSelected
@@ -512,6 +514,9 @@ const MapView = ({
             clickedProperty={clickedProperty}
             currentHexData={currentHexData}
             futureHexData={futureHexData}
+            restoreAction={restoreAction}
+            protectAction={protectAction}
+            maintainAction={maintainAction}
             setHexInfoPopupView={setHexInfoPopupView}
           />
         )}

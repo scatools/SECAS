@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from 'react-bootstrap';
 import Switch from "react-switch";
 import FutureWithActionTable from "./FutureWithActionTable";
 
@@ -10,6 +12,7 @@ const ActionSelect = ({
   maintainAction,
   setMaintainAction
 }) => {
+  const navigate = useNavigate();
   const actionDefinitions = {
     restore: "To restore (restoration) means utilizing human intervention (such as planting trees) to reverse degradation, under the influence of urbanization",
     protect: "To protect (protection) means reserving conservation values (such as fee title acquisition or conservation easement) for certain parcels, regardless of the chance of urbanization",
@@ -106,6 +109,7 @@ const ActionSelect = ({
         </div>
       )}
       <FutureWithActionTable />
+      <Button onClick={() => {navigate("/report")}}>Report</Button>
     </>
   );
 };
