@@ -65,6 +65,15 @@
   overflow: scroll;
 }
 
+.table-dropdown {
+  min-width: 50px !important;
+  height: 30px !important;
+}
+
+.action-button:hover {
+  cursor: pointer;
+}
+
 .boxdraw {
   background: rgba(56, 135, 190, 0.1);
   border: 2px solid #3887be;
@@ -244,19 +253,29 @@ button.sidebarControlBtn.btn.btn-secondary {
   margin-bottom: 0;
 }
 
-#future-no-action-title {
-  position: fixed;
-  text-shadow: 0px 0px 2px white;
-  top: 75px;
-  left: 25%;
+.current-map-title {
+  position: relative;
+  height: 50px;
+  width: 160px;
+  top: 25px;
+  left: calc(50vw - 165px);
+  padding: 2px;
+  text-align: center;
+  background-color: lightgray;
+  border: 1px black solid;
   z-index: 9999;
 }
 
-#current-title {
-  position: fixed;
-  text-shadow: 0px 0px 2px white;
-  top: 75px;
-  left: 25%;
+.future-map-title {
+  position: relative;
+  height: 50px;
+  width: 160px;
+  top: 25px;
+  left: 0px;
+  padding: 2px;
+  text-align: center;
+  background-color: lightgray;
+  border: 1px black solid;
   z-index: 9999;
 }
 

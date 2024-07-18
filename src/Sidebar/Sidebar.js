@@ -23,19 +23,18 @@ const Sidebar = ({
   setViewState,
   habitatLayer,
   setHabitatLayer,
+  hexData,
   hexGrid,
   setHexGrid,
   hexOpacity,
   setHexOpacity,
   setDualMap,
   setHexIdInBlue,
-  restoreAction,
-  setRestoreAction,
-  protectAction,
-  setProtectAction,
-  maintainAction,
-  setMaintainAction,
-  zoomToAOI
+  actionScores,
+  setActionScores,
+  zoomToAOI,
+  setProgress,
+  setShowProgress
 }) => {
   const [view, setView] = useState("add");
   const [alerttext, setAlerttext] = useState(false);
@@ -100,6 +99,8 @@ const Sidebar = ({
             setAlerttext={setAlerttext}
             setHabitatLayer={setHabitatLayer}
             setView={setView}
+            setProgress={setProgress}
+            setShowProgress={setShowProgress}
           />
         )}
 
@@ -116,6 +117,7 @@ const Sidebar = ({
               setEditAOI={setEditAOI}
               featureList={featureList}
               setAlerttext={setAlerttext}
+              hexData={hexData}
               hexGrid={hexGrid}
               setHexGrid={setHexGrid}
               setViewState={setViewState}
@@ -131,13 +133,10 @@ const Sidebar = ({
         {view === "act" && (
           <TakeActionView
             aoiSelected={aoiSelected}
+            hexData={hexData}
             setHexIdInBlue={setHexIdInBlue}
-            restoreAction={restoreAction}
-            setRestoreAction={setRestoreAction}
-            protectAction={protectAction}
-            setProtectAction={setProtectAction}
-            maintainAction={maintainAction}
-            setMaintainAction={setMaintainAction}
+            actionScores={actionScores}
+            setActionScores={setActionScores}
           />
         )}
       </div>

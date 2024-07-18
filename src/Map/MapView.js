@@ -1,17 +1,17 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import Map, { Layer, Popup, Source } from "react-map-gl";
 import { useSelector } from "react-redux";
-import { Table } from "react-bootstrap";
+import { Modal, ProgressBar, Table } from "react-bootstrap";
+import mapboxgl from "mapbox-gl";
 import bbox from "@turf/bbox";
 import axios from "axios";
-import { dataLayer } from "./map-style";
-import { normalization, getRestoreValues, getProtectValues, getMaintainValues } from "../helper/aggregateHex";
+import WebMercatorViewport from "viewport-mercator-project";
+import RouterContext from "../Router.js";
+import { dataLayer, secasLayer } from "./map-style";
+import { input_aoi, getDataFromAPI, setLoader } from "../action";
+import { getHexagonScore, getStochasticValues } from "../helper/aggregateHex";
 import DrawControl from "./DrawControl";
 import Legend from "./Legend";
-
-//NECESSARY FOR ANTHONY'S TO COMPILE
-import mapboxgl from "mapbox-gl";
-import WebMercatorViewport from "viewport-mercator-project";
 import HexInfoPopup from "./HexInfoPopup";
 //DO NOT REMOVE BELOW COMMENT
 // eslint-disable-next-line import/no-webpack-loader-syntax
@@ -28,9 +28,13 @@ const MapView = ({
   viewState,
   setViewState,
   habitatLayer,
+  hexData,
+  setHexData,
   hexGrid,
   currentInteractiveLayerIds,
+  setCurrentInteractiveLayerIds,
   futureInteractiveLayerIds,
+  setFutureInteractiveLayerIds,
   hexOpacity,
   dualMap,
   hexIdInBlue,
@@ -38,6 +42,10 @@ const MapView = ({
   protectAction,
   maintainAction,
   setActiveSidebar,
+  progress,
+  setProgress,
+  showProgress,
+  setShowProgress
 }) => {
   const [filter, setFilter] = useState(["in", "gid", ""]);
   const [hoverInfo, setHoverInfo] = useState(null);
@@ -48,13 +56,16 @@ const MapView = ({
   const [clickedGeometry, setClickedGeometry] = useState(null);
   const [mode, setMode] = useState("side-by-side");
   const [activeMap, setActiveMap] = useState("left");
-  const [currentHexData, setCurrentHexData] = useState();
-  const [futureHexData, setFutureHexData] = useState();
   const [hexInfoPopupView, setHexInfoPopupView] = useState(false);
   const [selectedHexIdList, setSelectedHexIdList] = useState(hexIdInBlue);
   const [boxXY, setBoxXY] = useState([[],[]]);
   const [dragPan, setDragPan] = useState(true);
   const [boxZoom, setBoxZoom] = useState(true);
+  // const {hexIdInBlue, restoreAction, protectAction, maintainAction} = useContext(RouterContext);
+
+  const hideProgress = () => {
+    setShowProgress(false);
+  };
 
   const aoiList = Object.values(useSelector((state) => state.aoi)).filter(
     (aoi) => aoi.id === aoiSelected
@@ -123,135 +134,15 @@ const MapView = ({
   const onRightMoveStart = useCallback(() => setActiveMap("right"), []);
   const onMove = useCallback((evt) => setViewState(evt.viewState), []);
 
-  const calcHexValues = (hexGrid, id) => {
-    const hexFeatureList = hexGrid.map((hex) => {
-      let scoreList = normalization(hex);
-      let scoreArray = Object.values(scoreList);
-      let averageScore =
-        scoreArray.reduce((a, b) => a + b, 0) / scoreArray.length;
-      return {
-        type: "Feature",
-        geometry: JSON.parse(hex.geometry),
-        properties: {
-          gid: hex.gid,
-          objectid: hex.objectid,
-          scoreH1: scoreList.scoreH1,
-          scoreH2: scoreList.scoreH2,
-          scoreH3: scoreList.scoreH3,
-          scoreH4: scoreList.scoreH4,
-          scoreF1: scoreList.scoreF1,
-          scoreF2: scoreList.scoreF2,
-          scoreC1: scoreList.scoreC1,
-          scoreC2: scoreList.scoreC2,
-          overallScore: averageScore,
-        },
-      };
-    });
-
-    if (id === "current")
-      setCurrentHexData({
-        type: "FeatureCollection",
-        features: hexFeatureList,
-      });
-
-    if (id === "future")
-      setFutureHexData({
-        type: "FeatureCollection",
-        features: hexFeatureList,
-      });
-  };
-
-  const renderHexGrid = (hexGrid, id) => {
-    const hexFeatureList = hexGrid.map((hex) => {
-      let scoreList = normalization(hex);
-      let scoreArray = Object.values(scoreList);
-      let averageScore =
-        scoreArray.reduce((a, b) => a + b, 0) / scoreArray.length;
-      return {
-        type: "Feature",
-        geometry: JSON.parse(hex.geometry),
-        properties: {
-          gid: hex.gid,
-          objectid: hex.objectid,
-          scoreH1: scoreList.scoreH1,
-          scoreH2: scoreList.scoreH2,
-          scoreH3: scoreList.scoreH3,
-          scoreH4: scoreList.scoreH4,
-          scoreF1: scoreList.scoreF1,
-          scoreF2: scoreList.scoreF2,
-          scoreC1: scoreList.scoreC1,
-          scoreC2: scoreList.scoreC2,
-          overallScore: averageScore,
-        },
-      };
-    });
-
-    const hexData = {
-      type: "FeatureCollection",
-      features: hexFeatureList,
-    };
-
-    return (
-      <>
-        <Source type="geojson" data={hexData}>
-          <Layer
-            id={id + "-hex"}
-            type="fill"
-            filter={["!", filter]}
-            paint={{
-              "fill-color": {
-                property: "overallScore",
-                stops: [
-                  [0.1, "#ccf7ff"],
-                  [0.3, "#82d9d7"],
-                  [0.5, "#3cb99f"],
-                  [0.7, "#00975b"],
-                  [0.9, "#057300"],
-                ],
-              },
-              "fill-opacity": [
-                "case",
-                ["boolean", ["feature-state", "hover"], false],
-                1,
-                parseInt(hexOpacity) / 100,
-              ],
-            }}
-          />
-        </Source>
-        <Legend
-          legendInfo={null}
-          hexGrid={hexGrid}
-          opacity={parseInt(hexOpacity)/100}
-        ></Legend>
-      </>
-    );
-  };
-
   const renderSelectedHex = (hexGrid, hexIdList) => {
     const hexFeatureList = hexGrid.filter((hex) => 
       hexIdList.includes(hex.gid)
     ).map((hex) => {
-      let newHex;
-      let scoreList = normalization(hex);
-      if (restoreAction) {
-        newHex = getRestoreValues(hex);
-        scoreList = normalization(newHex);
-      } else if (protectAction) {
-        newHex = getProtectValues(hex);
-        scoreList = normalization(newHex);
-      } else if (maintainAction) {
-        newHex = getMaintainValues(hex);
-        scoreList = normalization(newHex);
-      };
-      let scoreArray = Object.values(scoreList);
-      let averageScore =
-        scoreArray.reduce((a, b) => a + b, 0) / scoreArray.length;
       return {
         type: "Feature",
         geometry: JSON.parse(hex.geometry),
         properties: { 
           gid: hex.gid,
-          overallScore: averageScore, 
         },
       };
     });
@@ -320,20 +211,72 @@ const MapView = ({
               </td>
             </tr>
             <tr>
-              <td>Open Pine Site Condition:</td>
-              <td>{clickedProperty.scoreH1}</td>
+              <td>Estuarine Coastal Condition:</td>
+              <td>{clickedProperty.estcc}</td>
             </tr>
             <tr>
-              <td>Open Pine Species:</td>
-              <td>{clickedProperty.scoreH2}</td>
+              <td>Fire Frequency:</td>
+              <td>{clickedProperty.firef}</td>
             </tr>
             <tr>
-              <td>Toby's Fire:</td>
-              <td>{clickedProperty.scoreH3}</td>
+              <td>Great Plains Perrenial Grass:</td>
+              <td>{clickedProperty.gppgr}</td>
             </tr>
             <tr>
-              <td>Conservation Management:</td>
-              <td>{clickedProperty.scoreH4}</td>
+              <td>Imperiled Aquatic Species:</td>
+              <td>{clickedProperty.impas}</td>
+            </tr>
+            <tr>
+              <td>Interior Southeast Grasslands:</td>
+              <td>{clickedProperty.isegr}</td>
+            </tr>
+            <tr>
+              <td>MAV Forest Birds Protection:</td>
+              <td>{clickedProperty.mavbp}</td>
+            </tr>
+            <tr>
+              <td>MAV Forest Birds Restoration:</td>
+              <td>{clickedProperty.mavbr}</td>
+            </tr>
+            <tr>
+              <td>Natural Landcover Floodplains:</td>
+              <td>{clickedProperty.nlcfp}</td>
+            </tr>
+            <tr>
+              <td>Permeable Surface:</td>
+              <td>{clickedProperty.persu}</td>
+            </tr>
+            <tr>
+              <td>Playas:</td>
+              <td>{clickedProperty.playa}</td>
+            </tr>
+            <tr>
+              <td>Resilient Coastal Sites:</td>
+              <td>{clickedProperty.rescs}</td>
+            </tr>
+            <tr>
+              <td>Resilient Terrestrial Sites:</td>
+              <td>{clickedProperty.rests}</td>
+            </tr>
+            <tr>
+              <td>South Atlantic Beach Birds:</td>
+              <td>{clickedProperty.safbb}</td>
+            </tr>
+            <tr>
+              <td>South Atlantic Forest Birds:</td>
+              <td>{clickedProperty.saffb}</td>
+            </tr>
+            <tr>
+              <td>West Coastal Plain Ouachitas Forested Wetlands:</td>
+              <td>{clickedProperty.wcofw}</td>
+            </tr>
+            <tr>
+              <td>West Coastal Plain Ouachita Open Pine Bird:</td>
+              <td>{clickedProperty.wcopb}</td>
+            </tr>
+            <tr>
+              <td>West Gulf Coast Mottled Duck Nesting:</td>
+              <td>{clickedProperty.wgcmd}</td>
             </tr>
             <tr>
               <td colSpan="2">
@@ -341,12 +284,16 @@ const MapView = ({
               </td>
             </tr>
             <tr>
-              <td>Forest Carbon:</td>
-              <td>{clickedProperty.scoreF1}</td>
+              <td>Greenways Trails:</td>
+              <td>{clickedProperty.grntr}</td>
             </tr>
             <tr>
-              <td>Working Lands:</td>
-              <td>{clickedProperty.scoreF2}</td>
+              <td>South Atlantic Low-density Urban Historic Sites:</td>
+              <td>{clickedProperty.saluh}</td>
+            </tr>
+            <tr>
+              <td>Urban Park Size:</td>
+              <td>{clickedProperty.urbps}</td>
             </tr>
             <tr>
               <td colSpan="2">
@@ -354,20 +301,24 @@ const MapView = ({
               </td>
             </tr>
             <tr>
-              <td>Open Pine Landscape Condition: </td>
-              <td>{clickedProperty.scoreC1}</td>
+              <td>Gulf Migratory Fish Connectivity: </td>
+              <td>{clickedProperty.gmgfc}</td>
             </tr>
             <tr>
-              <td>TNC Resilience:</td>
-              <td>{clickedProperty.scoreC2}</td>
+              <td>Intact Habitat Cores:</td>
+              <td>{clickedProperty.ihabc}</td>
+            </tr>
+            <tr>
+              <td>Network Complexity:</td>
+              <td>{clickedProperty.netcx}</td>
             </tr>
             <tr>
               <td>
-                <b style={{ color: "blue" }}>Overall Score:</b>{" "}
+                <b style={{ color: "blue" }}>Overall Current Score:</b>{" "}
               </td>
               <td>
                 <b style={{ color: "blue" }}>
-                  {clickedProperty.overallScore.toFixed(2)}
+                  {clickedProperty.currentScore.toFixed(2)}
                 </b>
               </td>
             </tr>
@@ -385,24 +336,24 @@ const MapView = ({
   const onHover = (e) => {
     setHovered(true);
     if (e.features) {
-      const featureClicked = e.features[0];
-      if (featureClicked) {
-        setClickedProperty(featureClicked.properties);
-        setClickedGeometry(featureClicked.geometry);
+      const clickedFeature = e.features[0];
+      if (clickedFeature) {
+        setClickedProperty(clickedFeature.properties);
+        setClickedGeometry(clickedFeature.geometry);
       }
     }
   };
 
   const onClick = (e) => {
-    const feature = e.features[0];
-    console.log(feature);
-    if (feature) {
-      console.log(feature.properties);
-      setClickedProperty(feature.properties);
-      setClickedGeometry(feature.geometry);
-
-      setActiveSidebar(false);
-      setHexInfoPopupView(true);
+    if (e.features) {
+      const clickedFeature = e.features[0];
+      console.log(clickedFeature);
+      if (clickedFeature) {
+        setClickedProperty(clickedFeature.properties);
+        setClickedGeometry(clickedFeature.geometry);
+        setActiveSidebar(false);
+        setHexInfoPopupView(true);
+      }
     }
   };
 
@@ -412,7 +363,6 @@ const MapView = ({
       for (const f of e.features) {
         newFeatures[f.id] = f;
       }
-      console.log(newFeatures);
       return Object.values(newFeatures);
     });
   }, []);
@@ -482,10 +432,65 @@ const MapView = ({
   }, []);
 
   useEffect(() => {
-    if (aoi) {
-      calcHexValues(aoi.currentHexagons, "current");
-      calcHexValues(aoi.futureHexagons, "future");
+    if (aoi && aoi.currentHexagons) {
+      setShowProgress(true);
+      const hexFeatureList = aoi.currentHexagons.map((hex, index) => {
+        setProgress(Math.round(index/aoi.currentHexagons.length*75) + 25);
+        // Use raw score for deterministic model
+        const rawScore = {
+          estcc: hex.estcc_me,
+          firef: hex.firef_me,
+          gmgfc: hex.gmgfc_me,
+          gppgr: hex.gppgr_me,
+          grntr: hex.grntr_me,
+          ihabc: hex.ihabc_me,
+          impas: hex.impas_me,
+          isegr: hex.isegr_me,
+          mavbp: hex.mavbp_me,
+          mavbr: hex.mavbr_me,
+          netcx: hex.netcx_me,
+          nlcfp: hex.nlcfp_me,
+          persu: hex.persu_me,
+          playa: hex.playa_me,
+          rescs: hex.rescs_me,
+          rests: hex.rests_me,
+          safbb: hex.safbb_me,
+          saffb: hex.saffb_me,
+          saluh: hex.saluh_me,
+          urbps: hex.urbps_me,
+          wcofw: hex.wcofw_me,
+          wcopb: hex.wcopb_me,
+          wgcmd: hex.wgcmd_me,
+        };
+
+        // Use stochastic score for stochastic model
+        const stochasticScore = getStochasticValues(hex);
+        const hexagonScore = getHexagonScore(stochasticScore);
+
+        return {
+          type: "Feature",
+          geometry: JSON.parse(hex.geometry),
+          properties: {
+            ...stochasticScore,
+            ...hexagonScore,
+            gid: hex.gid,
+            objectid: hex.objectid,
+          },
+        };
+      });
+
+      const hexData = {
+        type: "FeatureCollection",
+        features: hexFeatureList,
+      };
+
+      setHexData(hexData);
+      setShowProgress(false);
+      console.log("Data Updated!");
     }
+  }, [aoi]);
+
+  useEffect(() => {
     if (aoi && dualMap) {
       zoomToAOI(aoi);
     }
@@ -502,20 +507,25 @@ const MapView = ({
       setFilter(["in", "gid", selectedHexIdList]);
       console.log("Filter Applied!");
     }
-  }, [restoreAction, protectAction, maintainAction])
+  }, [restoreAction, protectAction, maintainAction]);
 
   return (
     <>
       <div>
-        {clickedProperty && hexInfoPopupView && (
-          <HexInfoPopup
-            clickedProperty={clickedProperty}
-            currentHexData={currentHexData}
-            futureHexData={futureHexData}
-            setHexInfoPopupView={setHexInfoPopupView}
-          />
-        )}
-
+        <Modal show={showProgress} onHide={hideProgress}>
+          <Modal.Header closeButton>
+            <Modal.Title>
+              {progress < 25 ? "Processing your data..." : "Running stochastic models..."}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div>
+              <ProgressBar now={progress} label={progress + "%"} />
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+          </Modal.Footer>
+        </Modal>
         <Map
           ref={mapRef}
           className="resizeable"
@@ -536,7 +546,11 @@ const MapView = ({
           mapboxAccessToken={MAPBOX_TOKEN}
           interactiveLayerIds={currentInteractiveLayerIds}
         >
-          {/* <h2 id="current-title">Current</h2> */}
+          {dualMap && (
+            <h6 className="current-map-title">
+              Current Condition
+            </h6>
+          )}
           {drawingMode && (
             <DrawControl
               displayControlsDefault={false}
@@ -573,31 +587,24 @@ const MapView = ({
           {!habitatLayer && (
             <Source
               type="vector"
-              url="mapbox://chuck0520.4fzqbp42"
+              url="mapbox://chuck0520.71skk0hu"
               maxzoom={22}
               minzoom={0}
             >
               <Layer
-                {...dataLayer}
-                id="SECASlayer"
-                value="SECASlayer"
-                paint={{
-                  "fill-outline-color": "#484896",
-                  "fill-color": "#6E599F",
-                  "fill-opacity": 0.5,
-                }}
+                {...secasLayer}
               />
             </Source>
           )}
           {habitatLayer && (
             <Source
               type="vector"
-              url="mapbox://chuck0520.4fzqbp42"
+              url="mapbox://chuck0520.71skk0hu"
               maxzoom={22}
               minzoom={0}
             >
               <Layer
-                {...dataLayer}
+                {...secasLayer}
                 id="SECASlayer"
                 value="SECASlayer"
                 paint={{
@@ -607,91 +614,6 @@ const MapView = ({
                 }}
               />
             </Source>
-          )}
-          {habitatLayer === "hab2" && (
-            <>
-              <Source
-                type="raster"
-                url="mapbox://chuck0520.3dbvy7bi"
-                maxzoom={22}
-                minzoom={0}
-              >
-                <Layer
-                  type="raster"
-                  id="Forested_Wetland"
-                  value="Forested_Wetland"
-                />
-              </Source>
-              <Legend legendInfo="FW"></Legend>
-            </>
-          )}
-          {habitatLayer === "hab3" && (
-            <>
-              <Source
-                type="raster"
-                url="mapbox://chuck0520.813oo4df"
-                maxzoom={22}
-                minzoom={0}
-              >
-                <Layer
-                  type="raster"
-                  id="Upland_Hardwoods_Forest"
-                  value="Upland_Hardwoods_Forest"
-                />
-              </Source>
-              <Legend legendInfo="UHF"></Legend>
-            </>
-          )}
-          {habitatLayer === "hab4" && (
-            <>
-              <Source
-                type="raster"
-                url="mapbox://chuck0520.6kkntksf"
-                maxzoom={22}
-                minzoom={0}
-              >
-                <Layer
-                  type="raster"
-                  id="Upland_Hardwoods_Woodland"
-                  value="Upland_Hardwoods_Woodland"
-                />
-              </Source>
-              <Legend legendInfo="UHW"></Legend>
-            </>
-          )}
-          {habitatLayer === "hab5" && (
-            <>
-              <Source
-                type="raster"
-                url="mapbox://chuck0520.c4pm2rl8"
-                maxzoom={22}
-                minzoom={0}
-              >
-                <Layer
-                  type="raster"
-                  beforeId="data"
-                  id="Mixed_Forest"
-                  value="Mixed_Forest"
-                  paint={{
-                    "raster-opacity": 0.5,
-                  }}
-                />
-              </Source>
-              <Legend legendInfo="MF"></Legend>
-            </>
-          )}
-          {habitatLayer === "hab6" && (
-            <>
-              <Source
-                type="raster"
-                url="mapbox://chuck0520.bwuspx5h"
-                maxzoom={22}
-                minzoom={0}
-              >
-                <Layer type="raster" id="Grass" value="Grass" />
-              </Source>
-              <Legend legendInfo="G"></Legend>
-            </>
           )}
           {habitatLayer === "blueprint" && (
             <>
@@ -705,8 +627,41 @@ const MapView = ({
               </Source>
             </>
           )}
-          {aoi && hexGrid && renderHexGrid(aoi.currentHexagons, "current")}
-          {/* {aoi && hexGrid && clickedProperty && renderPopup()} */}
+          {aoi && hexGrid && hexData &&
+            <>
+              <Source type="geojson" data={hexData}>
+                <Layer
+                  id="current-hex"
+                  type="fill"
+                  filter={["!", filter]}
+                  paint={{
+                    "fill-color": {
+                      property: "currentScore",
+                      stops: [
+                        [0.1, "#aefff0"],
+                        [0.3, "#00d8f2"],
+                        [0.5, "#00a7e4"],
+                        [0.7, "#007ad0"],
+                        [0.9, "#5d00d8"],
+                      ],
+                    },
+                    "fill-opacity": [
+                      "case",
+                      ["boolean", ["feature-state", "hover"], false],
+                      1,
+                      parseInt(hexOpacity) / 100,
+                    ],
+                  }}
+                />
+              </Source>
+              <Legend
+                legendInfo={null}
+                hexGrid={hexGrid}
+                opacity={parseInt(hexOpacity)/100}
+              ></Legend>
+            </>
+          }
+          {aoi && hexGrid && clickedProperty && renderPopup()}
           {!!selectedHexIdList.length && renderSelectedHex(aoi.currentHexagons, selectedHexIdList)}
         </Map>
       </div>
@@ -722,8 +677,13 @@ const MapView = ({
           mapboxAccessToken={MAPBOX_TOKEN}
           interactiveLayerIds={futureInteractiveLayerIds}
           onClick={onClick}
+          onLoad={getDataFromAPI}
         >
-          {/* <h2 id="future-no-action-title">Future With No Action</h2> */}
+          <h6 className="future-map-title">
+            Future Condition
+            <br/>
+            (No Action)
+          </h6>
           {aoi && !editAOI && (
             <Source
               type="geojson"
@@ -746,31 +706,24 @@ const MapView = ({
           {!habitatLayer && (
             <Source
               type="vector"
-              url="mapbox://chuck0520.4fzqbp42"
+              url="mapbox://chuck0520.71skk0hu"
               maxzoom={22}
               minzoom={0}
             >
               <Layer
-                {...dataLayer}
-                id="SECASlayer"
-                value="SECASlayer"
-                paint={{
-                  "fill-outline-color": "#484896",
-                  "fill-color": "#6E599F",
-                  "fill-opacity": 0.5,
-                }}
+                {...secasLayer}
               />
             </Source>
           )}
           {habitatLayer && (
             <Source
               type="vector"
-              url="mapbox://chuck0520.4fzqbp42"
+              url="mapbox://chuck0520.71skk0hu"
               maxzoom={22}
               minzoom={0}
             >
               <Layer
-                {...dataLayer}
+                {...secasLayer}
                 id="SECASlayer"
                 value="SECASlayer"
                 paint={{
@@ -780,90 +733,6 @@ const MapView = ({
                 }}
               />
             </Source>
-          )}
-          {habitatLayer === "hab2" && (
-            <>
-              <Source
-                type="raster"
-                url="mapbox://chuck0520.3dbvy7bi"
-                maxzoom={22}
-                minzoom={0}
-              >
-                <Layer
-                  type="raster"
-                  id="Forested_Wetland"
-                  value="Forested_Wetland"
-                />
-              </Source>
-              <Legend legendInfo="FW"></Legend>
-            </>
-          )}
-          {habitatLayer === "hab3" && (
-            <>
-              <Source
-                type="raster"
-                url="mapbox://chuck0520.813oo4df"
-                maxzoom={22}
-                minzoom={0}
-              >
-                <Layer
-                  type="raster"
-                  id="Upland_Hardwoods_Forest"
-                  value="Upland_Hardwoods_Forest"
-                />
-              </Source>
-              <Legend legendInfo="UHF"></Legend>
-            </>
-          )}
-          {habitatLayer === "hab4" && (
-            <>
-              <Source
-                type="raster"
-                url="mapbox://chuck0520.6kkntksf"
-                maxzoom={22}
-                minzoom={0}
-              >
-                <Layer
-                  type="raster"
-                  id="Upland_Hardwoods_Woodland"
-                  value="Upland_Hardwoods_Woodland"
-                />
-              </Source>
-              <Legend legendInfo="UHW"></Legend>
-            </>
-          )}
-          {habitatLayer === "hab5" && (
-            <>
-              <Source
-                type="raster"
-                url="mapbox://chuck0520.c4pm2rl8"
-                maxzoom={22}
-                minzoom={0}
-              >
-                <Layer
-                  type="raster"
-                  id="Mixed_Forest"
-                  value="Mixed_Forest"
-                  paint={{
-                    "raster-opacity": 0.5,
-                  }}
-                />
-              </Source>
-              <Legend legendInfo="MF"></Legend>
-            </>
-          )}
-          {habitatLayer === "hab6" && (
-            <>
-              <Source
-                type="raster"
-                url="mapbox://chuck0520.bwuspx5h"
-                maxzoom={22}
-                minzoom={0}
-              >
-                <Layer type="raster" id="Grass" value="Grass" />
-              </Source>
-              <Legend legendInfo="G"></Legend>
-            </>
           )}
           {habitatLayer === "blueprint" && (
             <>
@@ -877,11 +746,41 @@ const MapView = ({
               </Source>
             </>
           )}
-          {aoi && hexGrid && renderHexGrid(aoi.futureHexagons, "future")}
-          {/* {aoi && hexGrid && hoveredProperty && renderPopup()} */}
-          {
-
+          {aoi && hexGrid && hexData &&
+            <>
+              <Source type="geojson" data={hexData}>
+                <Layer
+                  id="future-hex"
+                  type="fill"
+                  filter={["!", filter]}
+                  paint={{
+                    "fill-color": {
+                      property: "futureScore",
+                      stops: [
+                        [0.1, "#aefff0"],
+                        [0.3, "#00d8f2"],
+                        [0.5, "#00a7e4"],
+                        [0.7, "#007ad0"],
+                        [0.9, "#5d00d8"],
+                      ],
+                    },
+                    "fill-opacity": [
+                      "case",
+                      ["boolean", ["feature-state", "hover"], false],
+                      1,
+                      parseInt(hexOpacity) / 100,
+                    ],
+                  }}
+                />
+              </Source>
+              <Legend
+                legendInfo={null}
+                hexGrid={hexGrid}
+                opacity={parseInt(hexOpacity)/100}
+              ></Legend>
+            </>
           }
+          {/* {aoi && hexGrid && hoveredProperty && renderPopup()} */}
         </Map>
       )}
     </>

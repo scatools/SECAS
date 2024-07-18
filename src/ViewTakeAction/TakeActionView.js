@@ -4,13 +4,10 @@ import ActionSelect from "./ActionSelect";
 
 const TakeActionView = ({
   aoiSelected,
+  hexData,
   setHexIdInBlue,
-  restoreAction,
-  setRestoreAction,
-  protectAction,
-  setProtectAction,
-  maintainAction,
-  setMaintainAction
+  actionScores,
+  setActionScores,
 }) => {
   const [actionView, setActionView] = useState("actionLocation");
   return (
@@ -18,19 +15,16 @@ const TakeActionView = ({
       {actionView === "actionLocation" && (
         <ActionLocationSelect
           aoiSelected={aoiSelected}
-          setHexIdInBlue={setHexIdInBlue}
+          setHexIdInBlue={setHexIdInBlue} 
           setActionView={setActionView}
         />
       )}
 
       {actionView === "actionSelect" && (
         <ActionSelect
-          restoreAction={restoreAction}
-          setRestoreAction={setRestoreAction}
-          protectAction={protectAction}
-          setProtectAction={setProtectAction}
-          maintainAction={maintainAction}
-          setMaintainAction={setMaintainAction}
+          hexData={hexData}
+          actionScores={actionScores}
+          setActionScores={setActionScores}
         />
       )}
     </>

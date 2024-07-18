@@ -3,20 +3,15 @@ import { Button } from "react-bootstrap";
 import { MdMenu } from "react-icons/md";
 import "./main.css";
 import Sidebar from "./Sidebar/Sidebar";
-import AoiDetailTable from "./AoiDetailTable";
 import MapView from "./Map/MapView";
 import { WebMercatorViewport } from "viewport-mercator-project";
 import bbox from "@turf/bbox";
 
-const Main = ({ aoiSelected, setAoiSelected }) => {
+const Main = ({ aoiSelected, setAoiSelected, hexData, setHexData, actionScores, setActionScores }) => {
   const [mode, setMode] = useState(null);
   const [isDual, setIsDual] = useState(false);
-  const [currentInteractiveLayerIds, setCurrentInteractiveLayerIds] = useState([
-    "current-hex",
-  ]);
-  const [futureInteractiveLayerIds, setFutureInteractiveLayerIds] = useState([
-    "future-hex",
-  ]);
+  const [currentInteractiveLayerIds, setCurrentInteractiveLayerIds] = useState(["current-hex"]);
+  const [futureInteractiveLayerIds, setFutureInteractiveLayerIds] = useState(["future-hex"]);
   const [activeSidebar, setActiveSidebar] = useState(true);
   const [activeTable, setActiveTable] = useState(null);
   const [drawingMode, setDrawingMode] = useState(false);
@@ -35,6 +30,8 @@ const Main = ({ aoiSelected, setAoiSelected }) => {
   const [restoreAction, setRestoreAction] = useState(false);
   const [protectAction, setProtectAction] = useState(false);
   const [maintainAction, setMaintainAction] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [showProgress, setShowProgress] = useState(false);
 
   const zoomToAOI = (aoi) => {
     if (aoi) {
@@ -58,7 +55,6 @@ const Main = ({ aoiSelected, setAoiSelected }) => {
         longitude: newViewport.longitude - 0.5 * (aoiBbox[2] - aoiBbox[0]),
         zoom: newViewport.zoom,
       });
-      console.log(newViewport);
     }
   };
 
@@ -77,23 +73,18 @@ const Main = ({ aoiSelected, setAoiSelected }) => {
         setViewState={setViewState}
         habitatLayer={habitatLayer}
         setHabitatLayer={setHabitatLayer}
+        hexData={hexData}
         hexGrid={hexGrid}
         setHexGrid={setHexGrid}
         hexOpacity={hexOpacity}
         setHexOpacity={setHexOpacity}
         setDualMap={setDualMap}
         setHexIdInBlue={setHexIdInBlue}
-        restoreAction={restoreAction}
-        setRestoreAction={setRestoreAction}
-        protectAction={protectAction}
-        setProtectAction={setProtectAction}
-        maintainAction={maintainAction}
-        setMaintainAction={setMaintainAction}
+        actionScores={actionScores}
+        setActionScores={setActionScores}
         zoomToAOI={zoomToAOI}
-      />
-      <AoiDetailTable
-        activeTable={activeTable}
-        setActiveTable={setActiveTable}
+        setProgress={setProgress}
+        setShowProgress={setShowProgress}
       />
       <div style={{ height: "100%", position: "relative" }} className="content">
         <Button
@@ -113,9 +104,13 @@ const Main = ({ aoiSelected, setAoiSelected }) => {
           viewState={viewState}
           setViewState={setViewState}
           habitatLayer={habitatLayer}
+          hexData={hexData}
+          setHexData={setHexData}
           hexGrid={hexGrid}
           currentInteractiveLayerIds={currentInteractiveLayerIds}
+          setCurrentInteractiveLayerIds={setCurrentInteractiveLayerIds}
           futureInteractiveLayerIds={futureInteractiveLayerIds}
+          setFutureInteractiveLayerIds={setFutureInteractiveLayerIds}
           hexOpacity={hexOpacity}
           dualMap={dualMap}
           hexIdInBlue={hexIdInBlue}
@@ -123,6 +118,10 @@ const Main = ({ aoiSelected, setAoiSelected }) => {
           protectAction={protectAction}
           maintainAction={maintainAction}
           setActiveSidebar={setActiveSidebar}
+          progress={progress}
+          setProgress={setProgress}
+          showProgress={showProgress}
+          setShowProgress={setShowProgress}
         />
       </div>
     </div>

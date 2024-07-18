@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Table } from "react-bootstrap";
 import Draggable from "react-draggable";
-import { normalization } from "../helper/aggregateHex";
 
 const HexInfoPopup = ({
   clickedProperty,
@@ -41,7 +40,8 @@ const HexInfoPopup = ({
             <tr>
               <th>Measures</th>
               <th>Current</th>
-              <th>Future</th>
+              <th>Future Before Action</th>
+              <th>Future After Action</th>
             </tr>
           </thead>
           <tbody>

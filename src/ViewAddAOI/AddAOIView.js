@@ -10,6 +10,8 @@ const AddAOIView = ({
   setAlerttext,
   setView,
   setHabitatLayer,
+  setProgress,
+  setShowProgress
 }) => {
   const [inputMode, setInputMode] = useState("draw");
   const [timeoutError, setTimeoutError] = useState(false);
@@ -87,6 +89,8 @@ const AddAOIView = ({
           setView={setView}
           resetButton={resetButton}
           setHabitatLayer={setHabitatLayer}
+          setProgress={setProgress}
+          setShowProgress={setShowProgress}
         />
       )}
 

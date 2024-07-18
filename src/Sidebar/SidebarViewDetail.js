@@ -12,7 +12,7 @@ import { v4 as uuid } from "uuid";
 import area from "@turf/area";
 import axios from "axios";
 import { delete_aoi, edit_aoi } from "../action";
-import { normalization } from "../helper/aggregateHex";
+import { getAoiScore } from "../helper/aggregateHex";
 import SidebarViewGroup from "./SidebarViewGroup";
 
 const SidebarViewDetail = ({
@@ -26,6 +26,7 @@ const SidebarViewDetail = ({
   setEditAOI,
   featureList,
   setAlerttext,
+  hexData,
   hexGrid,
   setHexGrid,
   setViewState,
@@ -36,18 +37,17 @@ const SidebarViewDetail = ({
   setView,
 }) => {
   const [aoiName, setAoiName] = useState("");
-  const [overlayChecked, setOverlayChecked] = useState(false);
+  const [aoiScore, setAoiScore] = useState({});
+  const [scoreStyle, setScoreStyle] = useState({});
   const [conditionChecked, setConditionChecked] = useState(false);
+  const [stochasticityChecked, setStochasticityChecked] = useState(true);
+  const [overlayChecked, setOverlayChecked] = useState(false);
   const aoiList = Object.values(useSelector((state) => state.aoi)).filter(
     (aoi) => aoi.id === aoiSelected
   );
   const aoi = aoiList[0];
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  let currentScore = 0;
-  let futureScore = 0;
-  let currentStyle = {};
-  let futureStyle = {};
 
   const calculateArea = (input) => {
     let totalArea = 0;
@@ -58,20 +58,6 @@ const SidebarViewDetail = ({
         }, 0) / 1000000;
     }
     return totalArea;
-  };
-
-  const calculateScore = (hexagons) => {
-    const hexScoreList = hexagons.map((hex) => {
-      let scoreList = normalization(hex);
-      let scoreArray = Object.values(scoreList);
-      let averageScore =
-        scoreArray.reduce((a, b) => a + b, 0) / scoreArray.length;
-      return averageScore;
-    });
-    const aoiScore = (
-      hexScoreList.reduce((a, b) => a + b, 0) / hexScoreList.length
-    ).toFixed(2);
-    return aoiScore;
   };
 
   const handleEdit = async () => {
@@ -122,15 +108,6 @@ const SidebarViewDetail = ({
     tempElement.click();
   };
 
-  const onOverLayChange = () => {
-    if (!overlayChecked) {
-      setHabitatLayer("blueprint");
-    } else {
-      setHabitatLayer("none");
-    }
-    setOverlayChecked(!overlayChecked);
-  };
-
   const onConditionChange = () => {
     if (!conditionChecked) {
       setDualMap(true);
@@ -141,14 +118,34 @@ const SidebarViewDetail = ({
     setConditionChecked(!conditionChecked);
   };
 
-  if (aoi) {
-    currentScore = calculateScore(aoi.currentHexagons);
-    futureScore = calculateScore(aoi.futureHexagons);
-    currentStyle =
-      currentScore < futureScore ? { color: "coral" } : { color: "limegreen" };
-    futureStyle =
-      futureScore < currentScore ? { color: "coral" } : { color: "limegreen" };
-  }
+  const onStochasticityChange = () => {
+    setStochasticityChecked(!stochasticityChecked);
+  };
+
+  const onOverLayChange = () => {
+    if (!overlayChecked) {
+      setHabitatLayer("blueprint");
+    } else {
+      setHabitatLayer("none");
+    }
+    setOverlayChecked(!overlayChecked);
+  };
+
+  useEffect(() => {
+    if (aoi && hexData) {
+      const scores = getAoiScore(hexData.features);
+      setAoiScore(scores);
+      console.log(scores);
+    };
+  }, [hexData]);
+
+  useEffect(() => {
+    let styles = {
+      currentStyle: aoiScore.currentScore < aoiScore.futureScore ? { color: "coral" } : { color: "limegreen" },
+      futureStyle: aoiScore.futureScore < aoiScore.currentScore ? { color: "coral" } : { color: "limegreen" },
+    };
+    setScoreStyle(styles);
+  }, [aoiScore])
 
   useEffect(() => {
     setHexGrid(true);
@@ -165,12 +162,12 @@ const SidebarViewDetail = ({
         <Container className="aoi-details">
           <h2>{aoi.name} Details:</h2>
           <h4>
-            Current Condition Score:{" "}
-            <span style={currentStyle}>{currentScore}</span>
+            Current HFC Score:{" "}
+            <span style={scoreStyle.currentStyle}>{aoiScore.currentScore}</span>
           </h4>
           <h4>
-            Future Condition Score:{" "}
-            <span style={futureStyle}>{futureScore}</span>
+            Future HFC Score:{" "}
+            <span style={scoreStyle.futureStyle}>{aoiScore.futureScore}</span>
           </h4>
           <ul>
             <li>
@@ -178,52 +175,52 @@ const SidebarViewDetail = ({
               {Math.round(aoi.area * 100) / 100} km<sup>2</sup>
             </li>
             <li>
-              This area of interest contains {aoi.currentHexagons.length}{" "}
-              hexagons
+              This area of interest contains {aoi.currentHexagons.length}{" "} hexagons
             </li>
-            {/* <li>
-              This area has an overall HFC Score of{" "}
-              <b style={currentStyle}>{currentScore}</b> under current condition
-            </li>
-
             <li>
-              This area has an overall HFC Score of{" "}
-              <b style={futureStyle}>{futureScore}</b> under future condition
-              with no action
-            </li> */}
+              The HFC score of this area will drop{" "}
+              {Math.round(100 - 100*aoiScore.futureScore/aoiScore.currentScore)}
+              % in year 2060 with no conservation actions compared to current condition
+            </li>
           </ul>
           <div
             className="d-flex justify-content-between"
-            style={{ margin: "10px", width: "80%" }}
+            style={{ margin: "10px", width: "100%" }}
           >
-            <label>Future Condition</label>
-            <Switch
-              checked={conditionChecked}
-              onChange={onConditionChange}
-              onColor="#86d3ff"
-              onHandleColor="#2693e6"
-              handleDiameter={20}
-              uncheckedIcon={false}
-              checkedIcon={false}
-              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-              height={15}
-              width={36}
-            />
-            <label>Southeast Blueprint Layer</label>
-            <Switch
-              checked={overlayChecked}
-              onChange={onOverLayChange}
-              onColor="#86d3ff"
-              onHandleColor="#2693e6"
-              handleDiameter={20}
-              uncheckedIcon={false}
-              checkedIcon={false}
-              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-              height={15}
-              width={36}
-            />
+            <label>
+              Southeast Blueprint Layer
+              <Switch
+                className="toggle-switch"
+                checked={overlayChecked}
+                onChange={onOverLayChange}
+                onColor="#86d3ff"
+                onHandleColor="#2693e6"
+                handleDiameter={20}
+                uncheckedIcon={false}
+                checkedIcon={false}
+                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                height={15}
+                width={36}
+              />
+            </label>
+            <label>
+              Future Condition
+              <Switch
+                className="toggle-switch"
+                checked={conditionChecked}
+                onChange={onConditionChange}
+                onColor="#86d3ff"
+                onHandleColor="#2693e6"
+                handleDiameter={20}
+                uncheckedIcon={false}
+                checkedIcon={false}
+                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                height={15}
+                width={36}
+              />
+            </label>
           </div>
           <Button
             variant="dark"
@@ -320,25 +317,10 @@ const SidebarViewDetail = ({
       )}
       <Draggable cancel=".dont-drag-me">
         <div id="floating-layer-controls">
-          <label className="floating-toggle-switch">
-            Future Condition
-            <Switch
-              checked={conditionChecked}
-              onChange={onConditionChange}
-              onColor="#86d3ff"
-              onHandleColor="#2693e6"
-              handleDiameter={20}
-              uncheckedIcon={false}
-              checkedIcon={false}
-              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-              height={15}
-              width={36}
-            />
-          </label>
-          <label className="floating-toggle-switch">
+          <label>
             Southeast Blueprint Layer
             <Switch
+              className="toggle-switch"
               checked={overlayChecked}
               onChange={onOverLayChange}
               onColor="#86d3ff"
@@ -352,10 +334,46 @@ const SidebarViewDetail = ({
               width={36}
             />
           </label>
-          <label className="floating-toggle-switch">
+          <label>
+            Future Condition
+            <Switch
+              className="toggle-switch"
+              checked={conditionChecked}
+              onChange={onConditionChange}
+              onColor="#86d3ff"
+              onHandleColor="#2693e6"
+              handleDiameter={20}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+              height={15}
+              width={36}
+            />
+          </label>
+          <label>
+            Deterministic Model
+            <Switch
+              className="toggle-switch"
+              checked={stochasticityChecked}
+              onChange={onStochasticityChange}
+              onColor="#86d3ff"
+              onHandleColor="#2693e6"
+              handleDiameter={20}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+              height={15}
+              width={36}
+            />
+            Stochastic Model
+          </label>
+          <label>
             <GiHexes /> &nbsp;
             {hexGrid ? "Hide Hexagon Grid" : "Show Hexagon Grid"}
             <Switch
+              className="toggle-switch"
               checked={hexGrid}
               onChange={() => {
                 setHexGrid(!hexGrid);

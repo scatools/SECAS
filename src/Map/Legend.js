@@ -64,31 +64,31 @@ const Legend = ({ legendInfo, hexGrid=false, opacity=0.5 }) => {
             <ul className="legend-labels">
               <li>
                 <span
-                  style={{ background: "#95efff", opacity: opacity }}
+                  style={{ background: "#aefff0", opacity: opacity }}
                 />
                 0 ~ 0.1
               </li>
               <li>
                 <span
-                  style={{ background: "#4bd3d1", opacity: opacity }}
+                  style={{ background: "#00d8f2", opacity: opacity }}
                 />
                 0.1 ~ 0.3
               </li>
               <li>
                 <span
-                  style={{ background: "#00b597", opacity: opacity }}
+                  style={{ background: "#00a7e4", opacity: opacity }}
                 />
                 0.3 ~ 0.5
               </li>
               <li>
                 <span
-                  style={{ background: "#009456", opacity: opacity }}
+                  style={{ background: "#007ad0", opacity: opacity }}
                 />
                 0.5 ~ 0.7
               </li>
               <li>
                 <span
-                  style={{ background: "#057300", opacity: opacity }}
+                  style={{ background: "#5d00d8", opacity: opacity }}
                 />
                 0.7 ~ 0.9
               </li>

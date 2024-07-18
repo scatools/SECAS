@@ -15,48 +15,45 @@ import {
 
 export function getDataFromAPI() {
   return async function (dispatch) {
+    var startTime = (new Date()).getTime();
     let res = await Promise.all([
-      axios.get(`http://localhost:5000/data/1`),
-      axios.get(`http://localhost:5000/data/2`),
-      axios.get(`http://localhost:5000/data/3`),
-      // axios.get(`http://localhost:5000/data/4`),
-      // axios.get(`http://localhost:5000/data/5`),
-      // axios.get(`http://localhost:5000/data/6`),
-      // axios.get(`http://localhost:5000/data/7`),
-      // axios.get(`http://localhost:5000/data/8`),
-      // axios.get(`http://localhost:5000/data/9`),
-      // axios.get(`http://localhost:5001/data/10`),
-      // axios.get(`http://localhost:5001/data/11`),
-      // axios.get(`http://localhost:5001/data/12`),
-      // axios.get(`http://localhost:5001/data/13`),
-      // axios.get(`http://localhost:5001/data/14`),
-      // axios.get(`http://localhost:5001/data/15`),
-      // axios.get(`http://localhost:5001/data/16`),
-      // axios.get(`http://localhost:5001/data/17`),
-      // axios.get(`http://localhost:5001/data/18`),
-      // axios.get(`http://localhost:5001/data/19`),
-      // axios.get(`http://localhost:5002/data/20`),
-      // axios.get(`http://localhost:5002/data/21`),
-      // axios.get(`http://localhost:5002/data/22`),
-      // axios.get(`http://localhost:5002/data/23`),
-      // axios.get(`http://localhost:5002/data/24`),
-      // axios.get(`http://localhost:5002/data/25`),
-      // axios.get(`http://localhost:5002/data/26`),
-      // axios.get(`http://localhost:5002/data/27`),
-      // axios.get(`http://localhost:5002/data/28`),
-      // axios.get(`http://localhost:5002/data/29`),
-      // axios.get(`http://localhost:5003/data/30`),
-      // axios.get(`http://localhost:5003/data/31`),
-      // axios.get(`http://localhost:5003/data/32`),
-      // axios.get(`http://localhost:5003/data/33`),
-      // axios.get(`http://localhost:5003/data/34`),
-      // axios.get(`http://localhost:5003/data/35`),
-      // axios.get(`http://localhost:5003/data/36`),
-      // axios.get(`http://localhost:5003/data/37`),
-      // axios.get(`http://localhost:5003/data/38`),
-      // axios.get(`http://localhost:5003/data/39`),
-      // axios.get(`http://localhost:5003/data/40`)
+      axios.get(`https://secas-backend.herokuapp.com/data/1`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/aesfh`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/amifh`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/cshcd`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/egcpb`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/eqapp`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/estcc`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/firef`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/gmgfc`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/gppgr`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/grntr`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/ihabc`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/impas`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/isegr`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/mavbp`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/mavbr`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/netcx`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/nlcfp`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/persu`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/playa`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/rescs`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/rests`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/saamr`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/safbb`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/saffb`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/saluh`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/samaf`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/stcwl`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/urbps`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/wcofw`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/wcopb`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/wgcmd`),
+      // axios.get(`https://secas-backend.herokuapp.com/data/current/wvias`)
     ]);
+    var endTime = (new Date()).getTime();
+    var responseTime = endTime - startTime;
+    console.log("Elapsed Time: " + responseTime + "ms");
     const newData = { type: "FeatureCollection", features: [] };
     res.forEach((response) => {
       newData.features = [
@@ -66,6 +63,62 @@ export function getDataFromAPI() {
     });
     dispatch(gotData(newData));
   };
+}
+
+export async function getCurrentData(data) {
+    var startTime = (new Date()).getTime();
+    let futureResult = await axios.post(`https://secas-backend.herokuapp.com/data/future`, { data });
+    let gidList = futureResult.data.data.map((feature) => feature.gid);
+    let currentResult = await Promise.all([
+      axios.post(`https://secas-backend.herokuapp.com/data/current/estcc`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/firef`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/gmgfc`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/gppgr`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/grntr`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/ihabc`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/impas`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/isegr`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/mavbp`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/mavbr`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/netcx`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/nlcfp`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/persu`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/playa`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/rescs`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/rests`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/safbb`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/saffb`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/saluh`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/urbps`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/wcofw`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/wcopb`, { data: gidList }),
+      axios.post(`https://secas-backend.herokuapp.com/data/current/wgcmd`, { data: gidList }),
+    ]);
+
+    var endTime = (new Date()).getTime();
+    var responseTime = endTime - startTime;
+    console.log("Elapsed Time: " + responseTime + "ms");
+
+    const currentDataArray = currentResult.map((item) => item.data.data);
+    const futureDataArray = futureResult.data.data;
+    console.log(currentDataArray);
+    console.log(futureDataArray);
+    let mergedDataArray = futureDataArray;
+    mergedDataArray.forEach((feature, index) => {
+      currentDataArray.forEach((item) => {
+        Object.assign(feature, item[index]);
+      });
+    });
+    
+    // Parse all the indicator statistics into floating-point numbers
+    mergedDataArray = mergedDataArray.map(entry => 
+      Object.entries(entry).reduce(
+        (obj, [key, value]) => (obj[key] = isNaN(parseFloat(value)) ? value : parseFloat(value), obj), 
+        {}
+      )
+    );
+
+    return mergedDataArray;
 }
 
 function gotData(data) {

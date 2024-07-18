@@ -110,12 +110,8 @@ color: #fff;
   cursor: move;
 }
 
-.floating-toggle-switch {
-  display: block;
-}
-
-.floating-toggle-switch div {
-  padding-left: 7px;
+.toggle-switch {
+  vertical-align: bottom;
 }
 
 .range-slider-container {
