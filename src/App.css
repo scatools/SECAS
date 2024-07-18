@@ -1,0 +1,345 @@
+.map.tooltip {
+  position: absolute;
+  margin: 8px;
+  padding: 4px;
+  background: rgba(12, 12, 12, 0.8);
+  color: rgb(252, 252, 252);
+  max-width: 300px;
+  font-size: 13px;
+  z-index: 9;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.file-drop {
+  width: 95% !important;
+  height: auto;
+  min-height: 200px;
+  border: gray 2px dotted;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+  transition: all ease 0.3s;
+}
+
+.file-drop div {
+  text-align: center;
+  width: 100%;
+  padding: 85px;
+  cursor: pointer;
+}
+
+.file-drop:hover {
+  background: gray;
+}
+
+.AoiTable {
+  padding-right: 50px;
+  margin-top: 20px;
+}
+
+.AoiTableContainer {
+  width: 500px;
+  position: absolute;
+  left: -500px;
+  min-height: calc(100vh - 55px);
+  z-index: 5;
+  background: #292a2b;
+  color: #fff;
+  transition: all 0.3s;
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+  height: auto;
+  padding: 10px;
+}
+
+.AoiTableContainer.active {
+  padding: 20px 10px 60px 10px;
+  margin-top: 50px;
+  left: initial;
+  right: 0px;
+  top: 0;
+  height: 100vh;
+  position: fixed;
+  overflow: scroll;
+}
+
+.table-dropdown {
+  min-width: 50px !important;
+  height: 30px !important;
+}
+
+.action-button:hover {
+  cursor: pointer;
+}
+
+.boxdraw {
+  background: rgba(56, 135, 190, 0.1);
+  border: 2px solid #3887be;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+
+.legend {
+  position: absolute;
+  bottom: 5vh;
+  right: 2vw;
+  background-color: rgba(247, 245, 245, 0.8);
+  border-radius: 30px;
+  padding: 10px;
+}
+
+.legend .legend-title {
+  text-align: left;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 90%;
+  white-space: pre-wrap;
+}
+
+.legend .legend-scale ul {
+  margin: 0;
+  margin-bottom: 5px;
+  padding: 0;
+  float: left;
+  list-style: none;
+}
+
+.legend .legend-scale ul li {
+  font-size: 80%;
+  list-style: none;
+  margin-left: 0;
+  line-height: 18px;
+  margin-bottom: 2px;
+}
+
+.legend ul.legend-labels li span {
+  display: block;
+  float: left;
+  height: 16px;
+  width: 30px;
+  margin-right: 5px;
+  margin-left: 0;
+  border: 1px solid #999;
+}
+
+.button-cont {
+  margin-top: 50px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.smaller-text {
+  font-size: 12px !important;
+}
+
+.form-btn-container {
+  margin: 30px;
+  display: flex;
+  justify-content: space-around;
+}
+
+button.btn-dark.ml-1.btn {
+  font-size: 14px;
+  margin: 5px;
+}
+
+.btn-success,
+.btn-secondary,
+.btn-danger,
+.btn-primary {
+  min-width: 180px;
+}
+
+button.ml-1.btn.btn-danger {
+  margin: 5px;
+  font-size: 14px;
+  min-width: initial;
+}
+
+button.sidebarControlBtn.btn.btn-secondary {
+  min-width: initial;
+  width: initial;
+}
+
+.btn-container {
+  display: flex;
+  flex-direction: row;
+}
+
+#resetButton {
+  color: red;
+  display: flex;
+  justify-content: space-between;
+  width: 120px;
+  font-weight: bold;
+  font-size: 12px;
+  position: absolute;
+  bottom: 2vh;
+  right: 10px;
+}
+
+.container.detail-buttons {
+  margin-left: -25px;
+  width: 125%;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.mt-4 {
+  position: fixed !important;
+  right: 30px;
+  bottom: 30px;
+  margin: 0;
+  padding: 0.5rem !important;
+}
+
+.mt-4 p {
+  font-size: 20px;
+  padding: 0 !important;
+  margin: 0;
+}
+
+.mt-4 .h4 {
+  font-size: 20px;
+}
+
+/* Resizing future condition maps */
+
+.resizeable {
+  position: absolute;
+}
+
+.resizer {
+  position: absolute;
+  background: black;
+}
+
+.resizer-r {
+  height: 100%;
+  right: 0;
+  top: 0;
+  width: 5px;
+}
+
+.Popup-table-center {
+  position: fixed;
+  z-index: 9999;
+  width: 27.9vw;
+  bottom: 0;
+  margin: 0;
+  left: calc(50% - (29vw / 2));
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 2px white solid;
+  border-radius: 4px;
+  box-shadow: 6px 6px 5px grey;
+  transition: box-shadow 1s;
+  padding: 3px;
+}
+
+.Popup-table-center:hover {
+  cursor: move;
+}
+
+.Popup-table-center .table.table-dark.table-sm {
+  background-color: rgba(0, 0, 0, 0.5);
+  --bs-table-bg: rgba(0, 0, 0, 0.1);
+  --bs-table-striped-bg: rgba(0, 0, 0, 0.3);
+  margin-bottom: 0;
+}
+
+.current-map-title {
+  position: relative;
+  height: 50px;
+  width: 160px;
+  top: 25px;
+  left: calc(50vw - 165px);
+  padding: 2px;
+  text-align: center;
+  background-color: lightgray;
+  border: 1px black solid;
+  z-index: 9999;
+}
+
+.future-map-title {
+  position: relative;
+  height: 50px;
+  width: 160px;
+  top: 25px;
+  left: 0px;
+  padding: 2px;
+  text-align: center;
+  background-color: lightgray;
+  border: 1px black solid;
+  z-index: 9999;
+}
+
+/* Report */
+
+.tableSwitch {
+  position: fixed;
+  top: 77px;
+  right: 30px;
+  z-index: 1;
+  padding: 0px;
+  margin: 0px;
+  text-align: end;
+  transition: all ease 0.3s;
+}
+
+.multi-switch-container {
+  height: 42px !important;
+  width: 205px !important;
+}
+
+/* span.multi-switch-handle.multi-switch-handle-move {
+  top: 0;
+} */
+
+.multi-switch-content:hover {
+  background: lightsteelblue;
+  border-radius: 30px;
+  top: 0;
+}
+
+.accordion {
+  background-color: transparent !important;
+  border-radius: 10px;
+}
+
+.accordion-header button {
+  background-color: #3e4042 !important;
+  font-size: 22px;
+  color: black;
+  transition: all ease 0.3s;
+  border-radius: 10px !important;
+  border-color: transparent !important;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: #606060 !important;
+  color: whitesmoke !important;
+  border-color: transparent !important;
+}
+
+.accordion-item {
+  background: #919ca8 !important;
+  border-radius: 10px !important;
+  border-color: transparent !important;
+}
+
+.accordion-body p {
+  font-size: 20px !important;
+  color: black !important;
+  border-color: transparent !important;
+}
+
+.mapboxgl-ctrl-top-right {
+  top: 20px;
+  right: 0;
+}

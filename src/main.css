@@ -1,0 +1,121 @@
+/* background: #292a2b;
+color: #fff;
+*/
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+
+#sidebar {
+  width: 550px;
+  padding: 20px;
+  position: absolute;
+  top: 55.5px;
+  left: -600px;
+  height: auto;
+  min-height: 94.3vh;
+  z-index: 5;
+  background: #292a2b;
+  color: #fff;
+  transition: all 0.3s;
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+}
+
+#sidebar.active {
+  left: 0;
+}
+
+#dismiss,
+#popup-dismiss {
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  text-align: center;
+  background: #3b3b3b;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  -webkit-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+#popup-dismiss {
+  color: white;
+}
+
+#dismiss:hover,
+#popup-dismiss:hover {
+  background: #fff;
+  color: #6f7072;
+}
+
+#sidebar .ControlWrapper {
+  padding: 20px 0;
+}
+
+#sidebar .ControlWrapper p {
+  color: #fff;
+  padding: 10px;
+  font-size: 26px;
+}
+
+#sidebar .ControlWrapper .card {
+  border: 1px solid #363c3f;
+}
+
+#sidebar .ControlWrapper .card-header {
+  background-color: #6f7072;
+}
+
+#sidebar .ControlWrapper .card-body {
+  background-color: #a1a3a7;
+}
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+
+/* #content {
+    width: 100%;
+    padding: 20px;
+    min-height: 100vh;
+    transition: all 0.3s;
+    position: absolute;
+    top: 0;
+    right: 0;
+} */
+
+/* ---------------------------------------------------
+    FLOATING LAYER CONTROLS
+----------------------------------------------------- */
+
+#floating-layer-controls {
+  display: flex;
+  flex-wrap: wrap;
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 2px white solid;
+  width: 400px;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 6px 6px 5px gray;
+  transition: box-shadow 1s;
+  z-index: 4;
+}
+
+#floating-layer-controls:hover {
+  cursor: move;
+}
+
+.toggle-switch {
+  vertical-align: bottom;
+}
+
+.range-slider-container {
+  margin-top: 7px;
+  display: block;
+  width: 100%;
+}
