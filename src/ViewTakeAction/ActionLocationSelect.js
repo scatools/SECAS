@@ -36,11 +36,18 @@ const ActionLocationSelect = ({
       <h2>Where to take Action?</h2>
       <Accordion defaultActiveKey="0" flush>
         <Accordion.Item eventKey="0">
+          <Accordion.Header>Entire Area</Accordion.Header>
+          <Accordion.Body>
+            <p>
+              The hexagons accross the entire area of Interest (AOI) will be selected for you to apply the actions.
+            </p>
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="1">
           <Accordion.Header>Blueprint Quick Select</Accordion.Header>
           <Accordion.Body>
             <p>
-              Use the slider below to decide on the percentage of Blueprint you
-              would like in the hexagons.
+              Use the slider below to decide on the percentage of Blueprint you would like in the hexagons.
             </p>
             <p>Those hexagons will be selected for you to apply the actions.</p>
             <p>{filterBlue}% Blueprint per hex</p>
@@ -52,12 +59,11 @@ const ActionLocationSelect = ({
             />
           </Accordion.Body>
         </Accordion.Item>
-        <Accordion.Item eventKey="1">
+        <Accordion.Item eventKey="2">
           <Accordion.Header>Manual Hexagon Select</Accordion.Header>
           <Accordion.Body>
             <p>
-              Click and drag across multiple hexagons to select where you would
-              like to take action.
+              Press Shift key, then click and drag across multiple hexagons to select where you would like to take actions.
             </p>
             <p>Note: You must click within AOI boundary</p>
           </Accordion.Body>

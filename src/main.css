@@ -6,13 +6,12 @@ color: #fff;
 ----------------------------------------------------- */
 
 #sidebar {
-  width: 550px;
-  padding: 20px;
   position: absolute;
-  top: 55.5px;
+  width: 600px;
+  padding: 10px;
+  top: 60px;
   left: -600px;
-  height: auto;
-  min-height: 94.3vh;
+  height: calc(100vh - 60px);
   z-index: 5;
   background: #292a2b;
   color: #fff;
@@ -52,6 +51,7 @@ color: #fff;
 
 #sidebar .ControlWrapper {
   padding: 20px 0;
+  height: calc(100vh - 60px);
 }
 
 #sidebar .ControlWrapper p {
@@ -118,4 +118,20 @@ color: #fff;
   margin-top: 7px;
   display: block;
   width: 100%;
+}
+
+/* ===== Scrollbar CSS ===== */
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  border-radius: 4px;
+  background-color: gray;
+  border: 1px solid #cacaca;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: white;
 }

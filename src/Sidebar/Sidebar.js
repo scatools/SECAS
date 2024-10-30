@@ -24,6 +24,7 @@ const Sidebar = ({
   habitatLayer,
   setHabitatLayer,
   hexData,
+  setActionHexData,
   hexGrid,
   setHexGrid,
   hexOpacity,
@@ -134,6 +135,7 @@ const Sidebar = ({
           <TakeActionView
             aoiSelected={aoiSelected}
             hexData={hexData}
+            setActionHexData={setActionHexData}
             setHexIdInBlue={setHexIdInBlue}
             actionScores={actionScores}
             setActionScores={setActionScores}

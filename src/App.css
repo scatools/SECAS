@@ -36,15 +36,13 @@
 }
 
 .AoiTable {
-  padding-right: 50px;
   margin-top: 20px;
 }
 
 .AoiTableContainer {
-  width: 500px;
+  width: 550px;
   position: absolute;
   left: -500px;
-  min-height: calc(100vh - 55px);
   z-index: 5;
   background: #292a2b;
   color: #fff;
@@ -60,9 +58,9 @@
   left: initial;
   right: 0px;
   top: 0;
-  height: 100vh;
+  height: calc(100vh -500px);
   position: fixed;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .table-dropdown {
@@ -342,4 +340,8 @@ button.sidebarControlBtn.btn.btn-secondary {
 .mapboxgl-ctrl-top-right {
   top: 20px;
   right: 0;
+}
+
+.rs-slider-mark-content {
+  font-size: 0.7em;
 }

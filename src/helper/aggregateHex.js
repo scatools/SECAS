@@ -265,10 +265,9 @@ export function getHexagonScore(score) {
 };
 
 export function getAoiScore(featureArray) {
-  console.log(featureArray);
   const getAverageScore = (features, property) => {
     const scoreList = features.map((feature) => feature.properties[property]).filter((score) => score !== -1);
-    const aoiScore = scoreList.length ? Math.round(100*scoreList.reduce((a, b) => a + b, 0)/scoreList.length)/100 : "Not Available";
+    const aoiScore = scoreList.length ? Math.round(100*scoreList.reduce((a, b) => a + b, 0)/scoreList.length)/100 : -1;
     return aoiScore;
   };
   
@@ -305,4 +304,57 @@ export function getAoiScore(featureArray) {
   };
   
   return aoiScore;
+};
+
+export function sensitivityAnalysis(score, indicator, percentage) {
+  const hList = ["estcc", "firef", "gppgr", "impas", "isegr", "mavbp", "mavbr", "nlcfp", "persu", "playa", "rescs", "rests", "safbb", "saffb", "wcofw", "wcopb", "wgcmd"];
+  const fList = ["grntr", "saluh", "urbps"];
+  const cList = ["gmgfc", "ihabc", "netcx"];
+
+  const hTotal = hList.reduce((total, current) => total + (score[current] !== -1 ? (current === indicator? score[current]*(1+percentage) : score[current]) : 0), 0);
+  const hLength = hList.filter((item) => score[item] !== -1).length;
+  const hScore = hLength !== 0 ? hTotal/hLength : 0;
+  
+  const fTotal = fList.reduce((total, current) => total + (score[current] !== -1 ? (current === indicator? score[current]*(1+percentage) : score[current]) : 0), 0);
+  const fLength = fList.filter((item) => score[item] !== -1).length;
+  const fScore = fLength !== 0 ? fTotal/fLength : 0;
+
+  const cTotal = cList.reduce((total, current) => total + (score[current] !== -1 ? (current === indicator? score[current]*(1+percentage) : score[current]) : 0), 0);
+  const cLength = cList.filter((item) => score[item] !== -1).length;
+  const cScore = cLength !== 0 ? cTotal/cLength : 0;
+
+  const currentScore = (hScore + fScore + cScore)/3;
+  const futureScore = currentScore*score.futurePenalty;
+  
+  return {
+    estcc: score.estcc,
+    firef: score.firef,
+    gmgfc: score.gmgfc,
+    gppgr: score.gppgr,
+    grntr: score.grntr,
+    ihabc: score.ihabc,
+    impas: score.impas,
+    isegr: score.isegr,
+    mavbp: score.mavbp,
+    mavbr: score.mavbr,
+    netcx: score.netcx,
+    nlcfp: score.nlcfp,
+    persu: score.persu,
+    playa: score.playa,
+    rescs: score.rescs,
+    rests: score.rests,
+    safbb: score.safbb,
+    saffb: score.saffb,
+    saluh: score.saluh,
+    urbps: score.urbps,
+    wcofw: score.wcofw,
+    wcopb: score.wcopb,
+    wgcmd: score.wgcmd,
+    hScore: hScore,
+    fScore: fScore,
+    cScore: cScore,
+    currentScore: currentScore,
+    futureScore: futureScore,
+    futurePenalty: score.futurePenalty,
+  };
 };

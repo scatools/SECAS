@@ -5,7 +5,7 @@ import { Navbar } from "react-bootstrap";
 const Nav = () => {
   return (
     <Navbar
-      style={{ paddingLeft: "20px" }}
+      style={{ paddingLeft: "20px", height: "60px" }}
       bg="dark"
       variant="dark"
       fixed="top"

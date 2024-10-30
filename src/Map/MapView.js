@@ -5,6 +5,7 @@ import { Modal, ProgressBar, Table } from "react-bootstrap";
 import mapboxgl from "mapbox-gl";
 import bbox from "@turf/bbox";
 import axios from "axios";
+import { v4 as uuid } from "uuid";
 import WebMercatorViewport from "viewport-mercator-project";
 import RouterContext from "../Router.js";
 import { dataLayer, secasLayer } from "./map-style";
@@ -30,6 +31,7 @@ const MapView = ({
   habitatLayer,
   hexData,
   setHexData,
+  actionHexData,
   hexGrid,
   currentInteractiveLayerIds,
   setCurrentInteractiveLayerIds,
@@ -38,9 +40,7 @@ const MapView = ({
   hexOpacity,
   dualMap,
   hexIdInBlue,
-  restoreAction,
-  protectAction,
-  maintainAction,
+  actionScores,
   setActiveSidebar,
   progress,
   setProgress,
@@ -61,7 +61,6 @@ const MapView = ({
   const [boxXY, setBoxXY] = useState([[],[]]);
   const [dragPan, setDragPan] = useState(true);
   const [boxZoom, setBoxZoom] = useState(true);
-  // const {hexIdInBlue, restoreAction, protectAction, maintainAction} = useContext(RouterContext);
 
   const hideProgress = () => {
     setShowProgress(false);
@@ -158,16 +157,7 @@ const MapView = ({
           id="hex-in-blue"
           type="fill"
           paint={{
-            "fill-color": (restoreAction || protectAction || maintainAction) ? {
-              property: "overallScore",
-              stops: [
-                [0.1, "#ccf7ff"],
-                [0.3, "#82d9d7"],
-                [0.5, "#3cb99f"],
-                [0.7, "#00975b"],
-                [0.9, "#057300"],
-              ],
-            } : "transparent",
+            "fill-color":"transparent",
             "fill-outline-color": "blue",
             "fill-opacity": [
               "case",
@@ -329,7 +319,6 @@ const MapView = ({
   };
 
   const getCursor = ({ isHovering, isDragging }) => {
-    console.log(isDragging);
     return isDragging ? "grabbing" : isHovering ? "pointer" : "default";
   };
 
@@ -347,7 +336,6 @@ const MapView = ({
   const onClick = (e) => {
     if (e.features) {
       const clickedFeature = e.features[0];
-      console.log(clickedFeature);
       if (clickedFeature) {
         setClickedProperty(clickedFeature.properties);
         setClickedGeometry(clickedFeature.geometry);
@@ -373,7 +361,6 @@ const MapView = ({
       for (const f of e.features) {
         delete newFeatures[f.id];
       }
-      console.log(newFeatures);
       return Object.values(newFeatures);
     });
   }, []);
@@ -436,43 +423,45 @@ const MapView = ({
       setShowProgress(true);
       const hexFeatureList = aoi.currentHexagons.map((hex, index) => {
         setProgress(Math.round(index/aoi.currentHexagons.length*75) + 25);
-        // Use raw score for deterministic model
+        // Use medoid score for deterministic model
         const rawScore = {
-          estcc: hex.estcc_me,
-          firef: hex.firef_me,
-          gmgfc: hex.gmgfc_me,
-          gppgr: hex.gppgr_me,
-          grntr: hex.grntr_me,
-          ihabc: hex.ihabc_me,
-          impas: hex.impas_me,
-          isegr: hex.isegr_me,
-          mavbp: hex.mavbp_me,
-          mavbr: hex.mavbr_me,
-          netcx: hex.netcx_me,
-          nlcfp: hex.nlcfp_me,
-          persu: hex.persu_me,
-          playa: hex.playa_me,
-          rescs: hex.rescs_me,
-          rests: hex.rests_me,
-          safbb: hex.safbb_me,
-          saffb: hex.saffb_me,
-          saluh: hex.saluh_me,
-          urbps: hex.urbps_me,
-          wcofw: hex.wcofw_me,
-          wcopb: hex.wcopb_me,
-          wgcmd: hex.wgcmd_me,
+          estcc: hex.estcc_mi,
+          firef: hex.firef_mi,
+          gmgfc: hex.gmgfc_mi,
+          gppgr: hex.gppgr_mi,
+          grntr: hex.grntr_mi,
+          ihabc: hex.ihabc_mi,
+          impas: hex.impas_mi,
+          isegr: hex.isegr_mi,
+          mavbp: hex.mavbp_mi,
+          mavbr: hex.mavbr_mi,
+          netcx: hex.netcx_mi,
+          nlcfp: hex.nlcfp_mi,
+          persu: hex.persu_mi,
+          playa: hex.playa_mi,
+          rescs: hex.rescs_mi,
+          rests: hex.rests_mi,
+          safbb: hex.safbb_mi,
+          saffb: hex.saffb_mi,
+          saluh: hex.saluh_mi,
+          urbps: hex.urbps_mi,
+          wcofw: hex.wcofw_mi,
+          wcopb: hex.wcopb_mi,
+          wgcmd: hex.wgcmd_mi,
+          futurePenalty: hex.futv2_me
         };
+        const rawHexagonScore = getHexagonScore(rawScore);
 
         // Use stochastic score for stochastic model
-        const stochasticScore = getStochasticValues(hex);
-        const hexagonScore = getHexagonScore(stochasticScore);
+        // const stochasticScore = getStochasticValues(hex);
+        // const stochasticHexagonScore = getHexagonScore(stochasticScore);
 
         return {
           type: "Feature",
           geometry: JSON.parse(hex.geometry),
           properties: {
-            ...stochasticScore,
-            ...hexagonScore,
+            ...rawScore,
+            ...rawHexagonScore,
             gid: hex.gid,
             objectid: hex.objectid,
           },
@@ -486,7 +475,6 @@ const MapView = ({
 
       setHexData(hexData);
       setShowProgress(false);
-      console.log("Data Updated!");
     }
   }, [aoi]);
 
@@ -500,22 +488,14 @@ const MapView = ({
     setSelectedHexIdList(hexIdInBlue);
   }, [hexIdInBlue]);
 
-  useEffect(() => {
-    if (selectedHexIdList.length > 0 && (
-      restoreAction || protectAction || maintainAction
-    )) {
-      setFilter(["in", "gid", selectedHexIdList]);
-      console.log("Filter Applied!");
-    }
-  }, [restoreAction, protectAction, maintainAction]);
-
   return (
     <>
       <div>
         <Modal show={showProgress} onHide={hideProgress}>
           <Modal.Header closeButton>
             <Modal.Title>
-              {progress < 25 ? "Processing your data..." : "Running stochastic models..."}
+              {/* {progress < 25 ? "Processing your data..." : "Running stochastic models..."} */}
+              Processing your data...
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -623,11 +603,17 @@ const MapView = ({
                 maxzoom={22}
                 minzoom={0}
               >
-                <Layer type="raster" id="Blueprint" value="Blueprint" />
+                <Layer
+                  type="raster"
+                  id="Blueprint"
+                  value="Blueprint"
+                  beforeId="current-hex"
+                  paint={{"raster-opacity": 0.5}}
+                />
               </Source>
             </>
           )}
-          {aoi && hexGrid && hexData &&
+          {aoi && hexGrid && hexData && !actionHexData &&
             <>
               <Source type="geojson" data={hexData}>
                 <Layer
@@ -637,6 +623,41 @@ const MapView = ({
                   paint={{
                     "fill-color": {
                       property: "currentScore",
+                      stops: [
+                        [0.1, "#aefff0"],
+                        [0.3, "#00d8f2"],
+                        [0.5, "#00a7e4"],
+                        [0.7, "#007ad0"],
+                        [0.9, "#5d00d8"],
+                      ],
+                    },
+                    "fill-opacity": [
+                      "case",
+                      ["boolean", ["feature-state", "hover"], false],
+                      1,
+                      parseInt(hexOpacity) / 100,
+                    ],
+                  }}
+                />
+              </Source>
+              <Legend
+                legendInfo={null}
+                hexGrid={hexGrid}
+                opacity={parseInt(hexOpacity)/100}
+              ></Legend>
+            </>
+          }
+          {aoi && hexGrid && hexData && actionHexData &&
+            <>
+              {/* Must set unique key for forced rerendering */}
+              <Source key={uuid()} type="geojson" data={actionHexData}>
+                <Layer
+                  id="future-hex-action"
+                  type="fill"
+                  filter={["!", filter]}
+                  paint={{
+                    "fill-color": {
+                      property: "actionScore",
                       stops: [
                         [0.1, "#aefff0"],
                         [0.3, "#00d8f2"],
@@ -742,7 +763,13 @@ const MapView = ({
                 maxzoom={22}
                 minzoom={0}
               >
-                <Layer type="raster" id="Blueprint" value="Blueprint" />
+                <Layer
+                  type="raster"
+                  id="Blueprint"
+                  value="Blueprint"
+                  beforeId="future-hex"
+                  paint={{"raster-opacity": 0.5}}
+                />
               </Source>
             </>
           )}
@@ -750,7 +777,7 @@ const MapView = ({
             <>
               <Source type="geojson" data={hexData}>
                 <Layer
-                  id="future-hex"
+                  id="future-hex-no-action"
                   type="fill"
                   filter={["!", filter]}
                   paint={{

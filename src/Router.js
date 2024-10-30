@@ -7,6 +7,7 @@ const Router = () => {
   const RouterContext = createContext();
   const [aoiSelected, setAoiSelected] = useState(null);
   const [hexData, setHexData] = useState(null);
+  const [actionHexData, setActionHexData] = useState(null);
   const [actionScores, setActionScores] = useState({
     estcc: "No Action",
     firef: "No Action",
@@ -31,6 +32,10 @@ const Router = () => {
     wcofw: "No Action",
     wcopb: "No Action",
     wgcmd: "No Action",
+    hScore: "No Action",
+    fScore: "No Action",
+    cScore: "No Action",
+    futureScore: "No Action"
   });
 
   return (
@@ -45,6 +50,8 @@ const Router = () => {
               setAoiSelected={setAoiSelected}
               hexData={hexData}
               setHexData={setHexData}
+              actionHexData={actionHexData}
+              setActionHexData={setActionHexData}
               actionScores={actionScores}
               setActionScores={setActionScores}
             />
@@ -57,6 +64,7 @@ const Router = () => {
             <Report
               aoiSelected={aoiSelected}
               hexData={hexData}
+              actionHexData={actionHexData}
               actionScores={actionScores}
             />
           }

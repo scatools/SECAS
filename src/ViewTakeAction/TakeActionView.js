@@ -5,6 +5,7 @@ import ActionSelect from "./ActionSelect";
 const TakeActionView = ({
   aoiSelected,
   hexData,
+  setActionHexData,
   setHexIdInBlue,
   actionScores,
   setActionScores,
@@ -15,7 +16,7 @@ const TakeActionView = ({
       {actionView === "actionLocation" && (
         <ActionLocationSelect
           aoiSelected={aoiSelected}
-          setHexIdInBlue={setHexIdInBlue} 
+          setHexIdInBlue={setHexIdInBlue}
           setActionView={setActionView}
         />
       )}
@@ -23,6 +24,7 @@ const TakeActionView = ({
       {actionView === "actionSelect" && (
         <ActionSelect
           hexData={hexData}
+          setActionHexData={setActionHexData}
           actionScores={actionScores}
           setActionScores={setActionScores}
         />

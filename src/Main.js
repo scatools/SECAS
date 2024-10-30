@@ -7,7 +7,7 @@ import MapView from "./Map/MapView";
 import { WebMercatorViewport } from "viewport-mercator-project";
 import bbox from "@turf/bbox";
 
-const Main = ({ aoiSelected, setAoiSelected, hexData, setHexData, actionScores, setActionScores }) => {
+const Main = ({ aoiSelected, setAoiSelected, hexData, setHexData, actionHexData, setActionHexData, actionScores, setActionScores }) => {
   const [mode, setMode] = useState(null);
   const [isDual, setIsDual] = useState(false);
   const [currentInteractiveLayerIds, setCurrentInteractiveLayerIds] = useState(["current-hex"]);
@@ -27,9 +27,6 @@ const Main = ({ aoiSelected, setAoiSelected, hexData, setHexData, actionScores, 
   const [hexOpacity, setHexOpacity] = useState(50);
   const [dualMap, setDualMap] = useState(false);
   const [hexIdInBlue, setHexIdInBlue] = useState([]);
-  const [restoreAction, setRestoreAction] = useState(false);
-  const [protectAction, setProtectAction] = useState(false);
-  const [maintainAction, setMaintainAction] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showProgress, setShowProgress] = useState(false);
 
@@ -74,6 +71,7 @@ const Main = ({ aoiSelected, setAoiSelected, hexData, setHexData, actionScores, 
         habitatLayer={habitatLayer}
         setHabitatLayer={setHabitatLayer}
         hexData={hexData}
+        setActionHexData={setActionHexData}
         hexGrid={hexGrid}
         setHexGrid={setHexGrid}
         hexOpacity={hexOpacity}
@@ -106,6 +104,7 @@ const Main = ({ aoiSelected, setAoiSelected, hexData, setHexData, actionScores, 
           habitatLayer={habitatLayer}
           hexData={hexData}
           setHexData={setHexData}
+          actionHexData={actionHexData}
           hexGrid={hexGrid}
           currentInteractiveLayerIds={currentInteractiveLayerIds}
           setCurrentInteractiveLayerIds={setCurrentInteractiveLayerIds}
@@ -114,9 +113,7 @@ const Main = ({ aoiSelected, setAoiSelected, hexData, setHexData, actionScores, 
           hexOpacity={hexOpacity}
           dualMap={dualMap}
           hexIdInBlue={hexIdInBlue}
-          restoreAction={restoreAction}
-          protectAction={protectAction}
-          maintainAction={maintainAction}
+          actionScores={actionScores}
           setActiveSidebar={setActiveSidebar}
           progress={progress}
           setProgress={setProgress}

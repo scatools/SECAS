@@ -40,7 +40,7 @@ const SidebarViewDetail = ({
   const [aoiScore, setAoiScore] = useState({});
   const [scoreStyle, setScoreStyle] = useState({});
   const [conditionChecked, setConditionChecked] = useState(false);
-  const [stochasticityChecked, setStochasticityChecked] = useState(true);
+  const [stochasticityChecked, setStochasticityChecked] = useState(false);
   const [overlayChecked, setOverlayChecked] = useState(false);
   const aoiList = Object.values(useSelector((state) => state.aoi)).filter(
     (aoi) => aoi.id === aoiSelected
@@ -141,7 +141,7 @@ const SidebarViewDetail = ({
 
   useEffect(() => {
     let styles = {
-      currentStyle: aoiScore.currentScore < aoiScore.futureScore ? { color: "coral" } : { color: "limegreen" },
+      currentStyle: { color: "limegreen" },
       futureStyle: aoiScore.futureScore < aoiScore.currentScore ? { color: "coral" } : { color: "limegreen" },
     };
     setScoreStyle(styles);
