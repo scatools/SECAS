@@ -437,7 +437,7 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
                 </h5>
                 <h5>
                   Future HFC Score (No Action):{" "}
-                  <span style={{ color: "red" }}>{scores.futureScore.toFixed(2)}</span>
+                  <span style={{ color: "red" }}>{(scores.currentScore*scores.futurePenalty).toFixed(2)}</span>
                 </h5>
                 <h5>
                   Future HFC Score (With Action):{" "}
@@ -469,7 +469,7 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
                   <h5>Action Impact</h5>
                   <li>
                     The HFC score of this area will
-                    <b style={{ color: "red" }}> decrease by {Math.round(100 - 100*scores.futureScore/scores.currentScore)}% </b>
+                    <b style={{ color: "red" }}> decrease by {Math.round(100 - 100*scores.currentScore*scores.futurePenalty/scores.currentScore)}% </b>
                     in year 2060 with no conservation action compared to current condition
                   </li>
                   <li>
@@ -1103,7 +1103,7 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
                     </td>
                     <td>
                       <b style={{ color: "red" }}>
-                        {scores.futureScore.toFixed(2)}
+                        {(scores.currentScore*scores.futurePenalty).toFixed(2)}
                       </b>
                     </td>
                     <td>
@@ -1216,6 +1216,247 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
           <Row>
             <div>
               <h2>Appendix</h2>
+              <p>
+                {`
+                                  
+                  Health Indicators
+                  Atlantic Estuarine Fish Habitat:
+                  Definition: Index of Atlantic estuarine fish habitat condition based on water quality, marsh edges, seagrass and oyster reefs, and more.
+                  Scale: 
+                  0.25 = Degraded areas of opportunity
+                  0.5 = Restoration opportunity areas
+                  1.0 = Excellent Fish Habitat
+
+                  Atlantic Migratory Fish Habitat:
+                  Definition: Index of Atlantic migratory fish habitat condition based on water quality, connectivity, flow alteration, and more.
+                  Scale: 
+                  0 = Everything else, includes terrestrial
+                  0.25 = Degraded areas of opportunity
+                  0.5 = Restoration opportunity areas
+                  1.0 = Excellent Fish Habitat
+
+                  Coastal Shoreline Condition:
+                  Definition: Index based on presence of hardened structures and ease of development in coastal areas.
+                  Scale: 
+                  0 = Armored
+                  0.25 = Partially armored
+                  0.5 = Partially armored and harder to develop
+                  1.0 = Natural or natural and harder to develop
+                  East Gulf Coastal Plain Open Pine Birds:
+                  Definition: Index of areas within the longleaf pine range east of the Mississippi River where open pine habitat management would most benefit six focal bird species.
+                  Scale: 
+                  0.2 = Low
+                  0.4 = Med-Low
+                  0.6 = Medium
+                  0.8 = Med-High
+                  1.0 = High
+
+                  Estuarine Coastal Condition:
+                  Definition: Index of estuarine water quality, sediment quality, contaminants in fish tissue, and benthic community condition.
+                  Scale: 
+                  0 = Poor
+                  0.25 = Fair to poor
+                  0.5 = Fair
+                  0.75 = Good to fair
+                  1.0 = Good
+
+                  Fire Frequency:
+                  Definition: Estimates the number of times an area has been burned from 2013-2021.
+                  Scale: 
+                  0 = Not burned or row crop
+                  0.5 = Burned 1 time (~burned only once in 8 years)
+                  1.0 = Burned 2 or more times (~burned every 4 years or more frequently)
+
+                  Great Plains Perennial Grasslands:
+                  Definition: Grassland condition in the Great Plains (OK, TX) using the percent of perennial forbs and perennial grass.
+                  Scale: 0.2 = 0-20%, 0.4 = 21-40%, 0.6 = 41-60%, 0.8 = 61-80%, 1.0 = 81-100%
+
+                  Imperiled Aquatic Species:
+                  Definition: Number of aquatic Species of Greatest Conservation Need by watershed.
+                  Scale: 
+                  0 = no imperiled aquatic species
+                  0.5 = 1-2 imperiled aquatic species
+                  0.75 = 3 imperiled aquatic species
+                  1.0 = 4 or more imperiled aquatic species
+
+                  Interior South Grasslands:
+                  Definition: Index of known grasslands, areas with potentially compatible management, and grassland geology in the Interior Southeast.
+                  Scale: 
+                  0 = Grassland geology but grassland less likely
+                  0.25 = Potentially compatible management outside of grassland geology (undeveloped powerline right-of-way or perennial forbs and grasses)
+                  0.5 = Potentially compatible management within grassland geology (undeveloped powerline right-of-way or perennial forbs and grasses)
+                  0.75 = Known grassland buffer
+                  1.0 = Known grassland
+
+                  Mississippi Alluvial Valley Forest Birds - Protection:
+                  Definition: Prioritizes new areas for protection as an index within the MAV based on benefits to forest breeding birds that need large interior cores of bottomland hardwood habitat.
+                  Scale: 0 = no data, 0.1 = 1-10, 0.2 = 11-20, 0.3 = 21-30, 0.4 = 31-40, 0.5 = 41-50, 0.6 = 51-60, 0.7 = 61-70, 0.8 = 71-80, 0.9 = 81-90, 1.0 = 91-100
+                  Mississippi Alluvial Valley Forest Birds – Reforestation:
+                  Definition: Prioritizes new areas for reforestation as an index within the MAV based on benefits to forest breeding birds that need large interior cores of bottomland hardwood habitat.
+                  Scale: 0 = no data, 0.1 = 1-10, 0.2 = 11-20, 0.3 = 21-30, 0.4 = 31-40, 0.5 = 41-50, 0.6 = 51-60, 0.7 = 61-70, 0.8 = 71-80, 0.9 = 81-90, 1.0 = 91-100
+
+                  Natural Landcover in Floodplains:
+                  Definition: Percent natural landcover in the estimated floodplain, by catchment.
+                  Scale: 
+                  0.25 = ≤60% natural landcover
+                  0.5 = 61-70% natural landcover
+                  0.75 = 71-80% natural landcover
+                  1.0 = >80% natural landcover
+
+                  Permeable Surface:
+                  Definition: Percent non-impervious cover by catchment.
+                  Scale: 
+                  0.5 = <70% catchment permeable
+                  0.7 = 70-90% catchment permeable
+                  0.9 = 90-95% catchment permeable
+                  1.0 = >95% catchment permeable
+
+                  Playas:
+                  Definition: Identifies healthy playas and clusters of nearby playas in the western Great Plains (OK, TX).
+                  Scale: 
+                  0 = Everything else, includes terrestrial
+                  0.5 = Other Playa
+                  1.0 = Healthy Playa
+                  Resilient Coastal Sites:
+                  Definition: Index depicting the ability of terrestrial sites to continue supporting biodiversity and ecosystem function in the face of climate change.
+                  Scale: 0 = Everything else, includes terrestrial
+                  0.1 = Least resilient
+                  0.25 = Less resilient
+                  0.4 = Slightly less resilient
+                  0.55 = Average
+                  0.7 = Slightly more resilient
+                  0.85 = More resilient
+                  1.0 = Most resilient
+
+                  Resilient Terrestrial Sites:
+                  Definition: Index depicting the ability of terrestrial sites to continue supporting biodiversity and ecosystem function in the face of climate change.
+                  Scale: 0 = Developed and least resilient
+                  0.25 = Less resilient
+                  0.4 = Slightly less resilient
+                  0.55 = Average
+                  0.7 = Slightly more resilient
+                  0.85 = More resilient
+                  1.0 = Most resilient
+
+                  South Atlantic Amphibian & Reptile Areas:
+                  Definition: Priority Amphibian and Reptile Conservation Areas in the South Atlantic.
+                  Scale: 
+                  0 = None or below threshold
+                  1.0 = Good areas
+
+                  South Atlantic Beach Birds:
+                  Definition: Index of habitat suitability for four shorebird species in the South Atlantic.
+                  Scale: 0.2 = 0-20%, 0.4 = 21-40%, 0.6 = 41-60%, 0.8 = 61-80%, 1.0 = 81-100%
+
+                  South Atlantic Forest Birds:
+                  Definition: Index of habitat suitability for twelve upland hardwood and forested wetland bird species in the South Atlantic.
+                  Scale: 
+                  0 = Less potential
+                  0.5 = Very small patches
+                  1.0 = Very large patches
+
+                  South Atlantic Maritime Forest:
+                  Definition: Current maritime forest in the South Atlantic.
+                  Scale: 
+                  0 = None or below threshold
+                  1.0 = Maritime Forest
+
+                  Stable Coastal Wetlands:
+                  Definition: Index of marsh stability based on the ratio of open water to plants.
+                  Scale: 
+                  0 = None or below threshold
+                  0.5 = Intermediate number of cells in hex are stable coastal wetlands
+                  1.0 = Stable coastal wetlands
+
+                  West Gulf Coastal Plain Open Pine Birds:
+                  Definition: Index of areas with existing pine trees that, if managed for open condition, could support a population of three umbrella bird species in the West Gulf Coastal Plain/Ouachitas Bird Conservation Region.
+                  Scale: 
+                  0 = Pine patch / cluster too small OR not upland pine
+                  0.5 = Cluster large enough to support populations of 1 umbrella species
+                  0.6 = Cluster large enough to support populations of 2 umbrella species
+                  0.7 = Cluster large enough to support populations of 3 umbrella species
+                  0.8 = Patch large enough to support populations of 1 umbrella species
+                  0.9 = Patch large enough to support populations of 2 umbrella species
+                  1.0 = Patch large enough to support populations of 3 umbrella species
+
+                  West Gulf Coastal Plain Forested Wetland Birds:
+                  Definition: Index of habitat suitability for five forested wetland bird species in the West Gulf Coastal Plain/ Ouachitas Bird Conservation Region.
+                  Scale: 
+                  0 = Everything else, includes terrestrial
+                  0.2 = Low (1-20)
+                  0.4 = Med-Low (21-40)
+                  0.6 = Medium (41-60)
+                  0.8 = Med-High (61-80)
+                  1.0 = High (>80)
+
+                  West Gulf Coast Mottled Duck Nesting:
+                  Definition: Depicts marshes and grasslands along the Western Gulf Coast that are important for mottled duck nesting (% suitability).
+                  Scale: 0.1 = 1-10%, 0.2 = 11-20%, 0.3 = 21-30%, 0.4 = 31-40%, 0.5 = 41-50%, 0.6 = 51-60%, 0.7 = 61-70%, 0.8 = 71-80%, 0.9 = 81-90%, 1.0 = 91-100%
+
+                  West Virginia Imperiled Aquatic Species:
+                  Definition: Number of globally imperiled, threatened, or endangered aquatic species by watershed in the state of West Virginia.
+                  Scale: 
+                  0 = no imperiled aquatic species
+                  0.5 = 1-2 imperiled aquatic species
+                  0.75 = 3 imperiled aquatic species
+                  1.0 = 4 or more imperiled aquatic species
+
+                  Function Indicators
+                  Equitable Access to Potential Parks:
+                  Definition: Prioritizes places to create new parks to fill gaps in access to green space within socially vulnerable communities.
+                  Scale: 
+                  0 = Everything else, includes terrestrial
+                  0.5 = Moderate
+                  0.75 = High
+                  1.0 = Very high
+
+                  Greenways and Trails:
+                  Definition: Prioritizes places to create new parks to fill gaps in access to green space within socially vulnerable communities.
+                  Scale: 
+                  0 = Everything else, includes terrestrial
+                  0.25 = Sidewalk or other path
+                  0.5 = Developed and connected for <1.9km
+                  0.75 = Partly natural and connected for 1.9 to 5km
+                  1.0 = Mostly natural and connected, or partly natural and connected ≥5 km, or developed and connected ≥5 km
+                  South Atlantic Low-Urban Historic Landscapes:
+                  Definition: Index of sites on the National Register of Historic Places surrounded by limited urban development within the South Atlantic (FL, GA, NC, VA, SC).
+                  Scale: 
+                  0 = Not historic
+                  0.5 = Historic, high-urban buffer
+                  1.0 = Historic, low-urban buffer
+
+                  Urban Park Size:
+                  Definition: Measures the size of parks larger than 5 acres in the urban environment.
+                  Scale: 
+                  0.25 = 5-10 acres
+                  0.5 = 11-30 acres
+                  0.75 = 31-50 acres
+                  1.0 = >50 acres
+
+                  Connectivity Indicators
+                  Gulf Migratory Fish Connectivity:
+                  Definition: Index capturing how far upstream migratory fish species in the Gulf of Mexico have been observed.
+                  Scale: 
+                  0 = Everything else, includes terrestrial
+                  1.0 = Presence of Alabama shad, American shad, striped bass, or Gulf sturgeon
+
+                  Intact Habitat Cores:
+                  Definition: Represents the size of large, unfragmented patches of natural habitat. It identifies minimally disturbed natural areas at least 100 acres in size and greater than 200 meters wide.
+                  Scale: 
+                  0 = Not a core
+                  0.75 = Small core (>100–1,000 acres)
+                  1.0 = Large core (>1,000 acres)
+
+                  Network Complexity:
+                  Definition: Index depicting the number of stream size classes in a river network not separated by dams or waterfalls.
+                  Scale: 
+                  0 = Everything else, includes terrestrial
+                  0.25 = 1 connected stream class
+                  0.5 = 2 connected stream classes
+                  0.75 = 3 connected stream classes
+                  1.0 = >3 connected stream classes
+                `}
+              </p>
             </div>
           </Row>
         </Col>

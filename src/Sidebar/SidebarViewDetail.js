@@ -140,9 +140,10 @@ const SidebarViewDetail = ({
   }, [hexData]);
 
   useEffect(() => {
+    console.log(aoiScore);
     let styles = {
-      currentStyle: { color: "limegreen" },
-      futureStyle: aoiScore.futureScore < aoiScore.currentScore ? { color: "coral" } : { color: "limegreen" },
+      currentStyle: { color: "aqua" },
+      futureStyle: { color: "coral" },
     };
     setScoreStyle(styles);
   }, [aoiScore])
@@ -167,7 +168,7 @@ const SidebarViewDetail = ({
           </h4>
           <h4>
             Future HFC Score:{" "}
-            <span style={scoreStyle.futureStyle}>{aoiScore.futureScore}</span>
+            <span style={scoreStyle.futureStyle}>{Math.round(aoiScore.currentScore*aoiScore.futurePenalty*100)/100}</span>
           </h4>
           <ul>
             <li>
@@ -179,7 +180,7 @@ const SidebarViewDetail = ({
             </li>
             <li>
               The HFC score of this area will drop{" "}
-              {Math.round(100 - 100*aoiScore.futureScore/aoiScore.currentScore)}
+              {Math.round(100 - 100*aoiScore.currentScore*aoiScore.futurePenalty/aoiScore.currentScore)}
               % in year 2060 with no conservation actions compared to current condition
             </li>
           </ul>

@@ -22,8 +22,10 @@
     "deck.gl": "^9.0.20",
     "i": "^0.3.7",
     "mapbox-gl": "^3.4.0",
+    "node-polyfill-webpack-plugin": "^4.0.0",
     "npm": "^10.8.1",
     "react": "^18.3.1",
+    "react-app-rewired": "^2.2.1",
     "react-bootstrap": "^2.10.4",
     "react-bootstrap-range-slider": "^3.0.8",
     "react-chartjs-2": "^5.2.0",
@@ -52,10 +54,10 @@
     "worker-loader": "^3.0.8"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+  "start": "react-app-rewired start",
+  "build": "react-app-rewired build",
+  "test": "react-app-rewired test",
+  "eject": "react-scripts eject"
   },
   "engines": {
     "node": "^16.0.0",

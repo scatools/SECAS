@@ -124,9 +124,9 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
               progress
               renderMark={mark => {
                 if (mark === 0) {
-                  return "Low";
+                  return "";
                 } else if (mark === indicators[indicator].length-1) {
-                  return "High";
+                  return "Max";
                 }
               }}
               onChange={(e) => {
@@ -612,13 +612,13 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
                               }
                             },
                             {
-                              value: Math.round(scores.futureScore*100),
+                              value: Math.round(scores.currentScore*scores.futurePenalty*100),
                               valueConfig: {
                                 formatTextValue: (value) => '\u25BC',
                                 style: {
                                   fontSize: 15,
                                   fill: "red",
-                                  rotate: (scores.futureScore-0.5)*180+"deg",
+                                  rotate: (scores.currentScore*scores.futurePenalty-0.5)*180+"deg",
                                   transformOrigin: "0px -10px"
                                 }
                               }

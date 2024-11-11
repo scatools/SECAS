@@ -99,6 +99,8 @@ const AddAOIView = ({
           setAlerttext={setAlerttext}
           setView={setView}
           setHabitatLayer={setHabitatLayer}
+          setProgress={setProgress}
+          setShowProgress={setShowProgress}
         />
       )}
     </>
