@@ -311,7 +311,7 @@ button.sidebarControlBtn.btn.btn-secondary {
 }
 
 .accordion-header button {
-  background-color: #3e4042 !important;
+  background-color: lightgray !important;
   font-size: 22px;
   color: black;
   transition: all ease 0.3s;
@@ -329,6 +329,7 @@ button.sidebarControlBtn.btn.btn-secondary {
   background: #919ca8 !important;
   border-radius: 10px !important;
   border-color: transparent !important;
+  margin: 10px;
 }
 
 .accordion-body p {
@@ -345,3 +346,20 @@ button.sidebarControlBtn.btn.btn-secondary {
 .rs-slider-mark-content {
   font-size: 0.7em;
 }
+
+.print-button {
+  position: absolute !important;
+  width: 30px !important;
+  right: 200px;
+}
+
+@page {
+  size: landscape;
+}
+
+@media print {
+  .print-button {
+    display: none;
+  }
+}
+
