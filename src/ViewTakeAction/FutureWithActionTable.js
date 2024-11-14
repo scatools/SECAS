@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Dropdown, Table, Overlay } from "react-bootstrap";
+import { Dropdown, Table, Overlay, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 import { GaugeComponent } from "react-gauge-component";
@@ -41,6 +41,31 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
     wcopb: [0, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
     wgcmd: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
     futv2: [0.25, 0.50, 0.75, 1.0]
+  };
+  const sliderLabels = { 
+    estcc: "Better Condition",
+    firef: "More Frequently Burned",
+    gmgfc: "Higher Connectivity",
+    gppgr: "More Perennial Grass",
+    grntr: "More Greenways Trails",
+    ihabc: "Larger Core",
+    impas: "More Species",
+    isegr: "More Known Grassland",
+    mavbp: "More Protection Area",
+    mavbr: "More Reforestation Area",
+    netcx: "More Connected Stream Classes",
+    nlcfp: "More Natural Landcover",
+    persu: "More Catchment Permeable",
+    playa: "More Healthy Playas",
+    rescs: "More Resilient",
+    rests: "More Resilient",
+    safbb: "Higher Habitat Suitability",
+    saffb: "Higher Habitat Suitability",
+    saluh: "More Urban Historic Sites",
+    urbps: "Larger Park Size",
+    wcofw: "More Stable Coastal Wetlands",
+    wcopb: "Larger Patch Supporting Birds",
+    wgcmd: "Higher Habitat Suitability"
   };
 
   const onActionLevelChange = (e, indicator) => {
@@ -113,26 +138,59 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
               pointer={{type: "arrow", elastic: true, color: "green"}}
             />
           </div>
-          <div style={{width: "200px", marginTop: "50px"}}>
-            <Slider
-              defaultValue={currentLevels[indicator]}
-              value={actionLevels[indicator]}
-              min={0}
-              max={indicators[indicator].length-1}
-              step={1}
-              graduated
-              progress
-              renderMark={mark => {
-                if (mark === 0) {
-                  return "";
-                } else if (mark === indicators[indicator].length-1) {
-                  return "Max";
-                }
-              }}
-              onChange={(e) => {
-                onActionLevelChange(e, indicator)
-              }}
-            />
+          <div style={{width: "200px", height: "100px", marginTop: "50px"}}>
+            <Row>
+              <Slider
+                defaultValue={currentLevels[indicator]}
+                value={actionLevels[indicator]}
+                min={0}
+                max={indicators[indicator].length-1}
+                step={1}
+                graduated
+                progress
+                renderMark={mark => {
+                  if (mark === 0) {
+                    return "";
+                  } else if (mark === indicators[indicator].length-1) {
+                    return "Max";
+                  }
+                }}
+                onChange={(e) => {
+                  onActionLevelChange(e, indicator)
+                }}
+              />
+            </Row>
+            <Row>
+              <svg height="30px">
+                <defs>
+                  <marker
+                    id="head"
+                    orient="auto"
+                    markerWidth="3"
+                    markerHeight="4"
+                    refX="0.1"
+                    refY="2"
+                  >
+                    <path d="M0,1 V3 L2,2 Z" fill="indigo" />
+                  </marker>
+                  <linearGradient id="gradient" x1="40" y1="210" x2="460" y2="210" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="aqua" offset="0%" />
+                      <stop stop-color="indigo" offset="20%" />
+                  </linearGradient>
+                </defs>
+                <path
+                  id="arrow-line"
+                  marker-end="url(#head)"
+                  stroke-width="6"
+                  fill="none"
+                  stroke="url(#gradient)"
+                  d="M 0,10,150 10,200"
+                />
+              </svg>
+            </Row>
+            <Row>
+              <p style={{color: "black", fontSize: "0.7rem", marginTop: "-20px"}}>{sliderLabels[indicator]}</p>
+            </Row>
           </div>
         </div>
     );
@@ -480,7 +538,7 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
                 <td colSpan="4">{ActionSlider("firef")}</td>
               </tr>}
               {scores.gppgr > 0  && <tr>
-                <td>Great Plains Perrenial Grass</td>
+                <td>Great Plains Perennial Grass</td>
                 <td colSpan="4">{ActionSlider("gppgr")}</td>
               </tr>}
               {scores.impas > 0  && <tr>
@@ -532,7 +590,7 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
                 <td colSpan="4">{ActionSlider("wcofw")}</td>
               </tr>}
               {scores.wcopb > 0  && <tr>
-                <td>West Coastal Plain Ouachita Open Pine Bird</td>
+                <td>West Coastal Plain Ouachitas Open Pine Bird</td>
                 <td colSpan="4">{ActionSlider("wcopb")}</td>
               </tr>}
               {scores.wgcmd > 0  && <tr>
