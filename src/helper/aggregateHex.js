@@ -11,7 +11,7 @@ export function calculateArea(input) {
   return totalArea;
 };
 
-export function getStochasticValues(hex) {
+export function getStochasticScore(hex) {
   const indicators = {
     estcc: [0, 0.25, 0.5, 0.75, 1],
     firef: [0, 0.5, 1],
@@ -105,7 +105,7 @@ export function getStochasticValues(hex) {
     });
 
   // Remove null values (-1) before calculating the average
-  for(let i=0; i<1000; i++){
+  for (let i=0; i<1000; i++) {
     if (probabilities.estcc.filter((item) => item !== -1).length === probabilities.estcc.length) {
       estccSims.push(find(Math.random(), indicators.estcc, probabilities.estcc));
     };
@@ -181,6 +181,195 @@ export function getStochasticValues(hex) {
   };
   
   const average = array => array.length === 0 ? 0 : array.reduce((a, b) => a + b) / array.length;
+
+  const averageScores = {
+    estcc: average(estccSims),
+    firef: average(firefSims),
+    gmgfc: average(gmgfcSims),
+    gppgr: average(gppgrSims),
+    grntr: average(grntrSims),
+    ihabc: average(ihabcSims),
+    impas: average(impasSims),
+    isegr: average(isegrSims),
+    mavbp: average(mavbpSims),
+    mavbr: average(mavbrSims),
+    netcx: average(netcxSims),
+    nlcfp: average(nlcfpSims),
+    persu: average(persuSims),
+    playa: average(playaSims),
+    rescs: average(rescsSims),
+    rests: average(restsSims),
+    safbb: average(safbbSims),
+    saffb: average(saffbSims),
+    saluh: average(saluhSims),
+    urbps: average(urbpsSims),
+    wcofw: average(wcofwSims),
+    wcopb: average(wcopbSims),
+    wgcmd: average(wgcmdSims),
+    futurePenalty: hex.futv2_me
+  };
+
+  return averageScores;
+};
+
+export function getStochasticActionScore(hex) {
+  const indicators = {
+    estcc: [0, 0.25, 0.5, 0.75, 1],
+    firef: [0, 0.5, 1],
+    gmgfc: [0, 1],
+    gppgr: [0.2, 0.4, 0.6, 0.8, 1],
+    grntr: [0, 0.25, 0.5, 0.75, 1],
+    ihabc: [0, 0.75, 1],
+    impas: [0, 0.5, 0.75, 1],
+    isegr: [0, 0.25, 0.5, 0.75, 1],
+    mavbp: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+    mavbr: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+    netcx: [0, 0.25, 0.5, 0.75, 1],
+    nlcfp: [0, 0.25, 0.5, 0.75, 1],
+    persu: [0.5, 0.7, 0.9, 1],
+    playa: [0, 0.5, 1],
+    rescs: [0.1, 0.25, 0.4, 0.55, 0.7, 0.85, 1],
+    rests: [0, 0.25, 0.4, 0.55, 0.7, 0.85, 1],
+    safbb: [0, 0.2, 0.4, 0.6, 0.8, 1],
+    saffb: [0, 0.5, 1],
+    saluh: [0, 0.5, 1],
+    urbps: [0, 0.25, 0.5, 0.75, 1],
+    wcofw: [0, 0.2, 0.4, 0.6, 0.8, 1],
+    wcopb: [0, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+    wgcmd: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+    futv2: [0.25, 0.50, 0.75, 1.0]
+  };
+
+  const currentLevels = {
+    estcc: indicators.estcc.indexOf(hex.estcc_mi),
+    firef: indicators.firef.indexOf(hex.firef_mi),
+    gmgfc: indicators.gmgfc.indexOf(hex.gmgfc_mi),
+    gppgr: indicators.gppgr.indexOf(hex.gppgr_mi),
+    grntr: indicators.grntr.indexOf(hex.grntr_mi),
+    ihabc: indicators.ihabc.indexOf(hex.ihabc_mi),
+    impas: indicators.impas.indexOf(hex.impas_mi),
+    isegr: indicators.isegr.indexOf(hex.isegr_mi),
+    mavbp: indicators.mavbp.indexOf(hex.mavbp_mi),
+    mavbr: indicators.mavbr.indexOf(hex.mavbr_mi),
+    netcx: indicators.netcx.indexOf(hex.netcx_mi),
+    nlcfp: indicators.nlcfp.indexOf(hex.nlcfp_mi),
+    persu: indicators.persu.indexOf(hex.persu_mi),
+    playa: indicators.playa.indexOf(hex.playa_mi),
+    rescs: indicators.rescs.indexOf(hex.rescs_mi),
+    rests: indicators.rests.indexOf(hex.rests_mi),
+    safbb: indicators.safbb.indexOf(hex.safbb_mi),
+    saffb: indicators.saffb.indexOf(hex.saffb_mi),
+    saluh: indicators.saluh.indexOf(hex.saluh_mi),
+    urbps: indicators.urbps.indexOf(hex.urbps_mi),
+    wcofw: indicators.wcofw.indexOf(hex.wcofw_mi),
+    wcopb: indicators.wcopb.indexOf(hex.wcopb_mi),
+    wgcmd: indicators.wgcmd.indexOf(hex.wgcmd_mi)
+  };
+
+  let estccSims = [],
+  firefSims = [],
+  gmgfcSims = [],
+  gppgrSims = [],
+  grntrSims = [],
+  ihabcSims = [],
+  impasSims = [],
+  isegrSims = [],
+  mavbpSims = [],
+  mavbrSims = [],
+  netcxSims = [],
+  nlcfpSims = [],
+  persuSims = [],
+  playaSims = [],
+  rescsSims = [],
+  restsSims = [],
+  safbbSims = [],
+  saffbSims = [],
+  saluhSims = [],
+  urbpsSims = [],
+  wcofwSims = [],
+  wcopbSims = [],
+  wgcmdSims = [];
+
+  const randomSelect = (indicator) => {
+    const slicedScoreArray = indicators[indicator].slice(currentLevels[indicator]);
+    const randomScore = slicedScoreArray[Math.floor(Math.random()*slicedScoreArray.length)];
+    return randomScore;
+  };
+  
+  for (let i=0; i<1000; i++) {
+    if (currentLevels.estcc !== -1) {
+      estccSims.push(randomSelect("estcc"));
+    };
+    if (currentLevels.firef !== -1) {
+      firefSims.push(randomSelect("firef"));
+    };
+    if (currentLevels.gmgfc !== -1) {
+      gmgfcSims.push(randomSelect("gmgfc"));
+    };
+    if (currentLevels.gppgr !== -1) {
+      gppgrSims.push(randomSelect("gppgr"));
+    };
+    if (currentLevels.grntr !== -1) {
+      grntrSims.push(randomSelect("grntr"));
+    };
+    if (currentLevels.ihabc !== -1) {
+      ihabcSims.push(randomSelect("ihabc"));
+    };
+    if (currentLevels.impas !== -1) {
+      impasSims.push(randomSelect("impas"));
+    };
+    if (currentLevels.isegr !== -1) {
+      isegrSims.push(randomSelect("isegr"));
+    };
+    if (currentLevels.mavbp !== -1) {
+      mavbpSims.push(randomSelect("mavbp"));
+    };
+    if (currentLevels.mavbr !== -1) {
+      mavbrSims.push(randomSelect("mavbr"));
+    };
+    if (currentLevels.netcx !== -1) {
+      netcxSims.push(randomSelect("netcx"));
+    };
+    if (currentLevels.nlcfp !== -1) {
+      nlcfpSims.push(randomSelect("nlcfp"));
+    };
+    if (currentLevels.persu !== -1) {
+      persuSims.push(randomSelect("persu"));
+    };
+    if (currentLevels.playa !== -1) {
+      playaSims.push(randomSelect("playa"));
+    };
+    if (currentLevels.rescs !== -1) {
+      rescsSims.push(randomSelect("rescs"));
+    };
+    if (currentLevels.rests !== -1) {
+      restsSims.push(randomSelect("rests"));
+    };
+    if (currentLevels.safbb !== -1) {
+      safbbSims.push(randomSelect("safbb"));
+    };
+    if (currentLevels.saffb !== -1) {
+      saffbSims.push(randomSelect("saffb"));
+    };
+    if (currentLevels.saluh !== -1) {
+      saluhSims.push(randomSelect("saluh"));
+    };
+    if (currentLevels.urbps !== -1) {
+      urbpsSims.push(randomSelect("urbps"));
+    };
+    if (currentLevels.wcofw !== -1) {
+      wcofwSims.push(randomSelect("wcofw"));
+    };
+    if (currentLevels.wcopb !== -1) {
+      wcopbSims.push(randomSelect("wcopb"));
+    };
+    if (currentLevels.wgcmd !== -1) {
+      wgcmdSims.push(randomSelect("wgcmd"));
+    };
+  };
+
+  const average = array => array.length === 0 ? 0 : array.reduce((a, b) => a + b) / array.length;
+
   const averageScores = {
     estcc: average(estccSims),
     firef: average(firefSims),

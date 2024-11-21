@@ -7,7 +7,20 @@ import MapView from "./Map/MapView";
 import { WebMercatorViewport } from "viewport-mercator-project";
 import bbox from "@turf/bbox";
 
-const Main = ({ aoiSelected, setAoiSelected, hexData, setHexData, actionHexData, setActionHexData, actionScores, setActionScores }) => {
+const Main = ({
+  aoiSelected,
+  setAoiSelected,
+  hexData,
+  setHexData,
+  actionHexData,
+  setActionHexData,
+  actionScores,
+  setActionScores,
+  progress,
+  setProgress,
+  showProgress,
+  setShowProgress
+}) => {
   const [mode, setMode] = useState(null);
   const [isDual, setIsDual] = useState(false);
   const [currentInteractiveLayerIds, setCurrentInteractiveLayerIds] = useState(["current-hex"]);
@@ -27,8 +40,6 @@ const Main = ({ aoiSelected, setAoiSelected, hexData, setHexData, actionHexData,
   const [hexOpacity, setHexOpacity] = useState(50);
   const [dualMap, setDualMap] = useState(false);
   const [hexIdInBlue, setHexIdInBlue] = useState([]);
-  const [progress, setProgress] = useState(0);
-  const [showProgress, setShowProgress] = useState(false);
 
   const zoomToAOI = (aoi) => {
     if (aoi) {

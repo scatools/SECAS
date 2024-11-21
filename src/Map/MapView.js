@@ -10,7 +10,7 @@ import WebMercatorViewport from "viewport-mercator-project";
 import RouterContext from "../Router.js";
 import { dataLayer, secasLayer } from "./map-style";
 import { input_aoi, getDataFromAPI, setLoader } from "../action";
-import { getHexagonScore, getStochasticValues } from "../helper/aggregateHex";
+import { getHexagonScore, getStochasticScore } from "../helper/aggregateHex";
 import DrawControl from "./DrawControl";
 import Legend from "./Legend";
 import HexInfoPopup from "./HexInfoPopup";
@@ -209,7 +209,7 @@ const MapView = ({
               <td>{clickedProperty.firef}</td>
             </tr>
             <tr>
-              <td>Great Plains Perrenial Grass:</td>
+              <td>Great Plains Perennial Grass:</td>
               <td>{clickedProperty.gppgr}</td>
             </tr>
             <tr>
@@ -261,7 +261,7 @@ const MapView = ({
               <td>{clickedProperty.wcofw}</td>
             </tr>
             <tr>
-              <td>West Coastal Plain Ouachita Open Pine Bird:</td>
+              <td>West Coastal Plain Ouachitas Open Pine Bird:</td>
               <td>{clickedProperty.wcopb}</td>
             </tr>
             <tr>
@@ -453,7 +453,7 @@ const MapView = ({
         const rawHexagonScore = getHexagonScore(rawScore);
 
         // Use stochastic score for stochastic model
-        // const stochasticScore = getStochasticValues(hex);
+        // const stochasticScore = getStochasticScore(hex);
         // const stochasticHexagonScore = getHexagonScore(stochasticScore);
 
         return {

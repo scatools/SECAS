@@ -33,7 +33,7 @@ const ActionLocationSelect = ({
 
   return (
     <>
-      <h2>Where to take Action?</h2>
+      <h2 style={{margin: "10px"}}>Where to adjust the indicators?</h2>
       <Accordion defaultActiveKey="0" flush>
         <Accordion.Item eventKey="0">
           <Accordion.Header>Entire Area</Accordion.Header>

@@ -139,27 +139,25 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
             />
           </div>
           <div style={{width: "200px", height: "100px", marginTop: "50px"}}>
-            <Row>
-              <Slider
-                defaultValue={currentLevels[indicator]}
-                value={actionLevels[indicator]}
-                min={0}
-                max={indicators[indicator].length-1}
-                step={1}
-                graduated
-                progress
-                renderMark={mark => {
-                  if (mark === 0) {
-                    return "";
-                  } else if (mark === indicators[indicator].length-1) {
-                    return "Max";
-                  }
-                }}
-                onChange={(e) => {
-                  onActionLevelChange(e, indicator)
-                }}
-              />
-            </Row>
+            <Slider
+              defaultValue={currentLevels[indicator]}
+              value={actionLevels[indicator]}
+              min={0}
+              max={indicators[indicator].length-1}
+              step={1}
+              graduated
+              progress
+              renderMark={mark => {
+                if (mark === 0) {
+                  return "";
+                } else if (mark === indicators[indicator].length-1) {
+                  return "Max";
+                }
+              }}
+              onChange={(e) => {
+                onActionLevelChange(e, indicator)
+              }}
+            />
             <Row>
               <svg height="30px">
                 <defs>

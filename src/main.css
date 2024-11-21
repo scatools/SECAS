@@ -110,8 +110,20 @@ color: #fff;
   cursor: move;
 }
 
+.toggle-switch-container {
+  display: flex;
+  margin: 10px;
+  justify-content: space-around;
+}
+
 .toggle-switch {
   vertical-align: bottom;
+}
+
+.button-container {
+  display: flex;
+  margin: 10px;
+  justify-content: space-around;
 }
 
 .range-slider-container {

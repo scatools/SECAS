@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import RangeSlider from "react-bootstrap-range-slider";
 import { MdViewList, MdEdit, MdDelete } from "react-icons/md";
-import { HiDocumentReport } from "react-icons/hi";
+import { HiAdjustments, HiDocumentReport } from "react-icons/hi";
 import { GiHexes } from "react-icons/gi";
 import Draggable from "react-draggable";
 import Switch from "react-switch";
@@ -93,19 +93,7 @@ const SidebarViewDetail = ({
   };
 
   const handleReport = () => {
-    navigate("/report");
-  };
-
-  const handleDownload = () => {
-    let pageHTMLObject = document.getElementsByClassName("AoiTable")[0];
-    let pageHTML = pageHTMLObject.outerHTML;
-    let tempElement = document.createElement("a");
-
-    tempElement.href =
-      "data:text/html;charset=UTF-8," + encodeURIComponent(pageHTML);
-    tempElement.target = "_blank";
-    tempElement.download = "report.html";
-    tempElement.click();
+    navigate("/stochastic-report");
   };
 
   const onConditionChange = () => {
@@ -135,15 +123,13 @@ const SidebarViewDetail = ({
     if (aoi && hexData) {
       const scores = getAoiScore(hexData.features);
       setAoiScore(scores);
-      console.log(scores);
     };
   }, [hexData]);
 
   useEffect(() => {
-    console.log(aoiScore);
     let styles = {
-      currentStyle: { color: "aqua" },
-      futureStyle: { color: "coral" },
+      currentStyle: { color: "blue" },
+      futureStyle: { color: "red" },
     };
     setScoreStyle(styles);
   }, [aoiScore])
@@ -185,11 +171,10 @@ const SidebarViewDetail = ({
             </li>
           </ul>
           <div
-            className="d-flex justify-content-between"
-            style={{ margin: "10px", width: "100%" }}
+            className="toggle-switch-container"
           >
             <label>
-              Southeast Blueprint Layer
+              Southeast Blueprint Layer {" "}
               <Switch
                 className="toggle-switch"
                 checked={overlayChecked}
@@ -206,7 +191,7 @@ const SidebarViewDetail = ({
               />
             </label>
             <label>
-              Future Condition
+              Future Condition {" "}
               <Switch
                 className="toggle-switch"
                 checked={conditionChecked}
@@ -223,81 +208,12 @@ const SidebarViewDetail = ({
               />
             </label>
           </div>
-          <Button
-            variant="dark"
-            className="ml-2 mb-2"
-            onClick={() => {
-              setActiveTable(aoiSelected);
-            }}
-          >
-            <MdViewList /> &nbsp; View
-          </Button>
-          <Button
-            variant="dark"
-            className="ml-2 mb-2"
-            onClick={() => {
-              setEditAOI(true);
-              setDrawingMode(true);
-              setAoiName(aoi.name);
-            }}
-          >
-            <MdEdit /> &nbsp; Edit
-          </Button>
-          <Button
-            variant="dark"
-            className="ml-2 mb-2"
-            onClick={() => {
-              setActiveTable(false);
-              dispatch(delete_aoi(aoi.id));
-            }}
-          >
-            <MdDelete /> &nbsp; Delete
-          </Button>
-          <Button variant="dark" className="ml-2 mb-2" onClick={handleReport}>
-            <HiDocumentReport /> &nbsp; Report
-          </Button>
-          <Button
-            variant="dark"
-            className="ml-2 mb-2"
-            onClick={() => {
-              setHexGrid(!hexGrid);
-            }}
-          >
-            <GiHexes /> &nbsp;
-            {hexGrid ? "Hide Hexagon Grid" : "Show Hexagon Grid"}
-          </Button>
-          {editAOI && (
-            <>
-              <hr />
-              <InputGroup className="mb-3" style={{ width: "60%" }}>
-                <InputGroup.Prepend>
-                  <InputGroup.Text id="basic-addon1">
-                    Plan Name:
-                  </InputGroup.Text>
-                </InputGroup.Prepend>
-                <FormControl
-                  name="planName"
-                  value={aoiName}
-                  onChange={(e) => {
-                    setAoiName(e.target.value);
-                  }}
-                  placeholder="Name area of interest here..."
-                />
-              </InputGroup>
-              <Button
-                variant="dark"
-                // onClick={handleEdit}
-              >
-                Finalize Changes
-              </Button>
-            </>
-          )}
           {hexGrid && (
             <div
               className="d-flex justify-content-between"
               style={{ margin: "10px", width: "80%" }}
             >
-              <h6>Opacity: </h6>
+              <h6 style={{marginLeft: "25px"}}>Opacity: </h6>
               <RangeSlider
                 step={1}
                 value={hexOpacity}
@@ -306,14 +222,59 @@ const SidebarViewDetail = ({
               />
             </div>
           )}
-          <Button
-            variant="primary"
-            onClick={() => {
-              setView("act");
-            }}
-          >
-            Take Action
-          </Button>
+          <div class="button-container">
+            <Button
+              variant="dark"
+              className="ml-2 mb-2"
+              onClick={() => {
+                setEditAOI(true);
+                setDrawingMode(true);
+                setAoiName(aoi.name);
+              }}
+            >
+              <MdEdit /> {" "} Edit
+            </Button>
+            <Button
+              variant="dark"
+              className="ml-2 mb-2"
+              onClick={() => {
+                setActiveTable(false);
+                dispatch(delete_aoi(aoi.id));
+              }}
+            >
+              <MdDelete /> {" "} Delete
+            </Button>
+            <Button
+              variant="dark"
+              className="ml-2 mb-2"
+              onClick={() => {
+                setHexGrid(!hexGrid);
+              }}
+            >
+              <GiHexes /> {" "}
+              {hexGrid ? "Hide Hexagon Grid" : "Show Hexagon Grid"}
+            </Button>
+          </div>
+          <div class="button-container">
+            <Button
+              variant="dark"
+              className="ml-2 mb-2"
+              onClick={handleReport}
+            >
+              <HiDocumentReport /> {" "}
+              Get Stochastic Report
+            </Button>
+            <Button
+              variant="primary"
+              className="ml-2 mb-2"
+              onClick={() => {
+                setView("act");
+              }}
+            >
+              <HiAdjustments /> {" "}
+              Adjust Indicators
+            </Button>
+          </div>
         </Container>
       )}
       <Draggable cancel=".dont-drag-me">
@@ -371,7 +332,7 @@ const SidebarViewDetail = ({
             Stochastic Model
           </label>
           <label>
-            <GiHexes /> &nbsp;
+            <GiHexes /> {" "}
             {hexGrid ? "Hide Hexagon Grid" : "Show Hexagon Grid"}
             <Switch
               className="toggle-switch"

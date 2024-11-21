@@ -2,6 +2,7 @@ import React, { createContext, useState } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import Main from "./Main";
 import Report from "./Report";
+import StochasticReport from "./StochasticReport";
 
 const Router = () => {
   const RouterContext = createContext();
@@ -37,6 +38,8 @@ const Router = () => {
     cScore: "No Action",
     futureScore: "No Action"
   });
+  const [progress, setProgress] = useState(0);
+  const [showProgress, setShowProgress] = useState(false);
 
   return (
     // <RouterContext.Provider value={{hexIdInBlue, restoreAction, protectAction, maintainAction}}>
@@ -54,6 +57,10 @@ const Router = () => {
               setActionHexData={setActionHexData}
               actionScores={actionScores}
               setActionScores={setActionScores}
+              progress={progress}
+              setProgress={setProgress}
+              showProgress={showProgress}
+              setShowProgress={setShowProgress}
             />
           }
         ></Route>
@@ -66,6 +73,17 @@ const Router = () => {
               hexData={hexData}
               actionHexData={actionHexData}
               actionScores={actionScores}
+            />
+          }
+        ></Route>
+        <Route
+          exact
+          path="/stochastic-report"
+          element={
+            <StochasticReport
+              aoiSelected={aoiSelected}
+              setProgress={setProgress}
+              setShowProgress={setShowProgress}
             />
           }
         ></Route>

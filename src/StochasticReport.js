@@ -14,7 +14,7 @@ import RouterContext from "./Router.js";
 import { dataLayer } from "./Map/map-style";
 import DrawControl from "./Map/DrawControl";
 import Legend from "./Map/Legend";
-import { getAoiScore, sensitivityAnalysis } from "./helper/aggregateHex";
+import { getAoiScore, getHexagonScore, getStochasticScore, getStochasticActionScore, sensitivityAnalysis } from "./helper/aggregateHex";
 import "./App.css";
 
 //NECESSARY FOR ANTHONY'S TO COMPILE
@@ -29,13 +29,50 @@ ChartJS.register(ArcElement, BarElement, LineElement, PointElement, BoxPlotContr
 const MAPBOX_TOKEN =
   "pk.eyJ1IjoiY2h1Y2swNTIwIiwiYSI6ImNrMDk2NDFhNTA0bW0zbHVuZTk3dHQ1cGUifQ.dkjP73KdE6JMTiLcUoHvUA";
 
-const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
+const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
   const [stochasticityChecked, setStochasticityChecked] = useState(true);
   const [aoiScore, setAoiScore] = useState({});
   const [scoreStyle, setScoreStyle] = useState({});
   const [basemapStyle, setBasemapStyle] = useState("light-v10");
   const [overlayList, setOverlayList] = useState([]);
   // const [selectedHexIdList, setSelectedHexIdList] = useState(hexIdInBlue);
+  const [hexData, setHexData] = useState(null);
+  const [actionHexData, setActionHexData] = useState(null);
+  const [scores, setScores] = useState(null);
+  const [actionScores, setActionScores] = useState({
+    estcc: "No Action",
+    firef: "No Action",
+    gmgfc: "No Action",
+    gppgr: "No Action",
+    grntr: "No Action",
+    ihabc: "No Action",
+    impas: "No Action",
+    isegr: "No Action",
+    mavbp: "No Action",
+    mavbr: "No Action",
+    netcx: "No Action",
+    nlcfp: "No Action",
+    persu: "No Action",
+    playa: "No Action",
+    rescs: "No Action",
+    rests: "No Action",
+    safbb: "No Action",
+    saffb: "No Action",
+    saluh: "No Action",
+    urbps: "No Action",
+    wcofw: "No Action",
+    wcopb: "No Action",
+    wgcmd: "No Action",
+    hScore: "No Action",
+    fScore: "No Action",
+    cScore: "No Action",
+    futureScore: "No Action"
+  });
+  const [validScoreLabelList, setValidScoreLabelList] = useState([]);
+  const [barChartData, setBarChartData] = useState(null);
+  const [stackedBarChartData, setStackedBarChartData] = useState(null);
+  const [boxplotData, setBoxplotData] = useState(null);
+
   const overlaySources = {
     "secas": "mapbox://chuck0520.dkcwxuvl"
   };
@@ -68,10 +105,6 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
     longitude: newViewport.longitude,
     zoom: newViewport.zoom,
   });
-  
-  const scores = getAoiScore(hexData.features);
-
-  const scoreList = Object.values(scores);
 
   const scoreLabels = {
     "Estuarine Coastal Condition": "estcc",
@@ -125,205 +158,15 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
     "Network Complexity",
   ];
 
-  const validScoreLabelList = scoreLabelsList.filter((label) => scores[scoreLabels[label]] > 0);
-
-  const sensitivityResults = validScoreLabelList.map((label) => {
-    const increasedHexFeatureList = aoi.currentHexagons.map((hex, index) => {
-      // Use medoid score for deterministic model
-      const rawScore = {
-        estcc: hex.estcc_mi,
-        firef: hex.firef_mi,
-        gmgfc: hex.gmgfc_mi,
-        gppgr: hex.gppgr_mi,
-        grntr: hex.grntr_mi,
-        ihabc: hex.ihabc_mi,
-        impas: hex.impas_mi,
-        isegr: hex.isegr_mi,
-        mavbp: hex.mavbp_mi,
-        mavbr: hex.mavbr_mi,
-        netcx: hex.netcx_mi,
-        nlcfp: hex.nlcfp_mi,
-        persu: hex.persu_mi,
-        playa: hex.playa_mi,
-        rescs: hex.rescs_mi,
-        rests: hex.rests_mi,
-        safbb: hex.safbb_mi,
-        saffb: hex.saffb_mi,
-        saluh: hex.saluh_mi,
-        urbps: hex.urbps_mi,
-        wcofw: hex.wcofw_mi,
-        wcopb: hex.wcopb_mi,
-        wgcmd: hex.wgcmd_mi,
-        futurePenalty: hex.futv2_me
-      };
-      const increasedHexagonScore = sensitivityAnalysis(rawScore, scoreLabels[label], 0.25);
-
-      return {
-        type: "Feature",
-        geometry: JSON.parse(hex.geometry),
-        properties: {
-          ...increasedHexagonScore,
-          gid: hex.gid,
-          objectid: hex.objectid,
-        },
-      };
-    });
-
-    const decreasedHexFeatureList = aoi.currentHexagons.map((hex, index) => {
-      // Use medoid score for deterministic model
-      const rawScore = {
-        estcc: hex.estcc_mi,
-        firef: hex.firef_mi,
-        gmgfc: hex.gmgfc_mi,
-        gppgr: hex.gppgr_mi,
-        grntr: hex.grntr_mi,
-        ihabc: hex.ihabc_mi,
-        impas: hex.impas_mi,
-        isegr: hex.isegr_mi,
-        mavbp: hex.mavbp_mi,
-        mavbr: hex.mavbr_mi,
-        netcx: hex.netcx_mi,
-        nlcfp: hex.nlcfp_mi,
-        persu: hex.persu_mi,
-        playa: hex.playa_mi,
-        rescs: hex.rescs_mi,
-        rests: hex.rests_mi,
-        safbb: hex.safbb_mi,
-        saffb: hex.saffb_mi,
-        saluh: hex.saluh_mi,
-        urbps: hex.urbps_mi,
-        wcofw: hex.wcofw_mi,
-        wcopb: hex.wcopb_mi,
-        wgcmd: hex.wgcmd_mi,
-        futurePenalty: hex.futv2_me
-      };
-      const decreasedHexagonScore = sensitivityAnalysis(rawScore, scoreLabels[label], -0.25);
-
-      return {
-        type: "Feature",
-        geometry: JSON.parse(hex.geometry),
-        properties: {
-          ...decreasedHexagonScore,
-          gid: hex.gid,
-          objectid: hex.objectid,
-        },
-      };
-    });
-
-    const increasedAoiScore = getAoiScore(increasedHexFeatureList).currentScore;
-    const decreasedAoiScore = getAoiScore(decreasedHexFeatureList).currentScore;
-
-    return {
-      increasedAoiScore: increasedAoiScore,
-      decreasedAoiScore: decreasedAoiScore
-    };
-  });
-  
-  let barChartData = {
-    labels: ["Health", "Function", "Connectivity"],
-    datasets: [
-      {
-        label: "Current",
-        backgroundColor: "rgba(0,0,255,0.5)",
-        borderColor: "rgba(0,0,255,1)",
-        borderWidth: 1,
-        data: [
-          scores.hScore,
-          scores.fScore,
-          scores.cScore,
-        ],
-      },
-      {
-        label: "Future (No Action)",
-        backgroundColor: "rgba(255,0,0,0.5)",
-        borderColor: "rgba(255,0,0,1)",
-        borderWidth: 1,
-        data: [
-          scores.hScore*scores.futurePenalty,
-          scores.fScore*scores.futurePenalty,
-          scores.cScore*scores.futurePenalty,
-        ],
-      },
-      {
-        label: "Future (With Action)",
-        backgroundColor: "rgba(0,128,0,0.5)",
-        borderColor: "rgba(0,128,0,1)",
-        borderWidth: 1,
-        data: [
-          actionScores.hScore,
-          actionScores.fScore,
-          actionScores.cScore,
-        ],
-      },
-    ],
-  };
-
-  const stackedBarChartData = {
-    labels: validScoreLabelList,
-    datasets: [
-      {
-        label: "+25%",
-        backgroundColor: "rgba(93,0,216,1)",
-        data: sensitivityResults.map((item, index) => Math.abs(item.increasedAoiScore - scores[scoreLabels[validScoreLabelList[index]]]))
-      },
-      {
-        label: "-25%",
-        backgroundColor: "rgba(174,255,240,1)",
-        data: sensitivityResults.map((item, index) => 0 - Math.abs(item.decreasedAoiScore - scores[scoreLabels[validScoreLabelList[index]]]))
-      }
-    ]
-  };
-
-  const StackedAxisChart = () => {
-    const canvasRef = useRef(null);
-    useEffect(() => {
-      const ctx = canvasRef.current.getContext("2d");
-      if (ctx) {
-        new ChartJS(ctx, {
-          type: "bar",
-          data: stackedBarChartData,
-          options: {
-            responsive: true,
-            indexAxis: "y",
-            legend: {
-              position: "bottom"
-            },
-            scales: {
-              xAxes: [
-                {
-                  stacked: false,
-                  ticks: {
-                    beginAtZero: true,
-                    fontSize: 13,
-                    callback: (v) => {
-                      return v < 0 ? -v + "%" : v + "%";
-                    }
-                  }
-                }
-              ],
-              yAxes: [
-                {
-                  stacked: true,
-                  ticks: {
-                    beginAtZero: true,
-                    fontSize: 13
-                  },
-                  position: "right"
-                }
-              ]
-            }
-          }
-        });
-      }
-    }, []);
-  
-    return (
-      <canvas id="sensitivity" ref={canvasRef} />
-    );
-  };
-
-  const onStochasticityChange = () => {
-    setStochasticityChecked(!stochasticityChecked);
+  const boxplotOptions = {
+    responsive: true,
+    legend: {
+      position: "top"
+    },
+    title: {
+      display: true,
+      text: "Box Plot by HFC Goal"
+    }
   };
 
   let calculateImpact = (beforeScore, afterScore) => {
@@ -336,13 +179,305 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
     );
   };
 
+  useEffect(() => {
+    if (aoi && aoi.currentHexagons) {
+      setShowProgress(true);
+      const hexFeatureList = aoi.currentHexagons.map((hex, index) => {
+        setProgress(Math.round(index/aoi.currentHexagons.length*75) + 25);
+
+        // Use stochastic score for stochastic model
+        const stochasticScore = getStochasticScore(hex);
+        const stochasticHexagonScore = getHexagonScore(stochasticScore);
+
+        return {
+          type: "Feature",
+          geometry: JSON.parse(hex.geometry),
+          properties: {
+            ...stochasticScore,
+            ...stochasticHexagonScore,
+            gid: hex.gid,
+            objectid: hex.objectid,
+          },
+        };
+      });
+
+      const actionHexFeatureList = aoi.currentHexagons.map((hex, index) => {
+        setProgress(Math.round(index/aoi.currentHexagons.length*75) + 25);
+
+        // Use stochastic score for stochastic model with action
+        const stochasticActionScore = getStochasticActionScore(hex);
+        const stochasticActionHexagonScore = getHexagonScore(stochasticActionScore);
+
+        return {
+          type: "Feature",
+          geometry: JSON.parse(hex.geometry),
+          properties: {
+            ...stochasticActionScore,
+            ...stochasticActionHexagonScore,
+            gid: hex.gid,
+            objectid: hex.objectid,
+          },
+        };
+      });
+      
+      const hexData = {
+        type: "FeatureCollection",
+        features: hexFeatureList,
+      };
+      
+      const actionHexData = {
+        type: "FeatureCollection",
+        features: actionHexFeatureList,
+      };
+
+      setHexData(hexData);
+      setActionHexData(actionHexData);
+      setShowProgress(false);
+    }
+  }, [aoi]);
+  
+  useEffect(() => {
+    if (hexData) {
+      const scores = getAoiScore(hexData.features);
+      setScores(scores);
+
+      const validScoreLabelList = scoreLabelsList.filter((label) => scores[scoreLabels[label]] > 0);
+      setValidScoreLabelList(validScoreLabelList);
+    
+      const sensitivityResults = validScoreLabelList.map((label) => {
+        const increasedHexFeatureList = aoi.currentHexagons.map((hex, index) => {
+          // Use medoid score for deterministic model
+          const rawScore = {
+            estcc: hex.estcc_mi,
+            firef: hex.firef_mi,
+            gmgfc: hex.gmgfc_mi,
+            gppgr: hex.gppgr_mi,
+            grntr: hex.grntr_mi,
+            ihabc: hex.ihabc_mi,
+            impas: hex.impas_mi,
+            isegr: hex.isegr_mi,
+            mavbp: hex.mavbp_mi,
+            mavbr: hex.mavbr_mi,
+            netcx: hex.netcx_mi,
+            nlcfp: hex.nlcfp_mi,
+            persu: hex.persu_mi,
+            playa: hex.playa_mi,
+            rescs: hex.rescs_mi,
+            rests: hex.rests_mi,
+            safbb: hex.safbb_mi,
+            saffb: hex.saffb_mi,
+            saluh: hex.saluh_mi,
+            urbps: hex.urbps_mi,
+            wcofw: hex.wcofw_mi,
+            wcopb: hex.wcopb_mi,
+            wgcmd: hex.wgcmd_mi,
+            futurePenalty: hex.futv2_me
+          };
+          const increasedHexagonScore = sensitivityAnalysis(rawScore, scoreLabels[label], 0.25);
+    
+          return {
+            type: "Feature",
+            geometry: JSON.parse(hex.geometry),
+            properties: {
+              ...increasedHexagonScore,
+              gid: hex.gid,
+              objectid: hex.objectid,
+            },
+          };
+        });
+    
+        const decreasedHexFeatureList = aoi.currentHexagons.map((hex, index) => {
+          // Use medoid score for deterministic model
+          const rawScore = {
+            estcc: hex.estcc_mi,
+            firef: hex.firef_mi,
+            gmgfc: hex.gmgfc_mi,
+            gppgr: hex.gppgr_mi,
+            grntr: hex.grntr_mi,
+            ihabc: hex.ihabc_mi,
+            impas: hex.impas_mi,
+            isegr: hex.isegr_mi,
+            mavbp: hex.mavbp_mi,
+            mavbr: hex.mavbr_mi,
+            netcx: hex.netcx_mi,
+            nlcfp: hex.nlcfp_mi,
+            persu: hex.persu_mi,
+            playa: hex.playa_mi,
+            rescs: hex.rescs_mi,
+            rests: hex.rests_mi,
+            safbb: hex.safbb_mi,
+            saffb: hex.saffb_mi,
+            saluh: hex.saluh_mi,
+            urbps: hex.urbps_mi,
+            wcofw: hex.wcofw_mi,
+            wcopb: hex.wcopb_mi,
+            wgcmd: hex.wgcmd_mi,
+            futurePenalty: hex.futv2_me
+          };
+          const decreasedHexagonScore = sensitivityAnalysis(rawScore, scoreLabels[label], -0.25);
+    
+          return {
+            type: "Feature",
+            geometry: JSON.parse(hex.geometry),
+            properties: {
+              ...decreasedHexagonScore,
+              gid: hex.gid,
+              objectid: hex.objectid,
+            },
+          };
+        });
+    
+        const increasedAoiScore = getAoiScore(increasedHexFeatureList).currentScore;
+        const decreasedAoiScore = getAoiScore(decreasedHexFeatureList).currentScore;
+    
+        return {
+          increasedAoiScore: increasedAoiScore,
+          decreasedAoiScore: decreasedAoiScore
+        };
+      });
+
+      const stackedBarChartData = {
+        labels: validScoreLabelList,
+        datasets: [
+          {
+            label: "+25%",
+            backgroundColor: "rgba(93,0,216,1)",
+            data: sensitivityResults.map((item, index) => Math.abs(item.increasedAoiScore - scores[scoreLabels[validScoreLabelList[index]]]))
+          },
+          {
+            label: "-25%",
+            backgroundColor: "rgba(174,255,240,1)",
+            data: sensitivityResults.map((item, index) => 0 - Math.abs(item.decreasedAoiScore - scores[scoreLabels[validScoreLabelList[index]]]))
+          }
+        ]
+      };
+      
+      setStackedBarChartData(stackedBarChartData);
+    }
+
+    if (hexData && actionHexData) {
+      const scores = getAoiScore(hexData.features);
+      const actionScores = getAoiScore(actionHexData.features);
+      setActionScores(actionScores);
+      
+      let barChartData = {
+        labels: ["Health", "Function", "Connectivity"],
+        datasets: [
+          {
+            label: "Current",
+            backgroundColor: "rgba(0,0,255,0.5)",
+            borderColor: "rgba(0,0,255,1)",
+            borderWidth: 1,
+            data: [
+              scores.hScore,
+              scores.fScore,
+              scores.cScore,
+            ],
+          },
+          {
+            label: "Future (No Action)",
+            backgroundColor: "rgba(255,0,0,0.5)",
+            borderColor: "rgba(255,0,0,1)",
+            borderWidth: 1,
+            data: [
+              scores.hScore*scores.futurePenalty,
+              scores.fScore*scores.futurePenalty,
+              scores.cScore*scores.futurePenalty,
+            ],
+          },
+          {
+            label: "Future (With Action)",
+            backgroundColor: "rgba(0,128,0,0.5)",
+            borderColor: "rgba(0,128,0,1)",
+            borderWidth: 1,
+            data: [
+              actionScores.hScore,
+              actionScores.fScore,
+              actionScores.cScore,
+            ],
+          },
+        ],
+      };
+
+      setBarChartData(barChartData);
+      
+      const hScoreCurrent = hexData.features.map(feature => feature.properties.hScore);
+      const fScoreCurrent = hexData.features.map(feature => feature.properties.fScore);
+      const cScoreCurrent = hexData.features.map(feature => feature.properties.cScore);
+      const scoreCurrent = hexData.features.map(feature => feature.properties.currentScore);
+
+      const hScoreFuture = hexData.features.map(feature => Math.abs(feature.properties.hScore*feature.properties.futurePenalty));
+      const fScoreFuture = hexData.features.map(feature => Math.abs(feature.properties.fScore*feature.properties.futurePenalty));
+      const cScoreFuture = hexData.features.map(feature => Math.abs(feature.properties.cScore*feature.properties.futurePenalty));
+      const scoreFuture = hexData.features.map(feature => Math.abs(feature.properties.currentScore*feature.properties.futurePenalty));
+      
+      const hScoreAction = actionHexData.features.map(feature => feature.properties.hScore);
+      const fScoreAction = actionHexData.features.map(feature => feature.properties.fScore);
+      const cScoreAction = actionHexData.features.map(feature => feature.properties.cScore);
+      const scoreAction = actionHexData.features.map(feature => feature.properties.currentScore);
+  
+      const boxplotData = {
+        labels: ['Health', 'Function', 'Connectivity', 'Overall'],
+        datasets: [
+          {
+            label: "Current",
+            backgroundColor:  'rgba(0,0,255,0.5)',
+            borderColor: 'blue',
+            borderWidth: 1,
+            outlierColor: '#999999',
+            padding: 10,
+            itemRadius: 0,
+            data: [
+              hScoreCurrent,
+              fScoreCurrent,
+              cScoreCurrent,
+              scoreCurrent
+            ],
+          },
+          {
+            label: "Future (No Action)",
+            backgroundColor: 'rgba(255,0,0,0.5)',
+            borderColor: 'red',
+            borderWidth: 1,
+            outlierColor: '#999999',
+            padding: 10,
+            itemRadius: 0,
+            data: [
+              hScoreFuture,
+              fScoreFuture,
+              cScoreFuture,
+              scoreFuture
+            ],
+          },
+          {
+            label: "Future (With Action)",
+            backgroundColor: 'rgba(0,128,0,0.5)',
+            borderColor: 'green',
+            borderWidth: 1,
+            outlierColor: '#999999',
+            padding: 10,
+            itemRadius: 0,
+            data: [
+              hScoreAction,
+              fScoreAction,
+              cScoreAction,
+              scoreAction
+            ],
+          },
+        ],
+      };
+
+      setBoxplotData(boxplotData);
+    }
+  }, [hexData, actionHexData]);
+
   // useEffect(() => {
   //   setSelectedHexIdList(hexIdInBlue);
   // }, [hexIdInBlue]);
 
   return (
     <div style={{ padding: "50px", margin: "20px 100px" }}>
-      {aoi && (
+      {aoi && scores && actionScores && (
         <Col>
           <Row>
             <h2>{aoi.name} Details:</h2>
@@ -581,7 +716,7 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
                     type="fill"
                     paint={{
                       "fill-color": {
-                        property: "actionScore",
+                        property: "currentScore",
                         stops: [
                           [0.1, "#aefff0"],
                           [0.3, "#00d8f2"],
@@ -1033,16 +1168,65 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
                     </td>
                     <td>
                       <b style={{ color: "green" }}>
-                        {actionScores.futureScore}
+                        {actionScores.currentScore}
                       </b>
                     </td>
-                    {calculateImpact(scores.currentScore, actionScores.futureScore)}
+                    {calculateImpact(scores.currentScore, actionScores.currentScore)}
                   </tr>
                 </tbody>
               </Table>
             </Col>
             <Col>
-              <h4>HFC Goal Score Chart</h4>
+              <h4>HFC Goal Score Box Plot</h4>
+              <p>The HFC Goal Score Box Plot demonstrates the stochastic results of 1000 simulations that indicate the current condition, the deterioration of this area of interest when no action is applied, as well as the improvement of this area of interest when selected actions are taken by the goals of health, function and connectivity. </p>
+              <p style={{ display: "flex", justifyContent: "space-around" }}>
+                <div style={{ display: "flex", justifyContent: "space-around" }}>
+                  <span
+                    style={{
+                      display: "block",
+                      height: "20px",
+                      width: "30px",
+                      background: "blue",
+                      border: "1px blue solid",
+                      opacity: 0.5
+                    }}
+                  />
+                  &nbsp;
+                  <span style={{ color: "blue" }}>Current Score</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-around" }}>
+                  <span
+                    style={{
+                      display: "block",
+                      height: "20px",
+                      width: "30px",
+                      background: "red",
+                      border: "1px red solid",
+                      opacity: 0.5
+                    }}
+                  />
+                  &nbsp;
+                  <span style={{ color: "red" }}>Future Score (No Action)</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-around" }}>
+                  <span
+                    style={{
+                      display: "block",
+                      height: "20px",
+                      width: "30px",
+                      background: "green",
+                      border: "1px green solid",
+                      opacity: 0.5
+                    }}
+                  />
+                  &nbsp;
+                  <span style={{ color: "green" }}>Future Score (With Action)</span>
+                </div>
+              </p>
+              <Chart type="boxplot" options={boxplotOptions} data={boxplotData} />
+              <br/>
+
+              {/* <h4>HFC Goal Score Chart</h4>
               <p>The HFC Goal Score Chart demonstrates the deterioration of this area of interest when no action is applied as well as the improvement of this area of interest when selected actions are taken by the goals of health, function and connectivity. </p>
               <p style={{ display: "flex", justifyContent: "space-around" }}>
                 <div style={{ display: "flex", justifyContent: "space-around" }}>
@@ -1085,45 +1269,67 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
                   <span style={{ color: "green" }}>Future Score (With Action)</span>
                 </div>
               </p>
-              <Chart
-                type="bar"
-                data={barChartData}
-                options={{
-                  plugins: {
-                    legend: {
-                      display: true,
-                      position: "bottom"
+              {barChartData && (
+                <Chart
+                  type="bar"
+                  data={barChartData}
+                  options={{
+                    plugins: {
+                      legend: {
+                        display: true,
+                        position: "bottom"
+                      },
+                      title: {
+                        display: true,
+                        text: "AOI Scores"
+                      },
                     },
-                    title: {
-                      display: true,
-                      text: "AOI Scores"
-                    },
-                  },
-                }}
-              />
-              {/* <h4>AOI Score Chart by Indicator</h4>
-              <Chart
-                type="bar"
-                data={lineChartData}
-                options={{
-                  indexAxis: "y",
-                  plugins: {
-                    legend: {
-                      display: true,
-                      position: "bottom"
-                    },
-                    title: {
-                      display: true,
-                      text: "AOI Scores"
-                    },
-                  },
-                }}
-              /> */}
+                  }}
+                />
+              )} */}
+              <br/>
+
               <h4>Indicator Sensitivity Analysis</h4>
               <p>
                 The sensitivity analysis provides an assessment of which indicators are most influential on HFC scores 1) under the current conditions and scores in the area of interest and 2) relative to the other indicators. They are calculated in two separate analyses by 1) increasing each indicator one at time by 25% and 2) decreasing each indicator one at a time by 25%, while holding all other indicators constant. The largest positive and negative bars on the chart indicate that a particular indicator is more influential on HFC scores than the others under current conditions.
               </p>
-              {StackedAxisChart()}
+              {stackedBarChartData && (
+                <Chart
+                  type="bar"
+                  data={stackedBarChartData}
+                  options={{
+                    responsive: true,
+                    indexAxis: "y",
+                    legend: {
+                      position: "bottom"
+                    },
+                    scales: {
+                      xAxes: [
+                        {
+                          stacked: false,
+                          ticks: {
+                            beginAtZero: true,
+                            fontSize: 13,
+                            callback: (v) => {
+                              return v < 0 ? -v + "%" : v + "%";
+                            }
+                          }
+                        }
+                      ],
+                      yAxes: [
+                        {
+                          stacked: true,
+                          ticks: {
+                            beginAtZero: true,
+                            fontSize: 13
+                          },
+                          position: "right"
+                        }
+                      ]
+                    }
+                  }}
+                />
+              )}
             </Col>
           </Row>
           <Row>
@@ -1550,4 +1756,4 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
   );
 };
 
-export default Report;
+export default StochasticReport;
