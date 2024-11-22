@@ -340,6 +340,10 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
   //   setSelectedHexIdList(hexIdInBlue);
   // }, [hexIdInBlue]);
 
+  window.onbeforeunload = function() {
+    return "Data will be lost if you leave the page, are you sure?";
+  };
+
   return (
     <div style={{ padding: "50px", margin: "20px 100px" }}>
       {aoi && (
@@ -353,7 +357,7 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
               Print
             </Button>
           </Row>
-          <Row style={{ height: "50vh" }}>
+          <Row>
             <Col>
               <Row>
                 <h5>

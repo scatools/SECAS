@@ -475,6 +475,10 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
   //   setSelectedHexIdList(hexIdInBlue);
   // }, [hexIdInBlue]);
 
+  window.onbeforeunload = function() {
+    return "Data will be lost if you leave the page, are you sure?";
+  };
+
   return (
     <div style={{ padding: "50px", margin: "20px 100px" }}>
       {aoi && scores && actionScores && (
@@ -488,7 +492,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
               Print
             </Button>
           </Row>
-          <Row style={{ height: "50vh" }}>
+          <Row>
             <Col>
               <Row>
                 <h5>
@@ -501,7 +505,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                 </h5>
                 <h5>
                   Future HFC Score (With Action):{" "}
-                  <span style={{ color: "green" }}>{actionScores.futureScore}</span>
+                  <span style={{ color: "green" }}>{actionScores.currentScore}</span>
                 </h5>
               </Row>
               <Row>
@@ -534,7 +538,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                   </li>
                   <li>
                     The HFC score of this area will
-                    <b style={{ color: "green" }}> increase by {Math.round(100*actionScores.futureScore/scores.currentScore - 100)}% </b>
+                    <b style={{ color: "green" }}> increase by {Math.round(100*actionScores.currentScore/scores.currentScore - 100)}% </b>
                     in year 2060 with selected conservation actions compared to current condition
                   </li>
                 </Col>
