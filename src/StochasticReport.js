@@ -158,6 +158,33 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
     "Network Complexity",
   ];
 
+  const indicatorBins = {
+    estcc: [0, 0.25, 0.5, 0.75, 1],
+    firef: [0, 0.5, 1],
+    gmgfc: [0, 1],
+    gppgr: [0.2, 0.4, 0.6, 0.8, 1],
+    grntr: [0, 0.25, 0.5, 0.75, 1],
+    ihabc: [0, 0.75, 1],
+    impas: [0, 0.5, 0.75, 1],
+    isegr: [0, 0.25, 0.5, 0.75, 1],
+    mavbp: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+    mavbr: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+    netcx: [0, 0.25, 0.5, 0.75, 1],
+    nlcfp: [0, 0.25, 0.5, 0.75, 1],
+    persu: [0.5, 0.7, 0.9, 1],
+    playa: [0, 0.5, 1],
+    rescs: [0.1, 0.25, 0.4, 0.55, 0.7, 0.85, 1],
+    rests: [0, 0.25, 0.4, 0.55, 0.7, 0.85, 1],
+    safbb: [0, 0.2, 0.4, 0.6, 0.8, 1],
+    saffb: [0, 0.5, 1],
+    saluh: [0, 0.5, 1],
+    urbps: [0, 0.25, 0.5, 0.75, 1],
+    wcofw: [0, 0.2, 0.4, 0.6, 0.8, 1],
+    wcopb: [0, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+    wgcmd: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+    overall: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+  };
+
   const boxplotOptions = {
     responsive: true,
     legend: {
@@ -169,12 +196,20 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
     }
   };
 
-  let calculateImpact = (beforeScore, afterScore) => {
-    let percentage = beforeScore == 0 ? 0 : (afterScore-beforeScore)/beforeScore;
+  let calculateImpact = (beforeScore, afterScore, indicator) => {
+    const beforeScoreBin = indicatorBins[indicator].findIndex(bin => bin >= beforeScore);
+    const afterScoreBin = indicatorBins[indicator].findIndex(bin => bin >= afterScore);
+    const arrowNumber = afterScoreBin - beforeScoreBin + 1;
     return (
       <td>
-        {afterScore < beforeScore ? <BiSolidDownArrow color="red" /> : <BiSolidUpArrow color="green" />} &nbsp;
-        {(100*percentage).toFixed(0) + "%"}
+        {afterScore <= beforeScore ?
+          "--" :
+          (
+            Array.from({length: arrowNumber}).map((index) => 
+              <BiSolidUpArrow key={index} color="green" />
+            )
+          )
+        }
       </td>
     );
   };
@@ -761,7 +796,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.estcc}</td>
                     <td style={{ color: "red" }}>{(scores.estcc*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.estcc}</td>
-                    {calculateImpact(scores.estcc, actionScores.estcc)}
+                    {calculateImpact(scores.estcc, actionScores.estcc, "estcc")}
                   </tr>
                   :
                   <tr>
@@ -778,7 +813,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.firef}</td>
                     <td style={{ color: "red" }}>{(scores.firef*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.firef}</td>
-                    {calculateImpact(scores.firef, actionScores.firef)}
+                    {calculateImpact(scores.firef, actionScores.firef, "firef")}
                   </tr>
                   :
                   <tr>
@@ -795,7 +830,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.gppgr}</td>
                     <td style={{ color: "red" }}>{(scores.gppgr*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.gppgr}</td>
-                    {calculateImpact(scores.gppgr, actionScores.gppgr)}
+                    {calculateImpact(scores.gppgr, actionScores.gppgr, "gppgr")}
                   </tr>
                   :
                   <tr>
@@ -812,7 +847,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.impas}</td>
                     <td style={{ color: "red" }}>{(scores.impas*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.impas}</td>
-                    {calculateImpact(scores.impas, actionScores.impas)}
+                    {calculateImpact(scores.impas, actionScores.impas, "impas")}
                   </tr>
                   :
                   <tr>
@@ -829,7 +864,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.isegr}</td>
                     <td style={{ color: "red" }}>{(scores.isegr*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.isegr}</td>
-                    {calculateImpact(scores.isegr, actionScores.isegr)}
+                    {calculateImpact(scores.isegr, actionScores.isegr, "isegr")}
                   </tr>
                   :
                   <tr>
@@ -846,7 +881,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.mavbp}</td>
                     <td style={{ color: "red" }}>{(scores.mavbp*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.mavbp}</td>
-                    {calculateImpact(scores.mavbp, actionScores.mavbp)}
+                    {calculateImpact(scores.mavbp, actionScores.mavbp, "mavbp")}
                   </tr>
                   :
                   <tr>
@@ -863,7 +898,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.mavbr}</td>
                     <td style={{ color: "red" }}>{(scores.mavbr*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.mavbr}</td>
-                    {calculateImpact(scores.mavbr, actionScores.mavbr)}
+                    {calculateImpact(scores.mavbr, actionScores.mavbr, "mavbr")}
                   </tr>
                   :
                   <tr>
@@ -880,7 +915,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.nlcfp}</td>
                     <td style={{ color: "red" }}>{(scores.nlcfp*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.nlcfp}</td>
-                    {calculateImpact(scores.nlcfp, actionScores.nlcfp)}
+                    {calculateImpact(scores.nlcfp, actionScores.nlcfp, "nlcfp")}
                   </tr>
                   :
                   <tr>
@@ -897,7 +932,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.persu}</td>
                     <td style={{ color: "red" }}>{(scores.persu*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.persu}</td>
-                    {calculateImpact(scores.persu, actionScores.persu)}
+                    {calculateImpact(scores.persu, actionScores.persu, "persu")}
                   </tr>
                   :
                   <tr>
@@ -914,7 +949,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.playa}</td>
                     <td style={{ color: "red" }}>{(scores.playa*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.playa}</td>
-                    {calculateImpact(scores.playa, actionScores.playa)}
+                    {calculateImpact(scores.playa, actionScores.playa, "playa")}
                   </tr>
                   :
                   <tr>
@@ -931,7 +966,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.rescs}</td>
                     <td style={{ color: "red" }}>{(scores.rescs*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.rescs}</td>
-                    {calculateImpact(scores.rescs, actionScores.rescs)}
+                    {calculateImpact(scores.rescs, actionScores.rescs, "rescs")}
                   </tr>
                   :
                   <tr>
@@ -948,7 +983,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.rests}</td>
                     <td style={{ color: "red" }}>{(scores.rests*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.rests}</td>
-                    {calculateImpact(scores.rests, actionScores.rests)}
+                    {calculateImpact(scores.rests, actionScores.rests, "rests")}
                   </tr>
                   :
                   <tr>
@@ -965,7 +1000,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.safbb}</td>
                     <td style={{ color: "red" }}>{(scores.safbb*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.safbb}</td>
-                    {calculateImpact(scores.safbb, actionScores.safbb)}
+                    {calculateImpact(scores.safbb, actionScores.safbb, "safbb")}
                   </tr>
                   :
                   <tr>
@@ -982,7 +1017,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.saffb}</td>
                     <td style={{ color: "red" }}>{(scores.saffb*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.saffb}</td>
-                    {calculateImpact(scores.saffb, actionScores.saffb)}
+                    {calculateImpact(scores.saffb, actionScores.saffb, "saffb")}
                   </tr>
                   :
                   <tr>
@@ -999,7 +1034,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.wcofw}</td>
                     <td style={{ color: "red" }}>{(scores.wcofw*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.wcofw}</td>
-                    {calculateImpact(scores.wcofw, actionScores.wcofw)}
+                    {calculateImpact(scores.wcofw, actionScores.wcofw, "wcofw")}
                   </tr>
                   :
                   <tr>
@@ -1016,7 +1051,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.wcopb}</td>
                     <td style={{ color: "red" }}>{(scores.wcopb*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.wcopb}</td>
-                    {calculateImpact(scores.wcopb, actionScores.wcopb)}
+                    {calculateImpact(scores.wcopb, actionScores.wcopb, "wcopb")}
                   </tr>
                   :
                   <tr>
@@ -1033,7 +1068,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.wgcmd}</td>
                     <td style={{ color: "red" }}>{(scores.wgcmd*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.wgcmd}</td>
-                    {calculateImpact(scores.wgcmd, actionScores.wgcmd)}
+                    {calculateImpact(scores.wgcmd, actionScores.wgcmd, "wgcmd")}
                   </tr>
                   :
                   <tr>
@@ -1055,7 +1090,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.grntr}</td>
                     <td style={{ color: "red" }}>{(scores.grntr*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.grntr}</td>
-                    {calculateImpact(scores.grntr, actionScores.grntr)}
+                    {calculateImpact(scores.grntr, actionScores.grntr, "grntr")}
                   </tr>
                   :
                   <tr>
@@ -1072,7 +1107,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.saluh}</td>
                     <td style={{ color: "red" }}>{(scores.saluh*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.saluh}</td>
-                    {calculateImpact(scores.saluh, actionScores.saluh)}
+                    {calculateImpact(scores.saluh, actionScores.saluh, "saluh")}
                   </tr>
                   :
                   <tr>
@@ -1089,7 +1124,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.urbps}</td>
                     <td style={{ color: "red" }}>{(scores.urbps*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.urbps}</td>
-                    {calculateImpact(scores.urbps, actionScores.urbps)}
+                    {calculateImpact(scores.urbps, actionScores.urbps, "urbps")}
                   </tr>
                   :
                   <tr>
@@ -1111,7 +1146,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.gmgfc}</td>
                     <td style={{ color: "red" }}>{(scores.gmgfc*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.gmgfc}</td>
-                    {calculateImpact(scores.gmgfc, actionScores.gmgfc)}
+                    {calculateImpact(scores.gmgfc, actionScores.gmgfc, "gmgfc")}
                   </tr>
                   :
                   <tr>
@@ -1128,7 +1163,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.ihabc}</td>
                     <td style={{ color: "red" }}>{(scores.ihabc*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.ihabc}</td>
-                    {calculateImpact(scores.ihabc, actionScores.ihabc)}
+                    {calculateImpact(scores.ihabc, actionScores.ihabc, "ihabc")}
                   </tr>
                   :
                   <tr>
@@ -1145,7 +1180,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <td style={{ color: "blue" }}>{scores.netcx}</td>
                     <td style={{ color: "red" }}>{(scores.netcx*scores.futurePenalty).toFixed(2)}</td>
                     <td style={{ color: "green" }}>{actionScores.netcx}</td>
-                    {calculateImpact(scores.netcx, actionScores.netcx)}
+                    {calculateImpact(scores.netcx, actionScores.netcx, "netcx")}
                   </tr>
                   :
                   <tr>
@@ -1175,7 +1210,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                         {actionScores.currentScore}
                       </b>
                     </td>
-                    {calculateImpact(scores.currentScore, actionScores.currentScore)}
+                    {calculateImpact(scores.currentScore, actionScores.currentScore, "overall")}
                   </tr>
                 </tbody>
               </Table>
