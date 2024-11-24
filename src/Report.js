@@ -152,6 +152,33 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
     overall: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
   };
 
+  const indicatorBinLabels = {
+    estcc: ["Poor", "Fair to poor", "Fair", "Good to fair", "Good"],
+    firef: ["Not burned or row crop", "Burned 1 time (~burned only once in 8 years)", "Burned 2 or more times (~burned every 4 years or more frequently)"],
+    gmgfc: ["Everything else, includes terrestrial", "Presence of Alabama shad, American shad, striped bass, or Gulf sturgeon"],
+    gppgr: ["0-20%", "21-40%", "41-60%", "61-80%", "81-100%"],
+    grntr: ["Everything else, includes terrestrial", "Sidewalk or other path", "Developed and connected for <1.9km", "Partly natural and connected for 1.9 to 5km", "Mostly natural and connected, or partly natural and connected ≥5 km, or developed and connected ≥5 km"],
+    ihabc: ["Not a core", "Small core (>100–1,000 acres)", "Large core (>1,000 acres)"],
+    impas: ["No imperiled aquatic species", "1-2 imperiled aquatic species", "3 imperiled aquatic species", "4 or more imperiled aquatic species"],
+    isegr: ["Grassland geology but grassland less likely", "Potentially compatible management outside of grassland geology (undeveloped powerline right-of-way or perennial forbs and grasses)", "Potentially compatible management within grassland geology (undeveloped powerline right-of-way or perennial forbs and grasses)", "Known grassland buffer", "Known grassland"],
+    mavbp: ["No data", "1-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80", "81-90", "91-100"],
+    mavbr: ["No data", "1-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80", "81-90", "91-100"],
+    netcx: ["Everything else, includes terrestrial", "1 connected stream class", "2 connected stream classes", "3 connected stream classes", ">3 connected stream classes"],
+    nlcfp: ["No natural landcover", "≤60% natural landcover", "61-70% natural landcover", "71-80% natural landcover", ">80% natural landcover"],
+    persu: ["<70% catchment permeable", "70-90% catchment permeable", "90-95% catchment permeable", ">95% catchment permeable"],
+    playa: ["Everything else, includes terrestrial", "Other Playa", "Healthy Playa"],
+    rescs: ["Least resilient", "Less resilient", "Slightly less resilient", "Average", "Slightly more resilient", "More resilient", "Most resilient"],
+    rests: ["Developed and least resilient", "Less resilient", "Slightly less resilient", "Average", "Slightly more resilient", "More resilient", "Most resilient"],
+    safbb: ["0%", "0-20%", "21-40%", "41-60%", "61-80%", "81-100%"],
+    saffb: ["Less potential", "Very small patches", "Very large patches"],
+    saluh: ["Not historic", "Historic, high-urban buffer", "Historic, low-urban buffer"],
+    urbps: ["<5 acres", "5-10 acres", "11-30 acres", "31-50 acres", ">50 acres"],
+    wcofw: ["Everything else, includes terrestrial", "Low (1-20)", "Med-Low (21-40)", "Medium (41-60)", "Med-High (61-80)", "High (>80)"],
+    wcopb: ["Pine patch / cluster too small OR not upland pine", "Cluster large enough to support populations of 1 umbrella species", "Cluster large enough to support populations of 2 umbrella species", "Cluster large enough to support populations of 3 umbrella species", "Patch large enough to support populations of 1 umbrella species", "Patch large enough to support populations of 2 umbrella species", "Patch large enough to support populations of 3 umbrella species"],
+    wgcmd: ["0%", "1-10%", "11-20%", "21-30%", "31-40%", "41-50%", "51-60%", "61-70%", "71-80%", "81-90%", "91-100%"],
+    overall: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+  };
+
   const validScoreLabelList = scoreLabelsList.filter((label) => scores[scoreLabels[label]] > 0);
 
   const sensitivityResults = validScoreLabelList.map((label) => {
@@ -355,6 +382,10 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
     const arrowNumber = afterScoreBin - beforeScoreBin + 1;
     return (
       <td>
+        {afterScore > beforeScore && indicator !== "overall" && (
+          <span style={{color: "blue"}}>{indicatorBinLabels[indicator][beforeScoreBin]}</span>
+        )}
+        <br/>
         {afterScore <= beforeScore ?
           "--" :
           (
@@ -363,6 +394,10 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
             )
           )
         }
+        <br/>
+        {afterScore > beforeScore && indicator !== "overall" && (
+          <span style={{color: "green"}}>{indicatorBinLabels[indicator][afterScoreBin]}</span>
+        )}
       </td>
     );
   };
@@ -635,7 +670,7 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
           <Row>
             <Col>
               <h4>AOI Indicator Scores</h4>
-              <Table striped bordered size="md" variant="light">
+              <Table striped bordered size="md" variant="light" style={{textAlign: "center"}}>
                 <thead>
                   <tr>
                     <th>Indicators</th>
