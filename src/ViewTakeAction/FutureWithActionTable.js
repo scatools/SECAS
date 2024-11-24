@@ -142,7 +142,7 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
             <Slider
               defaultValue={currentLevels[indicator]}
               value={actionLevels[indicator]}
-              min={0}
+              min={currentLevels[indicator]}
               max={indicators[indicator].length-1}
               step={1}
               graduated
@@ -154,6 +154,7 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
                   return "Max";
                 }
               }}
+              renderTooltip={tooltip => "+" + tooltip}
               onChange={(e) => {
                 onActionLevelChange(e, indicator)
               }}
@@ -654,6 +655,12 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
                         },
                         tickLabels: {
                           type: "outer",
+                          defaultTickValueConfig: {
+                            formatTextValue: (value) => value/100,
+                            style: {
+                              fontSize: 15
+                            }
+                          },
                           ticks: [
                             {
                               value: Math.round(scores.currentScore*100),

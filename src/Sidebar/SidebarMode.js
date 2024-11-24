@@ -2,7 +2,7 @@ import React from "react";
 import { ButtonGroup, ToggleButton } from "react-bootstrap";
 
 const SidebarMode = ({ aoiSelected, view, setView }) => {
-  if (aoiSelected) {
+  if (aoiSelected && view === "add") {
     setView("evaluate");
   };
 
