@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Container, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
+import { ButtonGroup, Container, ToggleButton } from "react-bootstrap";
 import AddDraw from "./AddDraw";
 import AddZip from "./AddZip";
 
@@ -48,7 +48,7 @@ const AddAOIView = ({
     <>
       <p>Add Area of Interest</p>
       <Container className="d-flex">
-        <ToggleButtonGroup name="importSwitch" className="m-auto">
+        <ButtonGroup name="importSwitch" className="m-auto">
           <ToggleButton
             type="radio"
             variant="outline-secondary"
@@ -77,7 +77,7 @@ const AddAOIView = ({
           >
             by Zipped Shapefile
           </ToggleButton>
-        </ToggleButtonGroup>
+        </ButtonGroup>
       </Container>
 
       {inputMode === "draw" && (

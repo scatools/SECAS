@@ -73,7 +73,7 @@ const AddDraw = ({
   return (
     <Container className="mt-3">
       <InputGroup className="m-auto" style={{ width: "80%" }}>
-        <InputGroup.Text id="basic-addon1">Plan Name:</InputGroup.Text>
+        <InputGroup.Text id="basic-addon1">Area Name:</InputGroup.Text>
         <FormControl
           name="planName"
           value={drawData}

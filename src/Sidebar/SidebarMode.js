@@ -1,15 +1,12 @@
 import React from "react";
-import { ToggleButton, ToggleButtonGroup } from "react-bootstrap";
+import { ButtonGroup, ToggleButton } from "react-bootstrap";
 
 const SidebarMode = ({ aoiSelected, view, setView }) => {
   return (
-    <ToggleButtonGroup
-      type="radio"
-      name="modeSelect"
-      className="d-flex justify-content-center"
-    >
+    <ButtonGroup className="d-flex justify-content-center">
       <ToggleButton
         id="add"
+        type="radio"
         variant="outline-secondary"
         className="sidebar-toggle"
         value="add"
@@ -21,6 +18,7 @@ const SidebarMode = ({ aoiSelected, view, setView }) => {
       </ToggleButton>
       <ToggleButton
         id="evaluate"
+        type="radio"
         variant="outline-secondary"
         className="sidebar-toggle"
         value="evaluate"
@@ -32,6 +30,7 @@ const SidebarMode = ({ aoiSelected, view, setView }) => {
       </ToggleButton>
       <ToggleButton
         id="act"
+        type="radio"
         variant="outline-secondary"
         className="sidebar-toggle"
         value="act"
@@ -41,7 +40,7 @@ const SidebarMode = ({ aoiSelected, view, setView }) => {
       >
         Take Action
       </ToggleButton>
-    </ToggleButtonGroup>
+    </ButtonGroup>
   );
 };
 
