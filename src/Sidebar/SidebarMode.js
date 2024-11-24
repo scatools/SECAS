@@ -2,6 +2,10 @@ import React from "react";
 import { ButtonGroup, ToggleButton } from "react-bootstrap";
 
 const SidebarMode = ({ aoiSelected, view, setView }) => {
+  if (aoiSelected) {
+    setView("evaluate");
+  };
+
   return (
     <ButtonGroup className="d-flex justify-content-center">
       <ToggleButton
@@ -11,7 +15,6 @@ const SidebarMode = ({ aoiSelected, view, setView }) => {
         className="sidebar-toggle"
         value="add"
         checked={view === "add"}
-        defaultChecked={true}
         onChange={(e) => setView(e.currentTarget.value)}
       >
         Add AOI

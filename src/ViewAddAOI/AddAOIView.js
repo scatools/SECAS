@@ -40,7 +40,6 @@ const AddAOIView = ({
   useEffect(() => {
     if (inputMode === "draw") {
       setDrawingMode(true);
-      setAoiSelected(false);
     }
   }, [inputMode]);
 
@@ -57,7 +56,6 @@ const AddAOIView = ({
             value="draw"
             checked={inputMode === "draw"}
             onChange={(e) => {
-              setAoiSelected(false);
               setInputMode(e.currentTarget.value);
             }}
           >
