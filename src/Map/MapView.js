@@ -767,7 +767,7 @@ const MapView = ({
                   type="raster"
                   id="Blueprint"
                   value="Blueprint"
-                  beforeId="future-hex"
+                  beforeId="future-hex-no-action"
                   paint={{"raster-opacity": 0.5}}
                 />
               </Source>

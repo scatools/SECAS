@@ -269,6 +269,7 @@ const SidebarViewDetail = ({
               className="ml-2 mb-2"
               onClick={() => {
                 setView("act");
+                setDualMap(false);
               }}
             >
               <HiAdjustments /> {" "}
@@ -280,7 +281,7 @@ const SidebarViewDetail = ({
       <Draggable cancel=".dont-drag-me">
         <div id="floating-layer-controls">
           <label>
-            Southeast Blueprint Layer
+            Southeast Blueprint Layer {" "}
             <Switch
               className="toggle-switch"
               checked={overlayChecked}
@@ -297,7 +298,7 @@ const SidebarViewDetail = ({
             />
           </label>
           <label>
-            Future Condition
+            Future Condition {" "}
             <Switch
               className="toggle-switch"
               checked={conditionChecked}
@@ -314,7 +315,7 @@ const SidebarViewDetail = ({
             />
           </label>
           <label>
-            Deterministic Model
+            Deterministic Model {" "}
             <Switch
               className="toggle-switch"
               checked={stochasticityChecked}
@@ -329,11 +330,11 @@ const SidebarViewDetail = ({
               height={15}
               width={36}
             />
-            Stochastic Model
+             {" "} Stochastic Model
           </label>
           <label>
-            <GiHexes /> {" "}
-            {hexGrid ? "Hide Hexagon Grid" : "Show Hexagon Grid"}
+            <GiHexes />
+            {" "} Show Hexagon Grid {" "}
             <Switch
               className="toggle-switch"
               checked={hexGrid}
