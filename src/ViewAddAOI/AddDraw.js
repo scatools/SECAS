@@ -65,7 +65,7 @@ const AddDraw = ({
 
       setDrawingMode(false);
       setHabitatLayer("none");
-      setView("viewAOI");
+      setView("evaluate");
       setProgress(25);
     };
   };
@@ -83,25 +83,16 @@ const AddDraw = ({
       </InputGroup>
       <br />
       <Container>
-        <Button
-          variant="dark"
-          style={{ float: "left" }}
-          onClick={() => {
-            setDrawingMode(true);
-            setAoiSelected(false);
-          }}
-        >
-          Add a New Shape
-        </Button>
-        <Button variant="dark" style={{ float: "left" }} onClick={resetButton}>
+        <Button variant="secondary" style={{ float: "left" }} onClick={resetButton}>
           Start Over
         </Button>
         <Button
-          variant="dark"
+          variant="primary"
           style={{ float: "right" }}
+          disabled={drawData && featureList.length ? false : true}
           onClick={handleSubmit}
         >
-          Finalize Input
+          Finish Drawing
         </Button>
       </Container>
     </Container>

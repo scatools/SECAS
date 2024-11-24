@@ -82,15 +82,8 @@ const Sidebar = ({
       <div className="ControlWrapper">
         <h5>&nbsp;&nbsp;Options:</h5>
         <br />
-        <SidebarMode view={view} setView={setView} />
+        <SidebarMode aoiSelected={aoiSelected} view={view} setView={setView} />
         <br />
-        {/* {view === "visualize" && (
-          <SelectHabitatView
-            habitatLayer={habitatLayer}
-            setHabitatLayer={setHabitatLayer}
-            setView={setView}
-          />
-        )} */}
 
         {view === "add" && (
           <AddAOIView
@@ -105,7 +98,7 @@ const Sidebar = ({
           />
         )}
 
-        {view === "viewAOI" && (
+        {view === "evaluate" && (
           <Container>
             <SidebarViewDetail
               zoomToAOI={zoomToAOI}

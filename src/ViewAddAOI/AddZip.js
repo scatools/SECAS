@@ -57,7 +57,7 @@ const AddZip = ({ setAlerttext, setView, resetButton, setProgress, setShowProgre
           })
         );
 
-        setView("viewAOI");
+        setView("evaluate");
         setProgress(25);
       };
 
@@ -103,13 +103,16 @@ const AddZip = ({ setAlerttext, setView, resetButton, setProgress, setShowProgre
   );
 
   return (
-    <div>
+    <div style={{padding: "20px"}}>
+      <p style={{fontSize: "1em"}}>
+        Please zip all files (.shp, .shx, .dbf, .prj) of your shapefile into a single zip file and upload from the drop zone below:
+      </p>
       <Container className="m-auto file-drop">
         <Dropzone onDrop={onDrop} accept={{ "application/zip": [".zip"] }}>
           {({ getRootProps, getInputProps }) => (
             <div {...getRootProps()}>
               <input {...getInputProps()} />
-              Click me to upload a file!
+              Click me to upload a zipped shapefile!
             </div>
           )}
         </Dropzone>
