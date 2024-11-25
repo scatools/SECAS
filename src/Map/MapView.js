@@ -201,108 +201,154 @@ const MapView = ({
                 <b>Health: </b>{" "}
               </td>
             </tr>
-            <tr>
-              <td>Estuarine Coastal Condition:</td>
-              <td>{clickedProperty.estcc}</td>
-            </tr>
-            <tr>
-              <td>Fire Frequency:</td>
-              <td>{clickedProperty.firef}</td>
-            </tr>
-            <tr>
-              <td>Great Plains Perennial Grass:</td>
-              <td>{clickedProperty.gppgr}</td>
-            </tr>
-            <tr>
-              <td>Imperiled Aquatic Species:</td>
-              <td>{clickedProperty.impas}</td>
-            </tr>
-            <tr>
-              <td>Interior Southeast Grasslands:</td>
-              <td>{clickedProperty.isegr}</td>
-            </tr>
-            <tr>
-              <td>MAV Forest Birds Protection:</td>
-              <td>{clickedProperty.mavbp}</td>
-            </tr>
-            <tr>
-              <td>MAV Forest Birds Restoration:</td>
-              <td>{clickedProperty.mavbr}</td>
-            </tr>
-            <tr>
-              <td>Natural Landcover Floodplains:</td>
-              <td>{clickedProperty.nlcfp}</td>
-            </tr>
-            <tr>
-              <td>Permeable Surface:</td>
-              <td>{clickedProperty.persu}</td>
-            </tr>
-            <tr>
-              <td>Playas:</td>
-              <td>{clickedProperty.playa}</td>
-            </tr>
-            <tr>
-              <td>Resilient Coastal Sites:</td>
-              <td>{clickedProperty.rescs}</td>
-            </tr>
-            <tr>
-              <td>Resilient Terrestrial Sites:</td>
-              <td>{clickedProperty.rests}</td>
-            </tr>
-            <tr>
-              <td>South Atlantic Beach Birds:</td>
-              <td>{clickedProperty.safbb}</td>
-            </tr>
-            <tr>
-              <td>South Atlantic Forest Birds:</td>
-              <td>{clickedProperty.saffb}</td>
-            </tr>
-            <tr>
-              <td>West Coastal Plain Ouachitas Forested Wetlands:</td>
-              <td>{clickedProperty.wcofw}</td>
-            </tr>
-            <tr>
-              <td>West Coastal Plain Ouachitas Open Pine Bird:</td>
-              <td>{clickedProperty.wcopb}</td>
-            </tr>
-            <tr>
-              <td>West Gulf Coast Mottled Duck Nesting:</td>
-              <td>{clickedProperty.wgcmd}</td>
-            </tr>
+            {clickedProperty.estcc > 0 && (
+              <tr>
+                <td>Estuarine Coastal Condition:</td>
+                <td>{clickedProperty.estcc}</td>
+              </tr>
+            )}
+            {clickedProperty.firef > 0 && (
+              <tr>
+                <td>Fire Frequency:</td>
+                <td>{clickedProperty.firef}</td>
+              </tr>
+            )}
+            {clickedProperty.gppgr > 0 && (
+              <tr>
+                <td>Great Plains Perennial Grass:</td>
+                <td>{clickedProperty.gppgr}</td>
+              </tr>
+            )}
+            {clickedProperty.impas > 0 && (
+              <tr>
+                <td>Imperiled Aquatic Species:</td>
+                <td>{clickedProperty.impas}</td>
+              </tr>
+            )}
+            {clickedProperty.isegr > 0 && (
+              <tr>
+                <td>Interior Southeast Grasslands:</td>
+                <td>{clickedProperty.isegr}</td>
+              </tr>
+            )}
+            {clickedProperty.mavbp > 0 && (
+              <tr>
+                <td>MAV Forest Birds Protection:</td>
+                <td>{clickedProperty.mavbp}</td>
+              </tr>
+            )}
+            {clickedProperty.mavbr > 0 && (
+              <tr>
+                <td>MAV Forest Birds Restoration:</td>
+                <td>{clickedProperty.mavbr}</td>
+              </tr>
+            )}
+            {clickedProperty.nlcfp > 0 && (
+              <tr>
+                <td>Natural Landcover Floodplains:</td>
+                <td>{clickedProperty.nlcfp}</td>
+              </tr>
+            )}
+            {clickedProperty.persu > 0 && (
+              <tr>
+                <td>Permeable Surface:</td>
+                <td>{clickedProperty.persu}</td>
+              </tr>
+            )}
+            {clickedProperty.playa > 0 && (
+              <tr>
+                <td>Playas:</td>
+                <td>{clickedProperty.playa}</td>
+              </tr>
+            )}
+            {clickedProperty.rescs > 0 && (
+              <tr>
+                <td>Resilient Coastal Sites:</td>
+                <td>{clickedProperty.rescs}</td>
+              </tr>
+            )}
+            {clickedProperty.rests > 0 && (
+              <tr>
+                <td>Resilient Terrestrial Sites:</td>
+                <td>{clickedProperty.rests}</td>
+              </tr>
+            )}
+            {clickedProperty.safbb > 0 && (
+              <tr>
+                <td>South Atlantic Beach Birds:</td>
+                <td>{clickedProperty.safbb}</td>
+              </tr>
+            )}
+            {clickedProperty.saffb > 0 && (
+              <tr>
+                <td>South Atlantic Forest Birds:</td>
+                <td>{clickedProperty.saffb}</td>
+              </tr>
+            )}
+            {clickedProperty.wcofw > 0 && (
+              <tr>
+                <td>West Coastal Plain Ouachitas Forested Wetlands:</td>
+                <td>{clickedProperty.wcofw}</td>
+              </tr>
+            )}
+            {clickedProperty.wcopb > 0 && (
+              <tr>
+                <td>West Coastal Plain Ouachitas Open Pine Bird:</td>
+                <td>{clickedProperty.wcopb}</td>
+              </tr>
+            )}
+            {clickedProperty.wgcmd > 0 && (
+              <tr>
+                <td>West Gulf Coast Mottled Duck Nesting:</td>
+                <td>{clickedProperty.wgcmd}</td>
+              </tr>
+            )}
             <tr>
               <td colSpan="2">
                 <b>Function: </b>{" "}
               </td>
             </tr>
-            <tr>
-              <td>Greenways Trails:</td>
-              <td>{clickedProperty.grntr}</td>
-            </tr>
-            <tr>
-              <td>South Atlantic Low-density Urban Historic Sites:</td>
-              <td>{clickedProperty.saluh}</td>
-            </tr>
-            <tr>
-              <td>Urban Park Size:</td>
-              <td>{clickedProperty.urbps}</td>
-            </tr>
+            {clickedProperty.grntr > 0 && (
+              <tr>
+                <td>Greenways Trails:</td>
+                <td>{clickedProperty.grntr}</td>
+              </tr>
+            )}
+            {clickedProperty.saluh > 0 && (
+              <tr>
+                <td>South Atlantic Low-density Urban Historic Sites:</td>
+                <td>{clickedProperty.saluh}</td>
+              </tr>
+            )}
+            {clickedProperty.urbps > 0 && (
+              <tr>
+                <td>Urban Park Size:</td>
+                <td>{clickedProperty.urbps}</td>
+              </tr>
+            )}
             <tr>
               <td colSpan="2">
                 <b>Connectivity:</b>{" "}
               </td>
             </tr>
-            <tr>
-              <td>Gulf Migratory Fish Connectivity: </td>
-              <td>{clickedProperty.gmgfc}</td>
-            </tr>
-            <tr>
-              <td>Intact Habitat Cores:</td>
-              <td>{clickedProperty.ihabc}</td>
-            </tr>
-            <tr>
-              <td>Network Complexity:</td>
-              <td>{clickedProperty.netcx}</td>
-            </tr>
+            {clickedProperty.gmgfc > 0 && (
+              <tr>
+                <td>Gulf Migratory Fish Connectivity: </td>
+                <td>{clickedProperty.gmgfc}</td>
+              </tr>
+            )}
+            {clickedProperty.ihabc > 0 && (
+              <tr>
+                <td>Intact Habitat Cores:</td>
+                <td>{clickedProperty.ihabc}</td>
+              </tr>
+            )}
+            {clickedProperty.netcx > 0 && (
+              <tr>
+                <td>Network Complexity:</td>
+                <td>{clickedProperty.netcx}</td>
+              </tr>
+            )}
             <tr>
               <td>
                 <b style={{ color: "blue" }}>Overall Current Score:</b>{" "}
