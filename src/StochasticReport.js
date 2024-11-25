@@ -214,14 +214,26 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
   };
 
   const boxplotOptions = {
-    responsive: true,
-    legend: {
-      position: "top"
+    scales: {
+      y: {
+        title: {
+          display: true,
+          text: "Goal Scores"
+        }
+      },
+      x: {
+        title: {
+          display: true,
+          text: "Conservation Goals"
+        }
+      }
     },
-    title: {
-      display: true,
-      text: "Box Plot by HFC Goal"
-    }
+    plugins: {
+      legend: {
+        display: true,
+        position: "bottom"
+      },
+    }  
   };
 
   let calculateImpact = (beforeScore, afterScore, indicator) => {
@@ -563,7 +575,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
               Print
             </Button>
           </Row>
-          <Row>
+          <Row style={{minHeight: "450px"}}>
             <Col>
               <Row>
                 <h5>
@@ -679,7 +691,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
               </Map>
             </Col>
           </Row>
-          <Row style={{ height: "50vh" }}>
+          <Row style={{minHeight: "450px"}}>
             <Col>
               <h4>AOI Future Condition (No Action)</h4>
               <Map
@@ -1253,7 +1265,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
             </Col>
             <Col>
               <h4>HFC Goal Score Box Plot</h4>
-              <p>The HFC Goal Score Box Plot demonstrates the stochastic results of 1000 simulations that indicate the current condition, the deterioration of this area of interest when no action is applied, as well as the improvement of this area of interest when selected actions are taken by the goals of health, function and connectivity. </p>
+              <p>The HFC Goal Score Box Plot demonstrates the stochastic results of 1000 simulations that indicate the current condition (Current Score), the deterioration of this area of interest when no action is applied (Future Score (No Action)), as well as the improvement of this area of interest when selected actions are taken (Future Score (With Action)), by the goals of health, function and connectivity. </p>
               <p style={{ display: "flex", justifyContent: "space-around" }}>
                 <div style={{ display: "flex", justifyContent: "space-around" }}>
                   <span

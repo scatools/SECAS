@@ -423,7 +423,7 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
               Print
             </Button>
           </Row>
-          <Row>
+          <Row style={{minHeight: "450px"}}>
             <Col>
               <Row>
                 <h5>
@@ -539,7 +539,7 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
               </Map>
             </Col>
           </Row>
-          <Row style={{ height: "50vh" }}>
+          <Row style={{minHeight: "450px"}}>
             <Col>
               <h4>AOI Future Condition (No Action)</h4>
               <Map
@@ -1113,7 +1113,7 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
             </Col>
             <Col>
               <h4>HFC Goal Score Chart</h4>
-              <p>The HFC Goal Score Chart demonstrates the deterioration of this area of interest when no action is applied as well as the improvement of this area of interest when selected actions are taken by the goals of health, function and connectivity. </p>
+              <p>The HFC Goal Score Chart demonstrates the current condition (Current Score), the deterioration of this area of interest when no action is applied (Future Score (No Action)), as well as the improvement of this area of interest when selected actions are taken (Future Score (With Action)), by the goals of health, function and connectivity. </p>
               <p style={{ display: "flex", justifyContent: "space-around" }}>
                 <div style={{ display: "flex", justifyContent: "space-around" }}>
                   <span
@@ -1162,6 +1162,20 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
                 type="bar"
                 data={barChartData}
                 options={{
+                  scales: {
+                    y: {
+                      title: {
+                        display: true,
+                        text: "Goal Scores"
+                      }
+                    },
+                    x: {
+                      title: {
+                        display: true,
+                        text: "Conservation Goals"
+                      }
+                    }
+                  },
                   plugins: {
                     legend: {
                       display: true,
