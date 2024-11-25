@@ -40,6 +40,7 @@ const Main = ({
   const [hexOpacity, setHexOpacity] = useState(50);
   const [dualMap, setDualMap] = useState(false);
   const [hexIdInBlue, setHexIdInBlue] = useState([]);
+  const [stochasticityChecked, setStochasticityChecked] = useState(false);
 
   const zoomToAOI = (aoi) => {
     if (aoi) {
@@ -92,6 +93,8 @@ const Main = ({
         actionScores={actionScores}
         setActionScores={setActionScores}
         zoomToAOI={zoomToAOI}
+        stochasticityChecked={stochasticityChecked}
+        setStochasticityChecked={setStochasticityChecked}
         setProgress={setProgress}
         setShowProgress={setShowProgress}
       />
@@ -126,6 +129,7 @@ const Main = ({
           hexIdInBlue={hexIdInBlue}
           actionScores={actionScores}
           setActiveSidebar={setActiveSidebar}
+          stochasticityChecked={stochasticityChecked}
           progress={progress}
           setProgress={setProgress}
           showProgress={showProgress}

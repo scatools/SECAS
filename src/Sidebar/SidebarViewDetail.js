@@ -35,12 +35,13 @@ const SidebarViewDetail = ({
   setDualMap,
   zoomToAOI,
   setView,
+  stochasticityChecked,
+  setStochasticityChecked
 }) => {
   const [aoiName, setAoiName] = useState("");
   const [aoiScore, setAoiScore] = useState({});
   const [scoreStyle, setScoreStyle] = useState({});
   const [conditionChecked, setConditionChecked] = useState(false);
-  const [stochasticityChecked, setStochasticityChecked] = useState(false);
   const [overlayChecked, setOverlayChecked] = useState(false);
   const aoiList = Object.values(useSelector((state) => state.aoi)).filter(
     (aoi) => aoi.id === aoiSelected
@@ -270,6 +271,7 @@ const SidebarViewDetail = ({
               onClick={() => {
                 setView("act");
                 setDualMap(false);
+                setStochasticityChecked(false);
               }}
             >
               <HiAdjustments /> {" "}

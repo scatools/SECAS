@@ -42,6 +42,7 @@ const MapView = ({
   hexIdInBlue,
   actionScores,
   setActiveSidebar,
+  stochasticityChecked,
   progress,
   setProgress,
   showProgress,
@@ -423,6 +424,7 @@ const MapView = ({
       setShowProgress(true);
       const hexFeatureList = aoi.currentHexagons.map((hex, index) => {
         setProgress(Math.round(index/aoi.currentHexagons.length*75) + 25);
+
         // Use medoid score for deterministic model
         const rawScore = {
           estcc: hex.estcc_mi,
@@ -453,15 +455,26 @@ const MapView = ({
         const rawHexagonScore = getHexagonScore(rawScore);
 
         // Use stochastic score for stochastic model
-        // const stochasticScore = getStochasticScore(hex);
-        // const stochasticHexagonScore = getHexagonScore(stochasticScore);
+        const stochasticScore = getStochasticScore(hex);
+        const stochasticHexagonScore = getHexagonScore(stochasticScore);
+
+        let finalScore = {};
+        let finalHexagonScore = {};
+
+        if (stochasticityChecked) {
+          finalScore = stochasticScore;
+          finalHexagonScore = stochasticHexagonScore;
+        } else {
+          finalScore = rawScore;
+          finalHexagonScore = rawHexagonScore;
+        };
 
         return {
           type: "Feature",
           geometry: JSON.parse(hex.geometry),
           properties: {
-            ...rawScore,
-            ...rawHexagonScore,
+            ...finalScore,
+            ...finalHexagonScore,
             gid: hex.gid,
             objectid: hex.objectid,
           },
@@ -476,7 +489,7 @@ const MapView = ({
       setHexData(hexData);
       setShowProgress(false);
     }
-  }, [aoi]);
+  }, [aoi, stochasticityChecked]);
 
   useEffect(() => {
     if (aoi && dualMap) {

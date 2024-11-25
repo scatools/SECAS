@@ -33,6 +33,8 @@ const Sidebar = ({
   actionScores,
   setActionScores,
   zoomToAOI,
+  stochasticityChecked,
+  setStochasticityChecked,
   setProgress,
   setShowProgress
 }) => {
@@ -99,6 +101,8 @@ const Sidebar = ({
               setDualMap={setDualMap}
               setActiveSidebar={setActiveSidebar}
               setView={setView}
+              stochasticityChecked={stochasticityChecked}
+              setStochasticityChecked={setStochasticityChecked}
             />
           </Container>
         )}
