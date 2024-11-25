@@ -44,7 +44,7 @@ const ActionLocationSelect = ({
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="1">
-          <Accordion.Header>Blueprint Quick Select</Accordion.Header>
+          <Accordion.Header>Blueprint Quick Select (Coming Soon)</Accordion.Header>
           <Accordion.Body>
             <p>
               Use the slider below to decide on the percentage of Blueprint you would like in the hexagons.
@@ -60,7 +60,7 @@ const ActionLocationSelect = ({
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="2">
-          <Accordion.Header>Manual Hexagon Select</Accordion.Header>
+          <Accordion.Header>Manual Hexagon Select (Coming Soon)</Accordion.Header>
           <Accordion.Body>
             <p>
               Press Shift key, then click and drag across multiple hexagons to select where you would like to take actions.
