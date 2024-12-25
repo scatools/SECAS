@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Container, FormControl, InputGroup } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import RangeSlider from "react-bootstrap-range-slider";
@@ -43,10 +43,19 @@ const SidebarViewDetail = ({
   const [scoreStyle, setScoreStyle] = useState({});
   const [conditionChecked, setConditionChecked] = useState(false);
   const [overlayChecked, setOverlayChecked] = useState(false);
+  const [filterBlue, setFilterBlue] = useState(50);
   const aoiList = Object.values(useSelector((state) => state.aoi)).filter(
     (aoi) => aoi.id === aoiSelected
   );
   const aoi = aoiList[0];
+
+  // const percentBlueList = aoi["currentHexagons"].map((hex) => {
+  //   return {
+  //     id: hex.gid,
+  //     percentBlue : parseFloat(hex.lightblue) + parseFloat(hex.darkblue)
+  //   };
+  // });
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -120,6 +129,20 @@ const SidebarViewDetail = ({
     setOverlayChecked(!overlayChecked);
   };
 
+  const onAreaSelectionChange = () => {
+
+  };
+  
+  // const onPercentChange = (e) => {
+  //   setFilterBlue(e.target.value);
+  //   setHexIdInBlue([]);
+  //   percentBlueList.map((item) => {
+  //     if (item.percentBlue >= e.target.value/100) {
+  //       setHexIdInBlue(idList => [...idList, item.id]);
+  //     };
+  //   });
+  // };
+
   useEffect(() => {
     if (aoi && hexData) {
       const scores = getAoiScore(hexData.features);
@@ -148,22 +171,22 @@ const SidebarViewDetail = ({
       />
       {aoi && (
         <Container className="aoi-details">
-          <h2>{aoi.name} Details:</h2>
-          <h4>
+          <h3>{aoi.name} Details:</h3>
+          <h5>
+            &nbsp;&nbsp;
             Current HFC Score:{" "}
             <span style={scoreStyle.currentStyle}>{aoiScore.currentScore}</span>
-          </h4>
-          <h4>
+            &nbsp;&nbsp;&nbsp;&nbsp;
             Future HFC Score:{" "}
             <span style={scoreStyle.futureStyle}>{Math.round(aoiScore.currentScore*aoiScore.futurePenalty*100)/100}</span>
-          </h4>
+          </h5>
           <ul>
-            <li>
+            {/* <li>
               This area of interest has an area of{" "}
               {Math.round(aoi.area * 100) / 100} km<sup>2</sup>
-            </li>
+            </li> */}
             <li>
-              This area of interest contains {aoi.currentHexagons.length}{" "} hexagons
+              This area of interest intersects with {aoi.currentHexagons.length}{" "} hexagons
             </li>
             <li>
               The HFC score of this area will drop{" "}
@@ -171,58 +194,85 @@ const SidebarViewDetail = ({
               % in year 2060 with no conservation actions compared to current condition
             </li>
           </ul>
-          <div
-            className="toggle-switch-container"
-          >
-            <label>
-              Southeast Blueprint Layer {" "}
-              <Switch
-                className="toggle-switch"
-                checked={overlayChecked}
-                onChange={onOverLayChange}
-                onColor="#86d3ff"
-                onHandleColor="#2693e6"
-                handleDiameter={20}
-                uncheckedIcon={false}
-                checkedIcon={false}
-                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                height={15}
-                width={36}
-              />
-            </label>
-            <label>
-              Future Condition {" "}
-              <Switch
-                className="toggle-switch"
-                checked={conditionChecked}
-                onChange={onConditionChange}
-                onColor="#86d3ff"
-                onHandleColor="#2693e6"
-                handleDiameter={20}
-                uncheckedIcon={false}
-                checkedIcon={false}
-                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                height={15}
-                width={36}
-              />
-            </label>
+          <div className="option-container">
+            <Row>
+              <Col md={6} style={{padding: "10px 20px"}}>
+                <Row>
+                  <h6>Layers:</h6>
+                </Row>
+                <Row>
+                  <label>
+                    <Switch
+                      className="toggle-switch"
+                      checked={overlayChecked}
+                      onChange={onOverLayChange}
+                      onColor="#86d3ff"
+                      onHandleColor="#2693e6"
+                      handleDiameter={20}
+                      uncheckedIcon={false}
+                      checkedIcon={false}
+                      boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                      activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                      height={15}
+                      width={36}
+                    />
+                    {" "} Southeast Blueprint
+                  </label>
+                </Row>
+                <Row>
+                  <label>
+                    <Switch
+                      className="toggle-switch"
+                      checked={conditionChecked}
+                      onChange={onConditionChange}
+                      onColor="#86d3ff"
+                      onHandleColor="#2693e6"
+                      handleDiameter={20}
+                      uncheckedIcon={false}
+                      checkedIcon={false}
+                      boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                      activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                      height={15}
+                      width={36}
+                    />
+                    {" "} Future Condition
+                  </label>
+                </Row>
+              </Col>
+              <Col md={6}>
+                {hexGrid && (
+                  <>
+                    <div className="d-flex justify-content-between">
+                      <h6 style={{marginTop: "5px"}}>Opacity: </h6>
+                      <RangeSlider
+                        step={1}
+                        value={hexOpacity}
+                        onChange={(e) => setHexOpacity(e.target.value)}
+                        variant="secondary"
+                      />
+                    </div>
+                    <div>
+                      <h6>Subset Area:</h6>
+                      <Form.Select>
+                        <option>Entire Area</option>
+                        <option value="b">Blueprint Quick Select</option>
+                        <option value="m">Manual Hexagon Select</option>
+                      </Form.Select>
+                    </div>
+                    {/* <div>
+                      <p>{filterBlue}% Blueprint per hex</p>
+                      <RangeSlider
+                        step={1}
+                        value={filterBlue}
+                        onChange={onChange}
+                        variant="secondary"
+                      />
+                    </div> */}
+                  </>
+                )}
+              </Col>
+            </Row>
           </div>
-          {hexGrid && (
-            <div
-              className="d-flex justify-content-between"
-              style={{ margin: "10px", width: "80%" }}
-            >
-              <h6 style={{marginLeft: "25px"}}>Opacity: </h6>
-              <RangeSlider
-                step={1}
-                value={hexOpacity}
-                onChange={(e) => setHexOpacity(e.target.value)}
-                variant="secondary"
-              />
-            </div>
-          )}
           <div class="button-container">
             <Button
               variant="dark"
@@ -258,7 +308,7 @@ const SidebarViewDetail = ({
           </div>
           <div class="button-container">
             <Button
-              variant="dark"
+              variant="primary"
               className="ml-2 mb-2"
               onClick={handleReport}
             >

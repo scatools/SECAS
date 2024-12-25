@@ -72,7 +72,10 @@ const AddDraw = ({
 
   return (
     <Container className="mt-3">
-      <InputGroup className="m-auto" style={{ width: "80%" }}>
+      <p style={{fontSize: "1em", marginLeft: "20px"}}>
+        Please name your area of interest here and start drawing by clicking the polygon tool in the upper right corner of the map.
+      </p>
+      <InputGroup className="m-auto" style={{ width: "90%" }}>
         <InputGroup.Text id="basic-addon1">Area Name:</InputGroup.Text>
         <FormControl
           name="planName"
@@ -82,8 +85,11 @@ const AddDraw = ({
         />
       </InputGroup>
       <br />
+      <p style={{fontSize: "1em", marginLeft: "20px"}}>
+        Once area name is set and drawing is complete, click Submit Area to proceed. Click Start Over anytime to restart the process.
+      </p>
       <Container>
-        <Button variant="secondary" style={{ float: "left" }} onClick={resetButton}>
+        <Button variant="warning" style={{ float: "left" }} onClick={resetButton}>
           Start Over
         </Button>
         <Button
@@ -92,7 +98,7 @@ const AddDraw = ({
           disabled={drawData && featureList.length ? false : true}
           onClick={handleSubmit}
         >
-          Finish Drawing
+          Submit Area
         </Button>
       </Container>
     </Container>

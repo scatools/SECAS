@@ -18,6 +18,9 @@ const ActionSelect = ({ hexData, setActionHexData, actionScores, setActionScores
         actionScores={actionScores}
         setActionScores={setActionScores}
       />
+      <Button>
+        Back
+      </Button>
       <Button
         onClick={() => {navigate("/report")}}
         style={{float: "right", marginTop:"20px"}}

@@ -10,7 +10,7 @@ const TakeActionView = ({
   actionScores,
   setActionScores,
 }) => {
-  const [actionView, setActionView] = useState("actionLocation");
+  const [actionView, setActionView] = useState("actionSelect");
   return (
     <>
       {actionView === "actionLocation" && (

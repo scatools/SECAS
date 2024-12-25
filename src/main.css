@@ -110,6 +110,14 @@ color: #fff;
   cursor: move;
 }
 
+.option-container {
+  width: 90%;
+  padding: 10px;
+  margin-left: 20px;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
 .toggle-switch-container {
   display: flex;
   margin: 10px;

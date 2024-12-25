@@ -146,11 +146,12 @@ button.btn-dark.ml-1.btn {
   margin: 5px;
 }
 
-.btn-success,
+.btn-primary,
 .btn-secondary,
+.btn-success,
 .btn-danger,
-.btn-primary {
-  min-width: 180px;
+.btn-warning {
+  min-width: 150px;
 }
 
 button.ml-1.btn.btn-danger {
