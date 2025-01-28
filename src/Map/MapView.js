@@ -201,6 +201,36 @@ const MapView = ({
                 <b>Health: </b>{" "}
               </td>
             </tr>
+            {clickedProperty.amrpa > 0 && (
+              <tr>
+                <td>Amphibian & Reptile Areas:</td>
+                <td>{clickedProperty.amrpa}</td>
+              </tr>
+            )}
+            {clickedProperty.aefih > 0 && (
+              <tr>
+                <td>Atlantic Estuarine Fish Habitat:</td>
+                <td>{clickedProperty.aefih}</td>
+              </tr>
+            )}
+            {clickedProperty.amfih > 0 && (
+              <tr>
+                <td>Atlantic Migratory Fish Habitat:</td>
+                <td>{clickedProperty.amfih}</td>
+              </tr>
+            )}
+            {clickedProperty.cshcn > 0 && (
+              <tr>
+                <td>Coastal Shoreline Condition:</td>
+                <td>{clickedProperty.cshcn}</td>
+              </tr>
+            )}
+            {clickedProperty.ecopb > 0 && (
+              <tr>
+                <td>East Gulf Coastal Plain Open Pine Birds:</td>
+                <td>{clickedProperty.ecopb}</td>
+              </tr>
+            )}
             {clickedProperty.estcc > 0 && (
               <tr>
                 <td>Estuarine Coastal Condition:</td>
@@ -213,10 +243,10 @@ const MapView = ({
                 <td>{clickedProperty.firef}</td>
               </tr>
             )}
-            {clickedProperty.gppgr > 0 && (
+            {clickedProperty.grsav > 0 && (
               <tr>
-                <td>Great Plains Perennial Grass:</td>
-                <td>{clickedProperty.gppgr}</td>
+                <td>Grasslands and Savannas:</td>
+                <td>{clickedProperty.grsav}</td>
               </tr>
             )}
             {clickedProperty.impas > 0 && (
@@ -225,10 +255,10 @@ const MapView = ({
                 <td>{clickedProperty.impas}</td>
               </tr>
             )}
-            {clickedProperty.isegr > 0 && (
+            {clickedProperty.lscdn > 0 && (
               <tr>
-                <td>Interior Southeast Grasslands:</td>
-                <td>{clickedProperty.isegr}</td>
+                <td>Landscape Condition:</td>
+                <td>{clickedProperty.lscdn}</td>
               </tr>
             )}
             {clickedProperty.mavbp > 0 && (
@@ -285,6 +315,18 @@ const MapView = ({
                 <td>{clickedProperty.saffb}</td>
               </tr>
             )}
+            {clickedProperty.samfs > 0 && (
+              <tr>
+                <td>South Atlantic Maritime Forest:</td>
+                <td>{clickedProperty.samfs}</td>
+              </tr>
+            )}
+            {clickedProperty.scwet > 0 && (
+              <tr>
+                <td>Stable Coastal Wetlands:</td>
+                <td>{clickedProperty.scwet}</td>
+              </tr>
+            )}
             {clickedProperty.wcofw > 0 && (
               <tr>
                 <td>West Coastal Plain Ouachitas Forested Wetlands:</td>
@@ -308,6 +350,12 @@ const MapView = ({
                 <b>Function: </b>{" "}
               </td>
             </tr>
+            {clickedProperty.eqapk > 0 && (
+              <tr>
+                <td>Equitable Access to Potential Parks:</td>
+                <td>{clickedProperty.eqapk}</td>
+              </tr>
+            )}
             {clickedProperty.grntr > 0 && (
               <tr>
                 <td>Greenways Trails:</td>

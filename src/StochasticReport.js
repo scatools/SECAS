@@ -108,11 +108,19 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
   });
 
   const scoreLabels = {
+    "Atlantic Estuarine Fish Habitat": "aefih",
+    "Atlantic Migratory Fish Habitat": "amfih",
+    "Amphibian & Reptile Areas": "amrpa",
+    "Coastal Shoreline Condition": "cshcn",
+    "East Gulf Coastal Plain Open Pine Birds": "ecopb",
+    "Equitable Access to Potential Parks": "eqapk",
     "Estuarine Coastal Condition": "estcc",
     "Fire Frequency": "firef",
     "Great Plains Perennial Grass": "gppgr",
+    "Grasslands and Savannas": "grsav",
     "Imperiled Aquatic Species": "impas",
     "Interior Southeast Grasslands": "isegr",
+    "Landscape Condition": "lscdn",
     "MAV Forest Birds Protection": "mavbp",
     "MAV Forest Birds Restoration": "mavbr",
     "Natural Landcover Floodplains": "nlcfp",
@@ -122,6 +130,8 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
     "Resilient Terrestrial Sites": "rests",
     "South Atlantic Beach Birds": "safbb",
     "South Atlantic Forest Birds": "saffb",
+    "South Atlantic Maritime Forest": "samfs",
+    "Stable Coastal Wetlands": "scwet",
     "West Coastal Plain Ouachitas Forested Wetlands": "wcofw",
     "West Coastal Plain Ouachitas Open Pine Bird": "wcopb",
     "West Gulf Coast Mottled Duck Nesting": "wgcmd",
@@ -134,11 +144,19 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
   };
 
   const scoreLabelsList = [
+    "Atlantic Estuarine Fish Habitat",
+    "Atlantic Migratory Fish Habitat",
+    "Amphibian & Reptile Areas",
+    "Coastal Shoreline Condition",
+    "East Gulf Coastal Plain Open Pine Birds",
+    "Equitable Access to Potential Parks",
     "Estuarine Coastal Condition",
     "Fire Frequency",
     "Great Plains Perennial Grass",
+    "Grasslands and Savannas",
     "Imperiled Aquatic Species",
     "Interior Southeast Grasslands",
+    "Landscape Condition",
     "MAV Forest Birds Protection",
     "MAV Forest Birds Restoration",
     "Natural Landcover Floodplains",
@@ -148,6 +166,8 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
     "Resilient Terrestrial Sites",
     "South Atlantic Beach Birds",
     "South Atlantic Forest Birds",
+    "South Atlantic Maritime Forest",
+    "Stable Coastal Wetlands",
     "West Coastal Plain Ouachitas Forested Wetlands",
     "West Coastal Plain Ouachitas Open Pine Bird",
     "West Gulf Coast Mottled Duck Nesting",
@@ -160,14 +180,22 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
   ];
 
   const indicatorBins = {
+    aefih: [0.25, 0.5, 1],
+    amfih: [0.25, 0.5, 1],
+    amrpa: [0, 1],
+    cshcn: [0, 0.25, 0.5, 1],
+    ecopb: [0.2, 0.4, 0.6, 0.8, 1],
+    eqapk: [0.5, 0.75, 1],
     estcc: [0, 0.25, 0.5, 0.75, 1],
     firef: [0, 0.5, 1],
     gmgfc: [0, 1],
     gppgr: [0.2, 0.4, 0.6, 0.8, 1],
     grntr: [0, 0.25, 0.5, 0.75, 1],
+    grsav: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1],
     ihabc: [0, 0.75, 1],
     impas: [0, 0.5, 0.75, 1],
     isegr: [0, 0.25, 0.5, 0.75, 1],
+    lscdn: [0.1, 0.2, 0.4, 0.6, 0.8, 1],
     mavbp: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
     mavbr: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
     netcx: [0, 0.25, 0.5, 0.75, 1],
@@ -179,6 +207,8 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
     safbb: [0, 0.2, 0.4, 0.6, 0.8, 1],
     saffb: [0, 0.5, 1],
     saluh: [0, 0.5, 1],
+    samfs: [0, 1],
+    scwet: [0, 0.5, 1],
     urbps: [0, 0.25, 0.5, 0.75, 1],
     wcofw: [0, 0.2, 0.4, 0.6, 0.8, 1],
     wcopb: [0, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
@@ -187,14 +217,22 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
   };
 
   const indicatorBinLabels = {
+    aefih: ["Degraded areas of opportunity", "Restoration opportunity areas", "Excellent Fish Habitat"],
+    amfih: ["Degraded areas of opportunity", "Restoration opportunity areas", "Excellent Fish Habitat"],
+    amrpa: ["None or below threshold", "Good areas"],
+    cshcn: ["Armored", "Partially armored", "Partially armored and harder to develop", "Natural or natural and harder to develop"],
+    ecopb: ["Low", "Medium-Low", "Medium", "Medium-High", "High"],
+    eqapk: ["Moderate", "High", "Very high"],
     estcc: ["Poor", "Fair to poor", "Fair", "Good to fair", "Good"],
     firef: ["Not burned or row crop", "Burned 1 time (~burned only once in 8 years)", "Burned 2 or more times (~burned every 4 years or more frequently)"],
     gmgfc: ["Everything else, includes terrestrial", "Presence of Alabama shad, American shad, striped bass, or Gulf sturgeon"],
     gppgr: ["0-20%", "21-40%", "41-60%", "61-80%", "81-100%"],
     grntr: ["Everything else, includes terrestrial", "Sidewalk or other path", "Developed and connected for <1.9km", "Partly natural and connected for 1.9 to 5km", "Mostly natural and connected, or partly natural and connected ≥5 km, or developed and connected ≥5 km"],
+    grsav: ["Not identified as grassland/savannas", "Historic grassland/savanna", "Potential grassland/savanna in more altered landscape", "Potential grassland/savanna in mostly natural landscape", "Pollinator buffer around known or likely grassland/savanna", "Likely grassland/savanna ≤10 acres", "Likely grassland/savanna ≥10 acres", "Known grassland/savanna"],
     ihabc: ["Not a core", "Small core (>100–1,000 acres)", "Large core (>1,000 acres)"],
     impas: ["No imperiled aquatic species", "1-2 imperiled aquatic species", "3 imperiled aquatic species", "4 or more imperiled aquatic species"],
     isegr: ["Grassland geology but grassland less likely", "Potentially compatible management outside of grassland geology (undeveloped powerline right-of-way or perennial forbs and grasses)", "Potentially compatible management within grassland geology (undeveloped powerline right-of-way or perennial forbs and grasses)", "Known grassland buffer", "Known grassland"],
+    lscdn: ["Heavily altered landscape", "Altered landscape", "Partly natural landscape", "Mostly natural landscape", "Natural landscape", "Very natural landscape"],
     mavbp: ["No data", "1-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80", "81-90", "91-100"],
     mavbr: ["No data", "1-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80", "81-90", "91-100"],
     netcx: ["Everything else, includes terrestrial", "1 connected stream class", "2 connected stream classes", "3 connected stream classes", ">3 connected stream classes"],
@@ -206,6 +244,8 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
     safbb: ["0%", "0-20%", "21-40%", "41-60%", "61-80%", "81-100%"],
     saffb: ["Less potential", "Very small patches", "Very large patches"],
     saluh: ["Not historic", "Historic, high-urban buffer", "Historic, low-urban buffer"],
+    samfs: ["None or below threshold", "Maritime Forest"],
+    scwet: ["None or below threshold", "Intermediate number of cells in hex are stable coastal wetlands", "Stable coastal wetlands"],
     urbps: ["<5 acres", "5-10 acres", "11-30 acres", "31-50 acres", ">50 acres"],
     wcofw: ["Everything else, includes terrestrial", "Low (1-20)", "Med-Low (21-40)", "Medium (41-60)", "Med-High (61-80)", "High (>80)"],
     wcopb: ["Pine patch / cluster too small OR not upland pine", "Cluster large enough to support populations of 1 umbrella species", "Cluster large enough to support populations of 2 umbrella species", "Cluster large enough to support populations of 3 umbrella species", "Patch large enough to support populations of 1 umbrella species", "Patch large enough to support populations of 2 umbrella species", "Patch large enough to support populations of 3 umbrella species"],
@@ -331,14 +371,22 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
         const increasedHexFeatureList = aoi.currentHexagons.map((hex, index) => {
           // Use medoid score for deterministic model
           const rawScore = {
+            aefih: hex.aefih_mi,
+            amfih: hex.amfih_mi,
+            amrpa: hex.amrpa_mi,
+            cshcn: hex.cshcn_mi,
+            ecopb: hex.ecopb_mi,
+            eqapk: hex.eqapk_mi,
             estcc: hex.estcc_mi,
             firef: hex.firef_mi,
             gmgfc: hex.gmgfc_mi,
             gppgr: hex.gppgr_mi,
             grntr: hex.grntr_mi,
+            grsav: hex.grsav_mi,
             ihabc: hex.ihabc_mi,
             impas: hex.impas_mi,
             isegr: hex.isegr_mi,
+            lscdn: hex.lscdn_mi,
             mavbp: hex.mavbp_mi,
             mavbr: hex.mavbr_mi,
             netcx: hex.netcx_mi,
@@ -350,6 +398,8 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
             safbb: hex.safbb_mi,
             saffb: hex.saffb_mi,
             saluh: hex.saluh_mi,
+            samfs: hex.samfs_mi,
+            scwet: hex.scwet_mi,
             urbps: hex.urbps_mi,
             wcofw: hex.wcofw_mi,
             wcopb: hex.wcopb_mi,
@@ -372,14 +422,22 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
         const decreasedHexFeatureList = aoi.currentHexagons.map((hex, index) => {
           // Use medoid score for deterministic model
           const rawScore = {
+            aefih: hex.aefih_mi,
+            amfih: hex.amfih_mi,
+            amrpa: hex.amrpa_mi,
+            cshcn: hex.cshcn_mi,
+            ecopb: hex.ecopb_mi,
+            eqapk: hex.eqapk_mi,
             estcc: hex.estcc_mi,
             firef: hex.firef_mi,
             gmgfc: hex.gmgfc_mi,
             gppgr: hex.gppgr_mi,
             grntr: hex.grntr_mi,
+            grsav: hex.grsav_mi,
             ihabc: hex.ihabc_mi,
             impas: hex.impas_mi,
             isegr: hex.isegr_mi,
+            lscdn: hex.lscdn_mi,
             mavbp: hex.mavbp_mi,
             mavbr: hex.mavbr_mi,
             netcx: hex.netcx_mi,
@@ -391,6 +449,8 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
             safbb: hex.safbb_mi,
             saffb: hex.saffb_mi,
             saluh: hex.saluh_mi,
+            samfs: hex.samfs_mi,
+            scwet: hex.scwet_mi,
             urbps: hex.urbps_mi,
             wcofw: hex.wcofw_mi,
             wcopb: hex.wcopb_mi,
@@ -1425,6 +1485,16 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
               <h4>Health Indicators</h4>
               <Accordion>
                 <Accordion.Item eventKey="0">
+                  <Accordion.Header>Amphibian & Reptile Areas</Accordion.Header>
+                  <Accordion.Body>
+                    <b>Definition:</b> Priority Amphibian and Reptile Conservation Areas in the Southeastern U.S.
+                    <br/>
+                    <b>Scale: </b> 
+                    <li>0 = None or below threshold</li>
+                    <li>1.0 = Good areas</li>
+                  </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey="1">
                   <Accordion.Header>Atlantic Estuarine Fish Habitat</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Index of Atlantic estuarine fish habitat condition based on water quality, marsh edges, seagrass and oyster reefs, and more.
@@ -1435,7 +1505,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = Excellent Fish Habitat</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="1">
+                <Accordion.Item eventKey="2">
                   <Accordion.Header>Atlantic Migratory Fish Habitat</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Index of Atlantic migratory fish habitat condition based on water quality, connectivity, flow alteration, and more.
@@ -1447,7 +1517,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = Excellent Fish Habitat</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="2">
+                <Accordion.Item eventKey="3">
                   <Accordion.Header>Coastal Shoreline Condition</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Index based on presence of hardened structures and ease of development in coastal areas.
@@ -1459,7 +1529,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = Natural or natural and harder to develop</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="3">
+                <Accordion.Item eventKey="4">
                   <Accordion.Header>East Gulf Coastal Plain Open Pine Birds</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Index of areas within the longleaf pine range east of the Mississippi River where open pine habitat management would most benefit six focal bird species.
@@ -1472,7 +1542,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = High</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="4">
+                <Accordion.Item eventKey="5">
                   <Accordion.Header>Estuarine Coastal Condition</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Index of estuarine water quality, sediment quality, contaminants in fish tissue, and benthic community condition.
@@ -1485,7 +1555,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = Good</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="5">
+                <Accordion.Item eventKey="6">
                   <Accordion.Header>Fire Frequency</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Estimates the number of times an area has been burned from 2013-2021.
@@ -1496,20 +1566,23 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = Burned 2 or more times (~burned every 4 years or more frequently)</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="6">
-                  <Accordion.Header>Great Plains Perennial Grass</Accordion.Header>
+                <Accordion.Item eventKey="7">
+                  <Accordion.Header>Grasslands and Savannas</Accordion.Header>
                   <Accordion.Body>
-                    <b>Definition:</b> Grassland condition in the Great Plains (OK, TX) using the percent of perennial forbs and perennial grass.
+                    <b>Definition:</b>Grasslands and Savannas in the Southeastern U.S., including known locations, likely locations managed for biodiversity, and surrounding pollinator buffers. 
                     <br/>
                     <b>Scale: </b>
-                    <li>0.2 = 0-20%,</li>
-                    <li>0.4 = 21-40%,</li>
-                    <li>0.6 = 41-60%,</li>
-                    <li>0.8 = 61-80%,</li>
-                    <li>1.0 = 81-100%</li>
+                    <li>0 = Not identified as grassland/savannas</li>
+                    <li>0.15 = Historic grassland/savanna</li>
+                    <li>0.3 = Potential grassland/savanna in more altered landscape</li>
+                    <li>0.45 = Potential grassland/savanna in mostly natural landscape</li>
+                    <li>0.6 = Pollinator buffer around known or likely grassland/savanna</li>
+                    <li>0.75 = Likely grassland/savanna ≤10 acres</li>
+                    <li>0.9 = Likely grassland/savanna ≥10 acres</li>
+                    <li>1.0 = Known grassland/savanna</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="7">
+                <Accordion.Item eventKey="8">
                   <Accordion.Header>Imperiled Aquatic Species</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Number of aquatic Species of Greatest Conservation Need by watershed.
@@ -1521,20 +1594,21 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = 4 or more imperiled aquatic species</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="8">
-                  <Accordion.Header>Interior Southeast Grasslands</Accordion.Header>
+                <Accordion.Item eventKey="9">
+                  <Accordion.Header>Landscape Condition</Accordion.Header>
                   <Accordion.Body>
-                    <b>Definition:</b> Index of known grasslands, areas with potentially compatible management, and grassland geology in the Interior Southeast.
+                    <b>Definition:</b> Index of the degree of natural compared to human-altered areas and their surrounding landscape.
                     <br/>
                     <b>Scale: </b> 
-                    <li>0 = Grassland geology but grassland less likely</li>
-                    <li>0.25 = Potentially compatible management outside of grassland geology (undeveloped powerline right-of-way or perennial forbs and grasses)</li>
-                    <li>0.5 = Potentially compatible management within grassland geology (undeveloped powerline right-of-way or perennial forbs and grasses)</li>
-                    <li>0.75 = Known grassland buffer</li>
-                    <li>1.0 = Known grassland</li>
+                    <li>0.1 = Heavily altered landscape</li>
+                    <li>0.2 = Altered landscape</li>
+                    <li>0.4 = Partly natural landscape</li>
+                    <li>0.6 = Mostly natural landscape</li>
+                    <li>0.8 = Natural landscape</li>
+                    <li>1.0 = Very natural landscape</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="9">
+                <Accordion.Item eventKey="10">
                   <Accordion.Header>Mississippi Alluvial Valley Forest Birds - Protection</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Prioritizes new areas for protection as an index within the MAV based on benefits to forest breeding birds that need large interior cores of bottomland hardwood habitat.
@@ -1553,7 +1627,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = 91-100</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="10">
+                <Accordion.Item eventKey="11">
                   <Accordion.Header>Mississippi Alluvial Valley Forest Birds – Reforestation</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Prioritizes new areas for reforestation as an index within the MAV based on benefits to forest breeding birds that need large interior cores of bottomland hardwood habitat.
@@ -1572,7 +1646,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = 91-100</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="11">
+                <Accordion.Item eventKey="12">
                   <Accordion.Header>Natural Landcover Floodplains</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Percent natural landcover in the estimated floodplain, by catchment.
@@ -1584,7 +1658,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = 80-100% natural landcover</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="12">
+                <Accordion.Item eventKey="13">
                   <Accordion.Header>Permeable Surface</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Percent non-impervious cover by catchment.
@@ -1596,7 +1670,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = 95-100% catchment permeable</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="13">
+                <Accordion.Item eventKey="14">
                   <Accordion.Header>Playas</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Identifies healthy playas and clusters of nearby playas in the western Great Plains (OK, TX).
@@ -1607,7 +1681,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = Healthy Playa</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="14">
+                <Accordion.Item eventKey="15">
                   <Accordion.Header>Resilient Coastal Sites</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Index depicting the ability of terrestrial sites to continue supporting biodiversity and ecosystem function in the face of climate change.
@@ -1622,7 +1696,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = Most resilient</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="15">
+                <Accordion.Item eventKey="16">
                   <Accordion.Header>Resilient Terrestrial Sites</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Index depicting the ability of terrestrial sites to continue supporting biodiversity and ecosystem function in the face of climate change.
@@ -1636,7 +1710,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = Most resilient</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="16">
+                <Accordion.Item eventKey="17">
                   <Accordion.Header>South Atlantic Amphibian & Reptile Areas</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Priority Amphibian and Reptile Conservation Areas in the South Atlantic.
@@ -1646,7 +1720,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = Good areas</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="17">
+                <Accordion.Item eventKey="18">
                   <Accordion.Header>South Atlantic Beach Birds</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Index of habitat suitability for four shorebird species in the South Atlantic.
@@ -1659,7 +1733,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = 81-100%</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="18">
+                <Accordion.Item eventKey="19">
                   <Accordion.Header>South Atlantic Forest Birds</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Index of habitat suitability for twelve upland hardwood and forested wetland bird species in the South Atlantic.
@@ -1670,7 +1744,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = Very large patches</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="19">
+                <Accordion.Item eventKey="20">
                   <Accordion.Header>South Atlantic Maritime Forest</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Current maritime forest in the South Atlantic.
@@ -1680,7 +1754,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = Maritime Forest</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="20">
+                <Accordion.Item eventKey="21">
                   <Accordion.Header>West Coastal Plain Ouachitas Forested Wetlands</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Index of marsh stability based on the ratio of open water to plants.
@@ -1691,7 +1765,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = Stable coastal wetlands</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="21">
+                <Accordion.Item eventKey="22">
                   <Accordion.Header>West Coastal Plain Ouachitas Open Pine Bird</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Index of areas with existing pine trees that, if managed for open condition, could support a population of three umbrella bird species in the West Gulf Coastal Plain/Ouachitas Bird Conservation Region.
@@ -1706,7 +1780,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = Patch large enough to support populations of 3 umbrella species</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="22">
+                <Accordion.Item eventKey="23">
                   <Accordion.Header>West Gulf Coastal Plain Forested Wetland Birds</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Index of habitat suitability for five forested wetland bird species in the West Gulf Coastal Plain/ Ouachitas Bird Conservation Region.
@@ -1720,7 +1794,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = High (80~)</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="23">
+                <Accordion.Item eventKey="24">
                   <Accordion.Header>West Gulf Coast Mottled Duck Nesting</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Depicts marshes and grasslands along the Western Gulf Coast that are important for mottled duck nesting (% suitability).
@@ -1738,7 +1812,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = 91-100%</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="24">
+                <Accordion.Item eventKey="25">
                   <Accordion.Header>West Virginia Imperiled Aquatic Species</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Number of globally imperiled, threatened, or endangered aquatic species by watershed in the state of West Virginia.
@@ -1751,7 +1825,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                   </Accordion.Body>
                 </Accordion.Item>
                 <h4>Function Indicators</h4>
-                <Accordion.Item eventKey="25">
+                <Accordion.Item eventKey="26">
                   <Accordion.Header>Equitable Access to Potential Parks</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Prioritizes places to create new parks to fill gaps in access to green space within socially vulnerable communities.
@@ -1763,7 +1837,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = Very high</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="26">
+                <Accordion.Item eventKey="27">
                   <Accordion.Header>Greenways and Trails</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Prioritizes places to create new parks to fill gaps in access to green space within socially vulnerable communities.
@@ -1776,7 +1850,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = Mostly natural and connected, or partly natural and connected ≥5 km, or developed and connected ≥5 km</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="27">
+                <Accordion.Item eventKey="28">
                   <Accordion.Header>South Atlantic Low-Urban Historic Landscapes</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Index of sites on the National Register of Historic Places surrounded by limited urban development within the South Atlantic (FL, GA, NC, VA, SC).
@@ -1787,7 +1861,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = Historic, low-urban buffer</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="28">
+                <Accordion.Item eventKey="29">
                   <Accordion.Header>Urban Park Size</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Measures the size of parks larger than 5 acres in the urban environment.
@@ -1800,7 +1874,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                   </Accordion.Body>
                 </Accordion.Item>
                 <h4>Connectivity Indicators</h4>
-                <Accordion.Item eventKey="29">
+                <Accordion.Item eventKey="30">
                   <Accordion.Header>Gulf Migratory Fish Connectivity</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Index capturing how far upstream migratory fish species in the Gulf of Mexico have been observed.
@@ -1810,7 +1884,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = Presence of Alabama shad, American shad, striped bass, or Gulf sturgeon</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="30">
+                <Accordion.Item eventKey="31">
                   <Accordion.Header>Intact Habitat Cores</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Represents the size of large, unfragmented patches of natural habitat. It identifies minimally disturbed natural areas at least 100 acres in size and greater than 200 meters wide.
@@ -1821,7 +1895,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                     <li>1.0 = Large core (≥1,000 acres)</li>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="31">
+                <Accordion.Item eventKey="32">
                   <Accordion.Header>Network Complexity</Accordion.Header>
                   <Accordion.Body>
                     <b>Definition:</b> Index depicting the number of stream size classes in a river network not separated by dams or waterfalls.

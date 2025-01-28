@@ -16,15 +16,23 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
   const aoiList = Object.values(useSelector((state) => state.aoi));
   const aoi = aoiList[0];
   const scores = getAoiScore(hexData.features);
-  const indicators = { 
+  const indicators = {
+    aefih: [0.25, 0.5, 1],
+    amfih: [0.25, 0.5, 1],
+    amrpa: [0, 1],
+    cshcn: [0, 0.25, 0.5, 1],
+    ecopb: [0.2, 0.4, 0.6, 0.8, 1],
+    eqapk: [0.5, 0.75, 1],
     estcc: [0, 0.25, 0.5, 0.75, 1],
     firef: [0, 0.5, 1],
     gmgfc: [0, 1],
     gppgr: [0.2, 0.4, 0.6, 0.8, 1],
     grntr: [0, 0.25, 0.5, 0.75, 1],
+    grsav: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1],
     ihabc: [0, 0.75, 1],
     impas: [0, 0.5, 0.75, 1],
     isegr: [0, 0.25, 0.5, 0.75, 1],
+    lscdn: [0.1, 0.2, 0.4, 0.6, 0.8, 1],
     mavbp: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
     mavbr: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
     netcx: [0, 0.25, 0.5, 0.75, 1],
@@ -36,21 +44,31 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
     safbb: [0, 0.2, 0.4, 0.6, 0.8, 1],
     saffb: [0, 0.5, 1],
     saluh: [0, 0.5, 1],
+    samfs: [0, 1],
+    scwet: [0, 0.5, 1],
     urbps: [0, 0.25, 0.5, 0.75, 1],
     wcofw: [0, 0.2, 0.4, 0.6, 0.8, 1],
     wcopb: [0, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
     wgcmd: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
     futv2: [0.25, 0.50, 0.75, 1.0]
   };
-  const sliderLabels = { 
+  const sliderLabels = {
+    aefih: "Better Habitat Condition",
+    amfih: "Better Habitat Condition",
+    amrpa: "Larger Area",
+    cshcn: "Better Condition",
+    ecopb: "Higher Diversity",
+    eqapk: "Better Access",
     estcc: "Better Condition",
     firef: "More Frequently Burned",
     gmgfc: "Higher Connectivity",
     gppgr: "More Perennial Grass",
     grntr: "More Greenways Trails",
+    grsav: "More Grassland",
     ihabc: "Larger Core",
     impas: "More Species",
     isegr: "More Known Grassland",
+    lscdn: "Better Condition",
     mavbp: "More Protection Area",
     mavbr: "More Reforestation Area",
     netcx: "More Connected Stream Classes",
@@ -62,6 +80,8 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
     safbb: "Higher Habitat Suitability",
     saffb: "Higher Habitat Suitability",
     saluh: "More Urban Historic Sites",
+    samfs: "Higher Forest Cover",
+    scwet: "More Wetland",
     urbps: "Larger Park Size",
     wcofw: "More Stable Coastal Wetlands",
     wcopb: "Larger Patch Supporting Birds",
@@ -200,14 +220,22 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
       const medoidScoreList = aoi.currentHexagons.map((hex) => {
         const medoidScores = {
           gid: hex.gid,
+          aefih: hex.aefih_mi,
+          amfih: hex.amfih_mi,
+          amrpa: hex.amrpa_mi,
+          cshcn: hex.cshcn_mi,
+          ecopb: hex.ecopb_mi,
+          eqapk: hex.eqapk_mi,
           estcc: hex.estcc_mi,
           firef: hex.firef_mi,
           gmgfc: hex.gmgfc_mi,
           gppgr: hex.gppgr_mi,
           grntr: hex.grntr_mi,
+          grsav: hex.grsav_mi,
           ihabc: hex.ihabc_mi,
           impas: hex.impas_mi,
           isegr: hex.isegr_mi,
+          lscdn: hex.lscdn_mi,
           mavbp: hex.mavbp_mi,
           mavbr: hex.mavbr_mi,
           netcx: hex.netcx_mi,
@@ -219,6 +247,8 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
           safbb: hex.safbb_mi,
           saffb: hex.saffb_mi,
           saluh: hex.saluh_mi,
+          samfs: hex.samfs_mi,
+          scwet: hex.scwet_mi,
           urbps: hex.urbps_mi,
           wcofw: hex.wcofw_mi,
           wcopb: hex.wcopb_mi,
@@ -231,14 +261,22 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
       
       const futureMedoidScoreList = aoi.currentHexagons.map((hex) => {
         const medoidScores = {
+          aefih: hex.aefih_mi*hex.futv2_me,
+          amfih: hex.amfih_mi*hex.futv2_me,
+          amrpa: hex.amrpa_mi*hex.futv2_me,
+          cshcn: hex.cshcn_mi*hex.futv2_me,
+          ecopb: hex.ecopb_mi*hex.futv2_me,
+          eqapk: hex.eqapk_mi*hex.futv2_me,
           estcc: hex.estcc_mi*hex.futv2_me,
           firef: hex.firef_mi*hex.futv2_me,
           gmgfc: hex.gmgfc_mi*hex.futv2_me,
           gppgr: hex.gppgr_mi*hex.futv2_me,
           grntr: hex.grntr_mi*hex.futv2_me,
+          grsav: hex.grsav_mi*hex.futv2_me,
           ihabc: hex.ihabc_mi*hex.futv2_me,
           impas: hex.impas_mi*hex.futv2_me,
           isegr: hex.isegr_mi*hex.futv2_me,
+          lscdn: hex.lscdn_mi*hex.futv2_me,
           mavbp: hex.mavbp_mi*hex.futv2_me,
           mavbr: hex.mavbr_mi*hex.futv2_me,
           netcx: hex.netcx_mi*hex.futv2_me,
@@ -250,6 +288,8 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
           safbb: hex.safbb_mi*hex.futv2_me,
           saffb: hex.saffb_mi*hex.futv2_me,
           saluh: hex.saluh_mi*hex.futv2_me,
+          samfs: hex.samfs_mi*hex.futv2_me,
+          scwet: hex.scwet_mi*hex.futv2_me,
           urbps: hex.urbps_mi*hex.futv2_me,
           wcofw: hex.wcofw_mi*hex.futv2_me,
           wcopb: hex.wcopb_mi*hex.futv2_me,
@@ -269,14 +309,22 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
 
       // Only show the indicator if the selected area has data for at least one hexagon inside
       const indicatorData = {
+        aefih: count(medoidScoreList.map(item => item.aefih))["-1"] < medoidScoreList.length,
+        amfih: count(medoidScoreList.map(item => item.amfih))["-1"] < medoidScoreList.length,
+        amrpa: count(medoidScoreList.map(item => item.amrpa))["-1"] < medoidScoreList.length,
+        cshcn: count(medoidScoreList.map(item => item.cshcn))["-1"] < medoidScoreList.length,
+        ecopb: count(medoidScoreList.map(item => item.ecopb))["-1"] < medoidScoreList.length,
+        eqapk: count(medoidScoreList.map(item => item.eqapk))["-1"] < medoidScoreList.length,
         estcc: count(medoidScoreList.map(item => item.estcc))["-1"] < medoidScoreList.length,
         firef: count(medoidScoreList.map(item => item.firef))["-1"] < medoidScoreList.length,
         gmgfc: count(medoidScoreList.map(item => item.gmgfc))["-1"] < medoidScoreList.length,
         gppgr: count(medoidScoreList.map(item => item.gppgr))["-1"] < medoidScoreList.length,
         grntr: count(medoidScoreList.map(item => item.grntr))["-1"] < medoidScoreList.length,
+        grsav: count(medoidScoreList.map(item => item.grsav))["-1"] < medoidScoreList.length,
         ihabc: count(medoidScoreList.map(item => item.ihabc))["-1"] < medoidScoreList.length,
         impas: count(medoidScoreList.map(item => item.impas))["-1"] < medoidScoreList.length,
         isegr: count(medoidScoreList.map(item => item.isegr))["-1"] < medoidScoreList.length,
+        lscdn: count(medoidScoreList.map(item => item.lscdn))["-1"] < medoidScoreList.length,
         mavbp: count(medoidScoreList.map(item => item.mavbp))["-1"] < medoidScoreList.length,
         mavbr: count(medoidScoreList.map(item => item.mavbr))["-1"] < medoidScoreList.length,
         netcx: count(medoidScoreList.map(item => item.netcx))["-1"] < medoidScoreList.length,
@@ -288,6 +336,8 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
         safbb: count(medoidScoreList.map(item => item.safbb))["-1"] < medoidScoreList.length,
         saffb: count(medoidScoreList.map(item => item.saffb))["-1"] < medoidScoreList.length,
         saluh: count(medoidScoreList.map(item => item.saluh))["-1"] < medoidScoreList.length,
+        samfs: count(medoidScoreList.map(item => item.samfs))["-1"] < medoidScoreList.length,
+        scwet: count(medoidScoreList.map(item => item.scwet))["-1"] < medoidScoreList.length,
         urbps: count(medoidScoreList.map(item => item.urbps))["-1"] < medoidScoreList.length,
         wcofw: count(medoidScoreList.map(item => item.wcofw))["-1"] < medoidScoreList.length,
         wcopb: count(medoidScoreList.map(item => item.wcopb))["-1"] < medoidScoreList.length,
@@ -298,14 +348,22 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
 
       // Get the minimium value apart from the no-data (-1) values
       const minScores = {
+        aefih: Math.min(...medoidScoreList.map(item => item.aefih).filter(item => item !== -1)),
+        amfih: Math.min(...medoidScoreList.map(item => item.amfih).filter(item => item !== -1)),
+        amrpa: Math.min(...medoidScoreList.map(item => item.amrpa).filter(item => item !== -1)),
+        cshcn: Math.min(...medoidScoreList.map(item => item.cshcn).filter(item => item !== -1)),
+        ecopb: Math.min(...medoidScoreList.map(item => item.ecopb).filter(item => item !== -1)),
+        eqapk: Math.min(...medoidScoreList.map(item => item.eqapk).filter(item => item !== -1)),
         estcc: Math.min(...medoidScoreList.map(item => item.estcc).filter(item => item !== -1)),
         firef: Math.min(...medoidScoreList.map(item => item.firef).filter(item => item !== -1)),
         gmgfc: Math.min(...medoidScoreList.map(item => item.gmgfc).filter(item => item !== -1)),
         gppgr: Math.min(...medoidScoreList.map(item => item.gppgr).filter(item => item !== -1)),
         grntr: Math.min(...medoidScoreList.map(item => item.grntr).filter(item => item !== -1)),
+        grsav: Math.min(...medoidScoreList.map(item => item.grsav).filter(item => item !== -1)),
         ihabc: Math.min(...medoidScoreList.map(item => item.ihabc).filter(item => item !== -1)),
         impas: Math.min(...medoidScoreList.map(item => item.impas).filter(item => item !== -1)),
         isegr: Math.min(...medoidScoreList.map(item => item.isegr).filter(item => item !== -1)),
+        lscdn: Math.min(...medoidScoreList.map(item => item.lscdn).filter(item => item !== -1)),
         mavbp: Math.min(...medoidScoreList.map(item => item.mavbp).filter(item => item !== -1)),
         mavbr: Math.min(...medoidScoreList.map(item => item.mavbr).filter(item => item !== -1)),
         netcx: Math.min(...medoidScoreList.map(item => item.netcx).filter(item => item !== -1)),
@@ -317,6 +375,8 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
         safbb: Math.min(...medoidScoreList.map(item => item.safbb).filter(item => item !== -1)),
         saffb: Math.min(...medoidScoreList.map(item => item.saffb).filter(item => item !== -1)),
         saluh: Math.min(...medoidScoreList.map(item => item.saluh).filter(item => item !== -1)),
+        samfs: Math.min(...medoidScoreList.map(item => item.samfs).filter(item => item !== -1)),
+        scwet: Math.min(...medoidScoreList.map(item => item.scwet).filter(item => item !== -1)),
         urbps: Math.min(...medoidScoreList.map(item => item.urbps).filter(item => item !== -1)),
         wcofw: Math.min(...medoidScoreList.map(item => item.wcofw).filter(item => item !== -1)),
         wcopb: Math.min(...medoidScoreList.map(item => item.wcopb).filter(item => item !== -1)),
@@ -324,29 +384,39 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
       }
 
       const minLevels = {
-        estcc:  indicators.estcc.indexOf(minScores.estcc),
-        firef:  indicators.estcc.indexOf(minScores.firef),
-        gmgfc:  indicators.estcc.indexOf(minScores.gmgfc),
-        gppgr:  indicators.estcc.indexOf(minScores.gppgr),
-        grntr:  indicators.estcc.indexOf(minScores.grntr),
-        ihabc:  indicators.estcc.indexOf(minScores.ihabc),
-        impas:  indicators.estcc.indexOf(minScores.impas),
-        isegr:  indicators.estcc.indexOf(minScores.isegr),
-        mavbp:  indicators.estcc.indexOf(minScores.mavbp),
-        mavbr:  indicators.estcc.indexOf(minScores.mavbr),
-        netcx:  indicators.estcc.indexOf(minScores.netcx),
-        nlcfp:  indicators.estcc.indexOf(minScores.nlcfp),
-        persu:  indicators.estcc.indexOf(minScores.persu),
-        playa:  indicators.estcc.indexOf(minScores.playa),
-        rescs:  indicators.estcc.indexOf(minScores.rescs),
-        rests:  indicators.estcc.indexOf(minScores.rests),
-        safbb:  indicators.estcc.indexOf(minScores.safbb),
-        saffb:  indicators.estcc.indexOf(minScores.saffb),
-        saluh:  indicators.estcc.indexOf(minScores.saluh),
-        urbps:  indicators.estcc.indexOf(minScores.urbps),
-        wcofw:  indicators.estcc.indexOf(minScores.wcofw),
-        wcopb:  indicators.estcc.indexOf(minScores.wcopb),
-        wgcmd:  indicators.estcc.indexOf(minScores.wgcmd),
+        aefih: indicators.aefih.indexOf(minScores.aefih),
+        amfih: indicators.amfih.indexOf(minScores.amfih),
+        amrpa: indicators.amrpa.indexOf(minScores.amrpa),
+        cshcn: indicators.cshcn.indexOf(minScores.cshcn),
+        ecopb: indicators.ecopb.indexOf(minScores.ecopb),
+        eqapk: indicators.eqapk.indexOf(minScores.eqapk),
+        estcc: indicators.estcc.indexOf(minScores.estcc),
+        firef: indicators.firef.indexOf(minScores.firef),
+        gmgfc: indicators.gmgfc.indexOf(minScores.gmgfc),
+        gppgr: indicators.gppgr.indexOf(minScores.gppgr),
+        grntr: indicators.grntr.indexOf(minScores.grntr),
+        grsav: indicators.grsav.indexOf(minScores.grsav),
+        ihabc: indicators.ihabc.indexOf(minScores.ihabc),
+        impas: indicators.impas.indexOf(minScores.impas),
+        isegr: indicators.isegr.indexOf(minScores.isegr),
+        lscdn: indicators.lscdn.indexOf(minScores.lscdn),
+        mavbp: indicators.mavbp.indexOf(minScores.mavbp),
+        mavbr: indicators.mavbr.indexOf(minScores.mavbr),
+        netcx: indicators.netcx.indexOf(minScores.netcx),
+        nlcfp: indicators.nlcfp.indexOf(minScores.nlcfp),
+        persu: indicators.persu.indexOf(minScores.persu),
+        playa: indicators.playa.indexOf(minScores.playa),
+        rescs: indicators.rescs.indexOf(minScores.rescs),
+        rests: indicators.rests.indexOf(minScores.rests),
+        safbb: indicators.safbb.indexOf(minScores.safbb),
+        saffb: indicators.saffb.indexOf(minScores.saffb),
+        saluh: indicators.saluh.indexOf(minScores.saluh),
+        samfs: indicators.samfs.indexOf(minScores.samfs),
+        scwet: indicators.scwet.indexOf(minScores.scwet),
+        urbps: indicators.urbps.indexOf(minScores.urbps),
+        wcofw: indicators.wcofw.indexOf(minScores.wcofw),
+        wcopb: indicators.wcopb.indexOf(minScores.wcopb),
+        wgcmd: indicators.wgcmd.indexOf(minScores.wgcmd),
       };
 
       setCurrentLevels(minLevels);
@@ -398,33 +468,43 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
       const actionScoreList = currentScoreList.map((feature) => {
         const actionMedoidScores = {
           gid: feature.gid,
+          aefih: increaseLevel(actionLevels.aefih, feature.aefih, actionLevels.aefih === 0 ? actionLevels.aefih*0.25 : actionLevels.aefih*0.5),
+          amfih: increaseLevel(actionLevels.amfih, feature.amfih, actionLevels.amfih === 0 ? actionLevels.amfih*0.25 : actionLevels.amfih*0.5),
+          amrpa: increaseLevel(actionLevels.amrpa, feature.amrpa, actionLevels.amrpa*1),
+          cshcn: increaseLevel(actionLevels.cshcn, feature.cshcn, actionLevels.cshcn === 2 ? actionLevels.cshcn*0.25 + 0.25 : actionLevels.cshcn*0.25),
+          ecopb: increaseLevel(actionLevels.ecopb, feature.ecopb, actionLevels.ecopb*0.2),
+          eqapk: increaseLevel(actionLevels.eqapk, feature.eqapk, actionLevels.eqapk*0.25),
           estcc: increaseLevel(actionLevels.estcc, feature.estcc, actionLevels.estcc*0.25),
           firef: increaseLevel(actionLevels.firef, feature.firef, actionLevels.firef*0.5),
           gmgfc: increaseLevel(actionLevels.gmgfc, feature.gmgfc, actionLevels.gmgfc*1),
           gppgr: increaseLevel(actionLevels.gppgr, feature.gppgr, actionLevels.gppgr*0.2),
           grntr: increaseLevel(actionLevels.grntr, feature.grntr, actionLevels.grntr*0.25),
-          ihabc: increaseLevel(actionLevels.ihabc, feature.ihabc, feature.ihabc === 0 ? actionLevels.ihabc*0.25 + 0.5 : actionLevels.ihabc*0.25),
-          impas: increaseLevel(actionLevels.impas, feature.impas, feature.impas === 0 ? actionLevels.impas*0.25 + 0.25 : actionLevels.impas*0.25),
+          grsav: increaseLevel(actionLevels.grsav, feature.grsav, actionLevels.grsav*0.15),
+          ihabc: increaseLevel(actionLevels.ihabc, feature.ihabc, actionLevels.ihabc === 0 ? actionLevels.ihabc*0.25 + 0.5 : actionLevels.ihabc*0.25),
+          impas: increaseLevel(actionLevels.impas, feature.impas, actionLevels.impas === 0 ? actionLevels.impas*0.25 + 0.25 : actionLevels.impas*0.25),
           isegr: increaseLevel(actionLevels.isegr, feature.isegr, actionLevels.isegr*0.25),
+          lscdn: increaseLevel(actionLevels.lscdn, feature.lscdn, actionLevels.lscdn === 0 ? actionLevels.lscdn*0.2 - 0.1 : actionLevels.lscdn*0.2),
           mavbp: increaseLevel(actionLevels.mavbp, feature.mavbp, actionLevels.mavbp*0.1),
           mavbr: increaseLevel(actionLevels.mavbr, feature.mavbr, actionLevels.mavbr*0.1),
           netcx: increaseLevel(actionLevels.netcx, feature.netcx, actionLevels.netcx*0.25),
           nlcfp: increaseLevel(actionLevels.nlcfp, feature.nlcfp, actionLevels.nlcfp*0.25),
-          persu: increaseLevel(actionLevels.persu, feature.persu, 0),
+          persu: increaseLevel(actionLevels.persu, feature.persu, 0), // Not Adjustable
           playa: increaseLevel(actionLevels.playa, feature.playa, actionLevels.playa*0.5),
           rescs: increaseLevel(actionLevels.rescs, feature.rescs, actionLevels.rescs*0.15 + 0.1),
-          rests: increaseLevel(actionLevels.rests, feature.rests, feature.rests === 0 ? actionLevels.rests*0.15 + 0.1 : actionLevels.rests*0.15),
+          rests: increaseLevel(actionLevels.rests, feature.rests, actionLevels.rests === 0 ? actionLevels.rests*0.15 + 0.1 : actionLevels.rests*0.15),
           safbb: increaseLevel(actionLevels.safbb, feature.safbb, actionLevels.safbb*0.2),
           saffb: increaseLevel(actionLevels.saffb, feature.saffb, actionLevels.saffb*0.5),
-          saluh: increaseLevel(actionLevels.saluh, feature.saluh, 0),
+          saluh: increaseLevel(actionLevels.saluh, feature.saluh, 0), // Not Adjustable
+          samfs: increaseLevel(actionLevels.samfs, feature.samfs, actionLevels.samfs*1),
+          scwet: increaseLevel(actionLevels.scwet, feature.scwet, actionLevels.scwet*0.5),
           urbps: increaseLevel(actionLevels.urbps, feature.urbps, actionLevels.urbps*0.25),
           wcofw: increaseLevel(actionLevels.wcofw, feature.wcofw, actionLevels.wcofw*0.2),
-          wcopb: increaseLevel(actionLevels.wcopb, feature.wcopb, feature.wcopb === 0 ? actionLevels.wcopb*0.1 + 0.4 : actionLevels.wcopb*0.1),
+          wcopb: increaseLevel(actionLevels.wcopb, feature.wcopb, actionLevels.wcopb === 0 ? actionLevels.wcopb*0.1 + 0.4 : actionLevels.wcopb*0.1),
           wgcmd: increaseLevel(actionLevels.wgcmd, feature.wgcmd, actionLevels.wgcmd*0.1),
         };
 
-        const hList = ["estcc", "firef", "gppgr", "impas", "isegr", "mavbp", "mavbr", "nlcfp", "persu", "playa", "rescs", "rests", "safbb", "saffb", "wcofw", "wcopb", "wgcmd"];
-        const fList = ["grntr", "saluh", "urbps"];
+        const hList = ["aefih", "amfih", "amrpa", "cshcn", "ecopb", "estcc", "firef", "grsav", "impas", "lscdn", "mavbp", "mavbr", "nlcfp", "persu", "playa", "rescs", "rests", "safbb", "saffb", "samfs", "scwet", "wcofw", "wcopb", "wgcmd"];
+        const fList = ["eqapk", "grntr", "saluh", "urbps"];
         const cList = ["gmgfc", "ihabc", "netcx"];
 
         const hTotal = hList.reduce((total, current) => total + (actionMedoidScores[current] !== -1 ? actionMedoidScores[current] : 0), 0);
@@ -459,14 +539,22 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
       };
 
       let newActionScores = {
+        aefih: getAverageScore(actionScoreList, "aefih"),
+        amfih: getAverageScore(actionScoreList, "amfih"),
+        amrpa: getAverageScore(actionScoreList, "amrpa"),
+        cshcn: getAverageScore(actionScoreList, "cshcn"),
+        ecopb: getAverageScore(actionScoreList, "ecopb"),
+        eqapk: getAverageScore(actionScoreList, "eqapk"),
         estcc: getAverageScore(actionScoreList, "estcc"),
         firef: getAverageScore(actionScoreList, "firef"),
         gmgfc: getAverageScore(actionScoreList, "gmgfc"),
         gppgr: getAverageScore(actionScoreList, "gppgr"),
         grntr: getAverageScore(actionScoreList, "grntr"),
+        grsav: getAverageScore(actionScoreList, "grsav"),
         ihabc: getAverageScore(actionScoreList, "ihabc"),
         impas: getAverageScore(actionScoreList, "impas"),
         isegr: getAverageScore(actionScoreList, "isegr"),
+        lscdn: getAverageScore(actionScoreList, "lscdn"),
         mavbp: getAverageScore(actionScoreList, "mavbp"),
         mavbr: getAverageScore(actionScoreList, "mavbr"),
         netcx: getAverageScore(actionScoreList, "netcx"),
@@ -478,6 +566,8 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
         safbb: getAverageScore(actionScoreList, "safbb"),
         saffb: getAverageScore(actionScoreList, "saffb"),
         saluh: getAverageScore(actionScoreList, "saluh"),
+        samfs: getAverageScore(actionScoreList, "samfs"),
+        scwet: getAverageScore(actionScoreList, "scwet"),
         urbps: getAverageScore(actionScoreList, "urbps"),
         wcofw: getAverageScore(actionScoreList, "wcofw"),
         wcopb: getAverageScore(actionScoreList, "wcopb"),
@@ -528,6 +618,26 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
                   <b>Health </b>{" "}
                 </td>
               </tr>
+              {scores.amrpa > 0  && <tr>
+                <td>Amphibian & Reptile Areas</td>
+                <td colSpan="4">{ActionSlider("amrpa")}</td>
+              </tr>}
+              {scores.aefih > 0  && <tr>
+                <td>Atlantic Estuarine Fish Habitat</td>
+                <td colSpan="4">{ActionSlider("aefih")}</td>
+              </tr>}
+              {scores.amfih > 0  && <tr>
+                <td>Atlantic Estuarine Fish Habitat</td>
+                <td colSpan="4">{ActionSlider("amfih")}</td>
+              </tr>}
+              {scores.cshcn > 0  && <tr>
+                <td>Coastal Shoreline Condition</td>
+                <td colSpan="4">{ActionSlider("cshcn")}</td>
+              </tr>}
+              {scores.ecopb > 0  && <tr>
+                <td>East Gulf Coastal Plain Open Pine Birds</td>
+                <td colSpan="4">{ActionSlider("ecopb")}</td>
+              </tr>}
               {scores.estcc > 0  && <tr>
                 <td>Estuarine Coastal Condition</td>
                 <td colSpan="4">{ActionSlider("estcc")}</td>
@@ -536,17 +646,17 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
                 <td>Fire Frequency</td>
                 <td colSpan="4">{ActionSlider("firef")}</td>
               </tr>}
-              {scores.gppgr > 0  && <tr>
-                <td>Great Plains Perennial Grass</td>
-                <td colSpan="4">{ActionSlider("gppgr")}</td>
+              {scores.grsav > 0  && <tr>
+                <td>Grasslands and Savannas</td>
+                <td colSpan="4">{ActionSlider("grsav")}</td>
               </tr>}
               {scores.impas > 0  && <tr>
                 <td>Imperiled Aquatic Species</td>
                 <td colSpan="4">{ActionSlider("impas")}</td>
               </tr>}
-              {scores.isegr > 0  && <tr>
-                <td>Interior Southeast Grasslands</td>
-                <td colSpan="4">{ActionSlider("isegr")}</td>
+              {scores.lscdn > 0  && <tr>
+                <td>Landscape Condition</td>
+                <td colSpan="4">{ActionSlider("lscdn")}</td>
               </tr>}
               {scores.mavbp > 0  && <tr>
                 <td>MAV Forest Birds Protection</td>
@@ -584,6 +694,14 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
                 <td>South Atlantic Forest Birds</td>
                 <td colSpan="4">{ActionSlider("saffb")}</td>
               </tr>}
+              {scores.samfs > 0  && <tr>
+                <td>South Atlantic Maritime Forest</td>
+                <td colSpan="4">{ActionSlider("samfs")}</td>
+              </tr>}
+              {scores.scwet > 0  && <tr>
+                <td>Stable Coastal Wetlands</td>
+                <td colSpan="4">{ActionSlider("scwet")}</td>
+              </tr>}
               {scores.wcofw > 0  && <tr>
                 <td>West Coastal Plain Ouachitas Forested Wetlands</td>
                 <td colSpan="4">{ActionSlider("wcofw")}</td>
@@ -601,6 +719,10 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
                   <b>Function </b>{" "}
                 </td>
               </tr>
+              {scores.eqapk > 0  && <tr>
+                <td>Equitable Access to Potential Parks</td>
+                <td colSpan="4">{ActionSlider("eqapk")}</td>
+              </tr>}
               {scores.grntr > 0  && <tr>
                 <td>Greenways Trails</td>
                 <td colSpan="4">{ActionSlider("grntr")}</td>

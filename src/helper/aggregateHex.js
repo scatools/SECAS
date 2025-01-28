@@ -13,14 +13,22 @@ export function calculateArea(input) {
 
 export function getStochasticScore(hex) {
   const indicators = {
+    aefih: [0.25, 0.5, 1],
+    amfih: [0.25, 0.5, 1],
+    amrpa: [0, 1],
+    cshcn: [0, 0.25, 0.5, 1],
+    ecopb: [0.2, 0.4, 0.6, 0.8, 1],
+    eqapk: [0.5, 0.75, 1],
     estcc: [0, 0.25, 0.5, 0.75, 1],
     firef: [0, 0.5, 1],
     gmgfc: [0, 1],
     gppgr: [0.2, 0.4, 0.6, 0.8, 1],
     grntr: [0, 0.25, 0.5, 0.75, 1],
+    grsav: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1],
     ihabc: [0, 0.75, 1],
     impas: [0, 0.5, 0.75, 1],
     isegr: [0, 0.25, 0.5, 0.75, 1],
+    lscdn: [0.1, 0.2, 0.4, 0.6, 0.8, 1],
     mavbp: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
     mavbr: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
     netcx: [0, 0.25, 0.5, 0.75, 1],
@@ -32,6 +40,8 @@ export function getStochasticScore(hex) {
     safbb: [0, 0.2, 0.4, 0.6, 0.8, 1],
     saffb: [0, 0.5, 1],
     saluh: [0, 0.5, 1],
+    samfs: [0, 1],
+    scwet: [0, 0.5, 1],
     urbps: [0, 0.25, 0.5, 0.75, 1],
     wcofw: [0, 0.2, 0.4, 0.6, 0.8, 1],
     wcopb: [0, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
@@ -40,14 +50,22 @@ export function getStochasticScore(hex) {
   };
 
   const probabilities = {
+    aefih: [hex.aefih_0_25, hex.aefih_0_5, hex.aefih_1],
+    amfih: [hex.amfih_0_25, hex.amfih_0_5, hex.amfih_1],
+    amrpa: [hex.amrpa_0, hex.amrpa_1],
+    cshcn: [hex.cshcn_0, hex.cshcn_0_25, hex.cshcn_0_5, hex.cshcn_1],
+    ecopb: [hex.ecopb_0_2, hex.ecopb_0_4, hex.ecopb_0_6, hex.ecopb_0_8, hex.ecopb_1],
+    eqapk: [hex.eqapk_0_5, hex.eqapk_0_75, hex.eqapk_1],
     estcc: [hex.estcc_0, hex.estcc_0_25, hex.estcc_0_5, hex.estcc_0_75, hex.estcc_1],
     firef: [hex.firef_0, hex.firef_0_5, hex.firef_1],
     gmgfc: [hex.gmgfc_0, hex.gmgfc_1],
     gppgr: [hex.gppgr_0_2, hex.gppgr_0_4, hex.gppgr_0_6, hex.gppgr_0_8, hex.gppgr_1],
     grntr: [hex.grntr_0, hex.grntr_0_25, hex.grntr_0_5, hex.grntr_0_75, hex.grntr_1],
+    grsav: [hex.grsav_0, hex.grsav_0_15, hex.grsav_0_3, hex.grsav_0_45, hex.grsav_0_6, hex.grsav_0_75, hex.grsav_0_9, hex.grsav_1],
     ihabc: [hex.ihabc_0, hex.ihabc_0_75, hex.ihabc_1],
     impas: [hex.impas_0, hex.impas_0_5, hex.impas_0_75, hex.impas_1],
     isegr: [hex.isegr_0, hex.isegr_0_25, hex.isegr_0_5, hex.isegr_0_75, hex.isegr_1],
+    lscdn: [hex.lscdn_0_1, hex.lscdn_0_2, hex.lscdn_0_4, hex.lscdn_0_6, hex.lscdn_0_8, hex.lscdn_1],
     mavbp: [hex.mavbp_0, hex.mavbp_0_1, hex.mavbp_0_2, hex.mavbp_0_3, hex.mavbp_0_4, hex.mavbp_0_5, hex.mavbp_0_6, hex.mavbp_0_7, hex.mavbp_0_8, hex.mavbp_0_9, hex.mavbp_1],
     mavbr: [hex.mavbr_0, hex.mavbr_0_1, hex.mavbr_0_2, hex.mavbr_0_3, hex.mavbr_0_4, hex.mavbr_0_5, hex.mavbr_0_6, hex.mavbr_0_7, hex.mavbr_0_8, hex.mavbr_0_9, hex.mavbr_1],
     netcx: [hex.netcx_0, hex.netcx_0_25, hex.netcx_0_5, hex.netcx_0_75, hex.netcx_1],
@@ -59,6 +77,8 @@ export function getStochasticScore(hex) {
     safbb: [hex.safbb_0, hex.safbb_0_2, hex.safbb_0_4, hex.safbb_0_6, hex.safbb_0_8, hex.safbb_1],
     saffb: [hex.saffb_0, hex.saffb_0_5, hex.saffb_1],
     saluh: [hex.saluh_0, hex.saluh_0_5, hex.saluh_1],
+    samfs: [hex.samfs_0, hex.samfs_1],
+    scwet: [hex.scwet_0, hex.scwet_0_5, hex.scwet_1],
     urbps: [hex.urbps_0, hex.urbps_0_25, hex.urbps_0_5, hex.urbps_0_75, hex.urbps_1],
     wcofw: [hex.wcofw_0, hex.wcofw_0_2, hex.wcofw_0_4, hex.wcofw_0_6, hex.wcofw_0_8, hex.wcofw_1],
     wcopb: [hex.wcopb_0, hex.wcopb_0_5, hex.wcopb_0_6, hex.wcopb_0_7, hex.wcopb_0_8, hex.wcopb_0_9, hex.wcopb_1],
@@ -66,14 +86,23 @@ export function getStochasticScore(hex) {
     futv2: [hex.futv2_1, hex.futv2_2, hex.futv2_3, hex.futv2_4]
   };
   
-  let estccSims = [],
+  let
+  aefihSims = [],
+  amfihSims = [],
+  amrpaSims = [],
+  cshcnSims = [],
+  ecopbSims = [],
+  eqapkSims = [],
+  estccSims = [],
   firefSims = [],
   gmgfcSims = [],
   gppgrSims = [],
   grntrSims = [],
+  grsavSims = [],
   ihabcSims = [],
   impasSims = [],
   isegrSims = [],
+  lscdnSims = [],
   mavbpSims = [],
   mavbrSims = [],
   netcxSims = [],
@@ -85,6 +114,8 @@ export function getStochasticScore(hex) {
   safbbSims = [],
   saffbSims = [],
   saluhSims = [],
+  samfsSims = [],
+  scwetSims = [],
   urbpsSims = [],
   wcofwSims = [],
   wcopbSims = [],
@@ -106,6 +137,24 @@ export function getStochasticScore(hex) {
 
   // Remove null values (-1) before calculating the average
   for (let i=0; i<1000; i++) {
+    if (probabilities.aefih.filter((item) => item !== -1).length === probabilities.aefih.length) {
+      aefihSims.push(find(Math.random(), indicators.aefih, probabilities.aefih));
+    };
+    if (probabilities.amfih.filter((item) => item !== -1).length === probabilities.amfih.length) {
+      amfihSims.push(find(Math.random(), indicators.amfih, probabilities.amfih));
+    };
+    if (probabilities.amrpa.filter((item) => item !== -1).length === probabilities.amrpa.length) {
+      amrpaSims.push(find(Math.random(), indicators.amrpa, probabilities.amrpa));
+    };
+    if (probabilities.cshcn.filter((item) => item !== -1).length === probabilities.cshcn.length) {
+      cshcnSims.push(find(Math.random(), indicators.cshcn, probabilities.cshcn));
+    };
+    if (probabilities.ecopb.filter((item) => item !== -1).length === probabilities.ecopb.length) {
+      ecopbSims.push(find(Math.random(), indicators.ecopb, probabilities.ecopb));
+    };
+    if (probabilities.eqapk.filter((item) => item !== -1).length === probabilities.eqapk.length) {
+      eqapkSims.push(find(Math.random(), indicators.eqapk, probabilities.eqapk));
+    };
     if (probabilities.estcc.filter((item) => item !== -1).length === probabilities.estcc.length) {
       estccSims.push(find(Math.random(), indicators.estcc, probabilities.estcc));
     };
@@ -121,6 +170,9 @@ export function getStochasticScore(hex) {
     if (probabilities.grntr.filter((item) => item !== -1).length === probabilities.grntr.length) {
       grntrSims.push(find(Math.random(), indicators.grntr, probabilities.grntr));
     };
+    if (probabilities.grsav.filter((item) => item !== -1).length === probabilities.grsav.length) {
+      grsavSims.push(find(Math.random(), indicators.grsav, probabilities.grsav));
+    };
     if (probabilities.ihabc.filter((item) => item !== -1).length === probabilities.ihabc.length) {
       ihabcSims.push(find(Math.random(), indicators.ihabc, probabilities.ihabc));
     };
@@ -129,6 +181,9 @@ export function getStochasticScore(hex) {
     };
     if (probabilities.isegr.filter((item) => item !== -1).length === probabilities.isegr.length) {
       isegrSims.push(find(Math.random(), indicators.isegr, probabilities.isegr));
+    };
+    if (probabilities.lscdn.filter((item) => item !== -1).length === probabilities.lscdn.length) {
+      lscdnSims.push(find(Math.random(), indicators.lscdn, probabilities.lscdn));
     };
     if (probabilities.mavbp.filter((item) => item !== -1).length === probabilities.mavbp.length) {
       mavbpSims.push(find(Math.random(), indicators.mavbp, probabilities.mavbp));
@@ -163,6 +218,12 @@ export function getStochasticScore(hex) {
     if (probabilities.saluh.filter((item) => item !== -1).length === probabilities.saluh.length) {
       saluhSims.push(find(Math.random(), indicators.saluh, probabilities.saluh));
     };
+    if (probabilities.samfs.filter((item) => item !== -1).length === probabilities.samfs.length) {
+      samfsSims.push(find(Math.random(), indicators.samfs, probabilities.samfs));
+    };
+    if (probabilities.scwet.filter((item) => item !== -1).length === probabilities.scwet.length) {
+      scwetSims.push(find(Math.random(), indicators.scwet, probabilities.scwet));
+    };
     if (probabilities.urbps.filter((item) => item !== -1).length === probabilities.urbps.length) {
       urbpsSims.push(find(Math.random(), indicators.urbps, probabilities.urbps));
     };
@@ -183,14 +244,22 @@ export function getStochasticScore(hex) {
   const average = array => array.length === 0 ? 0 : array.reduce((a, b) => a + b) / array.length;
 
   const averageScores = {
+    aefih: average(aefihSims),
+    amfih: average(amfihSims),
+    amrpa: average(amrpaSims),
+    cshcn: average(cshcnSims),
+    ecopb: average(ecopbSims),
+    eqapk: average(eqapkSims),
     estcc: average(estccSims),
     firef: average(firefSims),
     gmgfc: average(gmgfcSims),
     gppgr: average(gppgrSims),
     grntr: average(grntrSims),
+    grsav: average(grsavSims),
     ihabc: average(ihabcSims),
     impas: average(impasSims),
     isegr: average(isegrSims),
+    lscdn: average(lscdnSims),
     mavbp: average(mavbpSims),
     mavbr: average(mavbrSims),
     netcx: average(netcxSims),
@@ -202,6 +271,8 @@ export function getStochasticScore(hex) {
     safbb: average(safbbSims),
     saffb: average(saffbSims),
     saluh: average(saluhSims),
+    samfs: average(samfsSims),
+    scwet: average(scwetSims),
     urbps: average(urbpsSims),
     wcofw: average(wcofwSims),
     wcopb: average(wcopbSims),
@@ -214,14 +285,22 @@ export function getStochasticScore(hex) {
 
 export function getStochasticActionScore(hex) {
   const indicators = {
+    aefih: [0.25, 0.5, 1],
+    amfih: [0.25, 0.5, 1],
+    amrpa: [0, 1],
+    cshcn: [0, 0.25, 0.5, 1],
+    ecopb: [0.2, 0.4, 0.6, 0.8, 1],
+    eqapk: [0.5, 0.75, 1],
     estcc: [0, 0.25, 0.5, 0.75, 1],
     firef: [0, 0.5, 1],
     gmgfc: [0, 1],
     gppgr: [0.2, 0.4, 0.6, 0.8, 1],
     grntr: [0, 0.25, 0.5, 0.75, 1],
+    grsav: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1],
     ihabc: [0, 0.75, 1],
     impas: [0, 0.5, 0.75, 1],
     isegr: [0, 0.25, 0.5, 0.75, 1],
+    lscdn: [0.1, 0.2, 0.4, 0.6, 0.8, 1],
     mavbp: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
     mavbr: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
     netcx: [0, 0.25, 0.5, 0.75, 1],
@@ -233,6 +312,8 @@ export function getStochasticActionScore(hex) {
     safbb: [0, 0.2, 0.4, 0.6, 0.8, 1],
     saffb: [0, 0.5, 1],
     saluh: [0, 0.5, 1],
+    samfs: [0, 1],
+    scwet: [0, 0.5, 1],
     urbps: [0, 0.25, 0.5, 0.75, 1],
     wcofw: [0, 0.2, 0.4, 0.6, 0.8, 1],
     wcopb: [0, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
@@ -241,14 +322,22 @@ export function getStochasticActionScore(hex) {
   };
 
   const currentLevels = {
+    aefih: indicators.aefih.indexOf(hex.aefih_mi),
+    amfih: indicators.amfih.indexOf(hex.amfih_mi),
+    amrpa: indicators.amrpa.indexOf(hex.amrpa_mi),
+    cshcn: indicators.cshcn.indexOf(hex.cshcn_mi),
+    ecopb: indicators.ecopb.indexOf(hex.ecopb_mi),
+    eqapk: indicators.eqapk.indexOf(hex.eqapk_mi),
     estcc: indicators.estcc.indexOf(hex.estcc_mi),
     firef: indicators.firef.indexOf(hex.firef_mi),
     gmgfc: indicators.gmgfc.indexOf(hex.gmgfc_mi),
     gppgr: indicators.gppgr.indexOf(hex.gppgr_mi),
     grntr: indicators.grntr.indexOf(hex.grntr_mi),
+    grsav: indicators.grsav.indexOf(hex.grsav_mi),
     ihabc: indicators.ihabc.indexOf(hex.ihabc_mi),
     impas: indicators.impas.indexOf(hex.impas_mi),
     isegr: indicators.isegr.indexOf(hex.isegr_mi),
+    lscdn: indicators.lscdn.indexOf(hex.lscdn_mi),
     mavbp: indicators.mavbp.indexOf(hex.mavbp_mi),
     mavbr: indicators.mavbr.indexOf(hex.mavbr_mi),
     netcx: indicators.netcx.indexOf(hex.netcx_mi),
@@ -260,20 +349,31 @@ export function getStochasticActionScore(hex) {
     safbb: indicators.safbb.indexOf(hex.safbb_mi),
     saffb: indicators.saffb.indexOf(hex.saffb_mi),
     saluh: indicators.saluh.indexOf(hex.saluh_mi),
+    samfs: indicators.samfs.indexOf(hex.samfs_mi),
+    scwet: indicators.scwet.indexOf(hex.scwet_mi),
     urbps: indicators.urbps.indexOf(hex.urbps_mi),
     wcofw: indicators.wcofw.indexOf(hex.wcofw_mi),
     wcopb: indicators.wcopb.indexOf(hex.wcopb_mi),
     wgcmd: indicators.wgcmd.indexOf(hex.wgcmd_mi)
   };
 
-  let estccSims = [],
+  let
+  aefihSims = [],
+  amfihSims = [],
+  amrpaSims = [],
+  cshcnSims = [],
+  ecopbSims = [],
+  eqapkSims = [],
+  estccSims = [],
   firefSims = [],
   gmgfcSims = [],
   gppgrSims = [],
   grntrSims = [],
+  grsavSims = [],
   ihabcSims = [],
   impasSims = [],
   isegrSims = [],
+  lscdnSims = [],
   mavbpSims = [],
   mavbrSims = [],
   netcxSims = [],
@@ -285,10 +385,13 @@ export function getStochasticActionScore(hex) {
   safbbSims = [],
   saffbSims = [],
   saluhSims = [],
+  samfsSims = [],
+  scwetSims = [],
   urbpsSims = [],
   wcofwSims = [],
   wcopbSims = [],
-  wgcmdSims = [];
+  wgcmdSims = [],
+  futv2Sims = [];
 
   const randomSelect = (indicator) => {
     const slicedScoreArray = indicators[indicator].slice(currentLevels[indicator]);
@@ -297,6 +400,24 @@ export function getStochasticActionScore(hex) {
   };
   
   for (let i=0; i<1000; i++) {
+    if (currentLevels.aefih !== -1) {
+      aefihSims.push(randomSelect("aefih"));
+    };
+    if (currentLevels.amfih !== -1) {
+      amfihSims.push(randomSelect("amfih"));
+    };
+    if (currentLevels.amrpa !== -1) {
+      amrpaSims.push(randomSelect("amrpa"));
+    };
+    if (currentLevels.cshcn !== -1) {
+      cshcnSims.push(randomSelect("cshcn"));
+    };
+    if (currentLevels.ecopb !== -1) {
+      ecopbSims.push(randomSelect("ecopb"));
+    };
+    if (currentLevels.eqapk !== -1) {
+      eqapkSims.push(randomSelect("eqapk"));
+    };
     if (currentLevels.estcc !== -1) {
       estccSims.push(randomSelect("estcc"));
     };
@@ -312,6 +433,9 @@ export function getStochasticActionScore(hex) {
     if (currentLevels.grntr !== -1) {
       grntrSims.push(randomSelect("grntr"));
     };
+    if (currentLevels.grsav !== -1) {
+      grsavSims.push(randomSelect("grsav"));
+    };
     if (currentLevels.ihabc !== -1) {
       ihabcSims.push(randomSelect("ihabc"));
     };
@@ -320,6 +444,9 @@ export function getStochasticActionScore(hex) {
     };
     if (currentLevels.isegr !== -1) {
       isegrSims.push(randomSelect("isegr"));
+    };
+    if (currentLevels.lscdn !== -1) {
+      lscdnSims.push(randomSelect("lscdn"));
     };
     if (currentLevels.mavbp !== -1) {
       mavbpSims.push(randomSelect("mavbp"));
@@ -354,6 +481,12 @@ export function getStochasticActionScore(hex) {
     if (currentLevels.saluh !== -1) {
       saluhSims.push(randomSelect("saluh"));
     };
+    if (currentLevels.samfs !== -1) {
+      samfsSims.push(randomSelect("samfs"));
+    };
+    if (currentLevels.scwet !== -1) {
+      scwetSims.push(randomSelect("scwet"));
+    };
     if (currentLevels.urbps !== -1) {
       urbpsSims.push(randomSelect("urbps"));
     };
@@ -371,14 +504,22 @@ export function getStochasticActionScore(hex) {
   const average = array => array.length === 0 ? 0 : array.reduce((a, b) => a + b) / array.length;
 
   const averageScores = {
+    aefih: average(aefihSims),
+    amfih: average(amfihSims),
+    amrpa: average(amrpaSims),
+    cshcn: average(cshcnSims),
+    ecopb: average(ecopbSims),
+    eqapk: average(eqapkSims),
     estcc: average(estccSims),
     firef: average(firefSims),
     gmgfc: average(gmgfcSims),
     gppgr: average(gppgrSims),
     grntr: average(grntrSims),
+    grsav: average(grsavSims),
     ihabc: average(ihabcSims),
     impas: average(impasSims),
     isegr: average(isegrSims),
+    lscdn: average(lscdnSims),
     mavbp: average(mavbpSims),
     mavbr: average(mavbrSims),
     netcx: average(netcxSims),
@@ -390,6 +531,8 @@ export function getStochasticActionScore(hex) {
     safbb: average(safbbSims),
     saffb: average(saffbSims),
     saluh: average(saluhSims),
+    samfs: average(samfsSims),
+    scwet: average(scwetSims),
     urbps: average(urbpsSims),
     wcofw: average(wcofwSims),
     wcopb: average(wcopbSims),
@@ -401,8 +544,8 @@ export function getStochasticActionScore(hex) {
 };
 
 export function getHexagonScore(score) {
-  const hList = ["estcc", "firef", "gppgr", "impas", "isegr", "mavbp", "mavbr", "nlcfp", "persu", "playa", "rescs", "rests", "safbb", "saffb", "wcofw", "wcopb", "wgcmd"];
-  const fList = ["grntr", "saluh", "urbps"];
+  const hList = ["aefih", "amfih", "amrpa", "cshcn", "ecopb", "estcc", "firef", "grsav", "impas", "lscdn", "mavbp", "mavbr", "nlcfp", "persu", "playa", "rescs", "rests", "safbb", "saffb", "samfs", "scwet", "wcofw", "wcopb", "wgcmd"];
+  const fList = ["eqapk", "grntr", "saluh", "urbps"];
   const cList = ["gmgfc", "ihabc", "netcx"];
 
   const hTotal = hList.reduce((total, current) => total + (score[current] !== -1 ? score[current] : 0), 0);
@@ -421,14 +564,22 @@ export function getHexagonScore(score) {
   const futureScore = currentScore*score.futurePenalty;
   
   return {
+    aefih: score.aefih,
+    amfih: score.amfih,
+    amrpa: score.amrpa,
+    cshcn: score.cshcn,
+    ecopb: score.ecopb,
+    eqapk: score.eqapk,
     estcc: score.estcc,
     firef: score.firef,
     gmgfc: score.gmgfc,
     gppgr: score.gppgr,
     grntr: score.grntr,
+    grsav: score.grsav,
     ihabc: score.ihabc,
     impas: score.impas,
     isegr: score.isegr,
+    lscdn: score.lscdn,
     mavbp: score.mavbp,
     mavbr: score.mavbr,
     netcx: score.netcx,
@@ -440,6 +591,8 @@ export function getHexagonScore(score) {
     safbb: score.safbb,
     saffb: score.saffb,
     saluh: score.saluh,
+    samfs: score.samfs,
+    scwet: score.scwet,
     urbps: score.urbps,
     wcofw: score.wcofw,
     wcopb: score.wcopb,
@@ -461,14 +614,22 @@ export function getAoiScore(featureArray) {
   };
   
   let aoiScore = {
+    aefih: getAverageScore(featureArray, "aefih"),
+    amfih: getAverageScore(featureArray, "amfih"),
+    amrpa: getAverageScore(featureArray, "amrpa"),
+    cshcn: getAverageScore(featureArray, "cshcn"),
+    ecopb: getAverageScore(featureArray, "ecopb"),
+    eqapk: getAverageScore(featureArray, "eqapk"),
     estcc: getAverageScore(featureArray, "estcc"),
     firef: getAverageScore(featureArray, "firef"),
     gmgfc: getAverageScore(featureArray, "gmgfc"),
     gppgr: getAverageScore(featureArray, "gppgr"),
     grntr: getAverageScore(featureArray, "grntr"),
+    grsav: getAverageScore(featureArray, "grsav"),
     ihabc: getAverageScore(featureArray, "ihabc"),
     impas: getAverageScore(featureArray, "impas"),
     isegr: getAverageScore(featureArray, "isegr"),
+    lscdn: getAverageScore(featureArray, "lscdn"),
     mavbp: getAverageScore(featureArray, "mavbp"),
     mavbr: getAverageScore(featureArray, "mavbr"),
     netcx: getAverageScore(featureArray, "netcx"),
@@ -480,6 +641,8 @@ export function getAoiScore(featureArray) {
     safbb: getAverageScore(featureArray, "safbb"),
     saffb: getAverageScore(featureArray, "saffb"),
     saluh: getAverageScore(featureArray, "saluh"),
+    samfs: getAverageScore(featureArray, "samfs"),
+    scwet: getAverageScore(featureArray, "scwet"),
     urbps: getAverageScore(featureArray, "urbps"),
     wcofw: getAverageScore(featureArray, "wcofw"),
     wcopb: getAverageScore(featureArray, "wcopb"),
@@ -496,8 +659,8 @@ export function getAoiScore(featureArray) {
 };
 
 export function sensitivityAnalysis(score, indicator, percentage) {
-  const hList = ["estcc", "firef", "gppgr", "impas", "isegr", "mavbp", "mavbr", "nlcfp", "persu", "playa", "rescs", "rests", "safbb", "saffb", "wcofw", "wcopb", "wgcmd"];
-  const fList = ["grntr", "saluh", "urbps"];
+  const hList = ["aefih", "amfih", "amrpa", "cshcn", "ecopb", "estcc", "firef", "grsav", "impas", "lscdn", "mavbp", "mavbr", "nlcfp", "persu", "playa", "rescs", "rests", "safbb", "saffb", "samfs", "scwet", "wcofw", "wcopb", "wgcmd"];
+  const fList = ["eqapk", "grntr", "saluh", "urbps"];
   const cList = ["gmgfc", "ihabc", "netcx"];
 
   const hTotal = hList.reduce((total, current) => total + (score[current] !== -1 ? (current === indicator? score[current]*(1+percentage) : score[current]) : 0), 0);
@@ -516,14 +679,22 @@ export function sensitivityAnalysis(score, indicator, percentage) {
   const futureScore = currentScore*score.futurePenalty;
   
   return {
+    aefih: score.aefih,
+    amfih: score.amfih,
+    amrpa: score.amrpa,
+    cshcn: score.cshcn,
+    ecopb: score.ecopb,
+    eqapk: score.eqapk,
     estcc: score.estcc,
     firef: score.firef,
     gmgfc: score.gmgfc,
     gppgr: score.gppgr,
     grntr: score.grntr,
+    grsav: score.grsav,
     ihabc: score.ihabc,
     impas: score.impas,
     isegr: score.isegr,
+    lscdn: score.lscdn,
     mavbp: score.mavbp,
     mavbr: score.mavbr,
     netcx: score.netcx,
@@ -535,6 +706,8 @@ export function sensitivityAnalysis(score, indicator, percentage) {
     safbb: score.safbb,
     saffb: score.saffb,
     saluh: score.saluh,
+    samfs: score.samfs,
+    scwet: score.scwet,
     urbps: score.urbps,
     wcofw: score.wcofw,
     wcopb: score.wcopb,
