@@ -89,7 +89,7 @@ const AddDraw = ({
         Once area name is set and drawing is complete, click Submit Area to proceed. Click Start Over anytime to restart the process.
       </p>
       <Container>
-        <Button variant="warning" style={{ float: "left" }} onClick={resetButton}>
+        <Button variant="danger" style={{ float: "left" }} onClick={resetButton}>
           Start Over
         </Button>
         <Button

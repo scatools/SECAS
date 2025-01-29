@@ -16,7 +16,7 @@ const SidebarViewGroup = ({ aoiSelected, setAoiSelected, zoomToAOI }) => {
       {aoiList.length > 0 &&
         aoiList.map((aoi) => (
           <ToggleButton
-            key={aoi.id}
+            id={aoi.id}
             type="radio"
             variant="outline-secondary"
             name={aoi.id}

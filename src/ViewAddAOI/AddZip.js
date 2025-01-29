@@ -16,7 +16,8 @@ const AddZip = ({ setAlerttext, setView, resetButton, setProgress, setShowProgre
       const handleSubmitShapefile = async (
         geometry,
         geometryType,
-        aoiNumber
+        aoiNumber,
+        aoiName
       ) => {
         setAlerttext(false);
         setShowProgress(true);
@@ -48,7 +49,7 @@ const AddZip = ({ setAlerttext, setView, resetButton, setProgress, setShowProgre
 
         dispatch(
           input_aoi({
-            name: "Area of Interest " + aoiNumber,
+            name: aoiName ? aoiName : "Area of Interest " + aoiNumber,
             geometry: newList,
             area: planArea,
             currentHexagons: currentData,
@@ -66,33 +67,63 @@ const AddZip = ({ setAlerttext, setView, resetButton, setProgress, setShowProgre
         reader.onload = async () => {
           const result = await shp(reader.result);
           if (result) {
-            // console.log(result.features);
             // Features are stored as [0:{}, 1:{}, 2:{}, ...]
             console.log(result);
-            console.log(result.features);
-            const featureCollection = result.length > 0 ? result[0] : result;
-            for (var num in featureCollection.features) {
-              var featureGeometry = featureCollection.features[num].geometry;
-              var featureGeometryType = featureCollection.features[num].geometry.type;
-              var featureNumber = parseInt(num) + 1;
-              var featureName = null;
-              // Check if each feature has a name-like property
-              // for (var property in result.features[num].properties) {
-              //   if (
-              //     property.indexOf("name") != -1 ||
-              //     property.indexOf("Name") != -1 ||
-              //     property.indexOf("NAME") != -1
-              //   ) {
-              //     featureName = result.features[num].properties[property];
-              //   }
-              // }
-              // Add geometry type as a parameter to cater to both Polygon and MultiPolygon
-              handleSubmitShapefile(
-                featureGeometry,
-                featureGeometryType,
-                featureNumber,
-                featureName
-              );
+            // const featureCollection = result.length > 0 ? result[0] : result;
+            // Loop through all files in the zip folder
+            if (result.length > 0) {
+              for (var fileNumber in result) {
+                let featureCollection = result[fileNumber];
+                // Loop through all features in the feature collection
+                for (var num in featureCollection.features) {
+                  var featureGeometry = featureCollection.features[num].geometry;
+                  var featureGeometryType = featureCollection.features[num].geometry.type;
+                  var featureNumber = parseInt(num) + 1;
+                  // Check if each feature has a name-like property
+                  var featureName = featureCollection.fileName ? featureCollection.fileName.split("/")[1] : null;
+                  // for (var property in result.features[num].properties) {
+                  //   if (
+                  //     property.indexOf("name") != -1 ||
+                  //     property.indexOf("Name") != -1 ||
+                  //     property.indexOf("NAME") != -1
+                  //   ) {
+                  //     featureName = result.features[num].properties[property];
+                  //   }
+                  // }
+                  // Add geometry type as a parameter to cater to both Polygon and MultiPolygon
+                  await handleSubmitShapefile(
+                    featureGeometry,
+                    featureGeometryType,
+                    featureNumber,
+                    featureName
+                  );
+                };
+              };
+            } else {
+              let featureCollection = result;
+              for (var num in featureCollection.features) {
+                var featureGeometry = featureCollection.features[num].geometry;
+                var featureGeometryType = featureCollection.features[num].geometry.type;
+                var featureNumber = parseInt(num) + 1;
+                // Check if each feature has a name-like property
+                var featureName = featureCollection.fileName ? featureCollection.fileName.split("/")[1] : null;
+                // for (var property in result.features[num].properties) {
+                //   if (
+                //     property.indexOf("name") != -1 ||
+                //     property.indexOf("Name") != -1 ||
+                //     property.indexOf("NAME") != -1
+                //   ) {
+                //     featureName = result.features[num].properties[property];
+                //   }
+                // }
+                // Add geometry type as a parameter to cater to both Polygon and MultiPolygon
+                await handleSubmitShapefile(
+                  featureGeometry,
+                  featureGeometryType,
+                  featureNumber,
+                  featureName
+                );
+              };
             }
           }
         };

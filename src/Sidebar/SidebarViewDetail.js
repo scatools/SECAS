@@ -3,9 +3,10 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import RangeSlider from "react-bootstrap-range-slider";
-import { MdViewList, MdEdit, MdDelete } from "react-icons/md";
-import { HiAdjustments, HiDocumentReport } from "react-icons/hi";
 import { GiHexes } from "react-icons/gi";
+import { HiAdjustments, HiDocumentReport } from "react-icons/hi";
+import { MdViewList, MdEdit, MdDelete } from "react-icons/md";
+import { VscDebugRestart } from "react-icons/vsc";
 import Draggable from "react-draggable";
 import Switch from "react-switch";
 import { v4 as uuid } from "uuid";
@@ -278,7 +279,7 @@ const SidebarViewDetail = ({
                       <h6>Subset Area:</h6>
                       <Form.Select>
                         <option>Entire Area</option>
-                        <option value="b">Blueprint Quick Select</option>
+                        {/* <option value="b">Blueprint Quick Select</option> */}
                         <option value="m">Manual Hexagon Select</option>
                       </Form.Select>
                     </div>
@@ -337,7 +338,7 @@ const SidebarViewDetail = ({
                 window.location.reload();
               }}
             >
-              <MdDelete /> {" "} Start Over
+              <VscDebugRestart /> {" "} Start Over
             </Button>
             <Button
               variant="dark"
