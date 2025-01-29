@@ -131,7 +131,7 @@ color: #fff;
 .button-container {
   display: flex;
   margin: 10px;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
 .range-slider-container {

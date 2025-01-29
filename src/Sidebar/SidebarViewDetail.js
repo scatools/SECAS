@@ -317,6 +317,8 @@ const SidebarViewDetail = ({
               <HiAdjustments /> {" "}
               Adjust Indicators
             </Button>
+          </div>
+          <div class="button-container">
             {/* <Button
               variant="dark"
               className="ml-2 mb-2"
@@ -328,6 +330,15 @@ const SidebarViewDetail = ({
             >
               <MdEdit /> {" "} Edit
             </Button> */}
+            <Button
+              variant="danger"
+              className="ml-2 mb-2"
+              onClick={() => {
+                window.location.reload();
+              }}
+            >
+              <MdDelete /> {" "} Start Over
+            </Button>
             <Button
               variant="dark"
               className="ml-2 mb-2"

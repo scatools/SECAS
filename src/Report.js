@@ -512,7 +512,7 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
                       This area of interest contains {aoi.currentHexagons.length}{" "} hexagons
                     </li>
                   </ul>
-                  <h5>Selected Actions</h5>
+                  <h5>Selected Indicators</h5>
                   <ul style={{listStyle: "none"}}>
                     {validScoreLabelList.map((label) => {
                       if (actionScores[scoreLabels[label]] > scores[scoreLabels[label]]) {
