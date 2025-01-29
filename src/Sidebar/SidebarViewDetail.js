@@ -106,6 +106,10 @@ const SidebarViewDetail = ({
     navigate("/stochastic-report");
   };
 
+  const onGridChange = () => {
+    setHexGrid(!hexGrid);
+  };
+
   const onConditionChange = () => {
     if (!conditionChecked) {
       setDualMap(true);
@@ -204,6 +208,25 @@ const SidebarViewDetail = ({
                   <label>
                     <Switch
                       className="toggle-switch"
+                      checked={hexGrid}
+                      onChange={onGridChange}
+                      onColor="#86d3ff"
+                      onHandleColor="#2693e6"
+                      handleDiameter={20}
+                      uncheckedIcon={false}
+                      checkedIcon={false}
+                      boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                      activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                      height={15}
+                      width={36}
+                    />
+                    {" "} Hexagon Grid
+                  </label>
+                </Row>
+                <Row>
+                  <label>
+                    <Switch
+                      className="toggle-switch"
                       checked={overlayChecked}
                       onChange={onOverLayChange}
                       onColor="#86d3ff"
@@ -275,39 +298,6 @@ const SidebarViewDetail = ({
           </div>
           <div class="button-container">
             <Button
-              variant="dark"
-              className="ml-2 mb-2"
-              onClick={() => {
-                setEditAOI(true);
-                setDrawingMode(true);
-                setAoiName(aoi.name);
-              }}
-            >
-              <MdEdit /> {" "} Edit
-            </Button>
-            <Button
-              variant="dark"
-              className="ml-2 mb-2"
-              onClick={() => {
-                setActiveTable(false);
-                dispatch(delete_aoi(aoi.id));
-              }}
-            >
-              <MdDelete /> {" "} Delete
-            </Button>
-            <Button
-              variant="dark"
-              className="ml-2 mb-2"
-              onClick={() => {
-                setHexGrid(!hexGrid);
-              }}
-            >
-              <GiHexes /> {" "}
-              {hexGrid ? "Hide Hexagon Grid" : "Show Hexagon Grid"}
-            </Button>
-          </div>
-          <div class="button-container">
-            <Button
               variant="primary"
               className="ml-2 mb-2"
               onClick={handleReport}
@@ -326,6 +316,27 @@ const SidebarViewDetail = ({
             >
               <HiAdjustments /> {" "}
               Adjust Indicators
+            </Button>
+            {/* <Button
+              variant="dark"
+              className="ml-2 mb-2"
+              onClick={() => {
+                setEditAOI(true);
+                setDrawingMode(true);
+                setAoiName(aoi.name);
+              }}
+            >
+              <MdEdit /> {" "} Edit
+            </Button> */}
+            <Button
+              variant="dark"
+              className="ml-2 mb-2"
+              onClick={() => {
+                setActiveTable(false);
+                dispatch(delete_aoi(aoi.id));
+              }}
+            >
+              <MdDelete /> {" "} Delete
             </Button>
           </div>
         </Container>

@@ -31,8 +31,8 @@ export function getStochasticScore(hex) {
     lscdn: [0.1, 0.2, 0.4, 0.6, 0.8, 1],
     mavbp: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
     mavbr: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
-    netcx: [0, 0.25, 0.5, 0.75, 1],
-    nlcfp: [0, 0.25, 0.5, 0.75, 1],
+    netcx: [0.25, 0.5, 0.75, 1],
+    nlcfp: [0.25, 0.5, 0.75, 1],
     persu: [0.5, 0.7, 0.9, 1],
     playa: [0, 0.5, 1],
     rescs: [0.1, 0.25, 0.4, 0.55, 0.7, 0.85, 1],
@@ -42,7 +42,7 @@ export function getStochasticScore(hex) {
     saluh: [0, 0.5, 1],
     samfs: [0, 1],
     scwet: [0, 0.5, 1],
-    urbps: [0, 0.25, 0.5, 0.75, 1],
+    urbps: [0.2, 0.4, 0.6, 0.8, 1],
     wcofw: [0, 0.2, 0.4, 0.6, 0.8, 1],
     wcopb: [0, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
     wgcmd: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
@@ -68,8 +68,8 @@ export function getStochasticScore(hex) {
     lscdn: [hex.lscdn_0_1, hex.lscdn_0_2, hex.lscdn_0_4, hex.lscdn_0_6, hex.lscdn_0_8, hex.lscdn_1],
     mavbp: [hex.mavbp_0, hex.mavbp_0_1, hex.mavbp_0_2, hex.mavbp_0_3, hex.mavbp_0_4, hex.mavbp_0_5, hex.mavbp_0_6, hex.mavbp_0_7, hex.mavbp_0_8, hex.mavbp_0_9, hex.mavbp_1],
     mavbr: [hex.mavbr_0, hex.mavbr_0_1, hex.mavbr_0_2, hex.mavbr_0_3, hex.mavbr_0_4, hex.mavbr_0_5, hex.mavbr_0_6, hex.mavbr_0_7, hex.mavbr_0_8, hex.mavbr_0_9, hex.mavbr_1],
-    netcx: [hex.netcx_0, hex.netcx_0_25, hex.netcx_0_5, hex.netcx_0_75, hex.netcx_1],
-    nlcfp: [hex.nlcfp_0, hex.nlcfp_0_25, hex.nlcfp_0_5, hex.nlcfp_0_75, hex.nlcfp_1],
+    netcx: [hex.netcx_0_25, hex.netcx_0_5, hex.netcx_0_75, hex.netcx_1],
+    nlcfp: [hex.nlcfp_0_25, hex.nlcfp_0_5, hex.nlcfp_0_75, hex.nlcfp_1],
     persu: [hex.persu_0_5, hex.persu_0_7, hex.persu_0_9, hex.persu_1],
     playa: [hex.playa_0, hex.playa_0_5, hex.playa_1],
     rescs: [hex.rescs_0_1, hex.rescs_0_25, hex.rescs_0_4, hex.rescs_0_55, hex.rescs_0_7, hex.rescs_0_85, hex.rescs_1],
@@ -79,7 +79,7 @@ export function getStochasticScore(hex) {
     saluh: [hex.saluh_0, hex.saluh_0_5, hex.saluh_1],
     samfs: [hex.samfs_0, hex.samfs_1],
     scwet: [hex.scwet_0, hex.scwet_0_5, hex.scwet_1],
-    urbps: [hex.urbps_0, hex.urbps_0_25, hex.urbps_0_5, hex.urbps_0_75, hex.urbps_1],
+    urbps: [hex.urbps_0_2, hex.urbps_0_4, hex.urbps_0_6, hex.urbps_0_8, hex.urbps_1],
     wcofw: [hex.wcofw_0, hex.wcofw_0_2, hex.wcofw_0_4, hex.wcofw_0_6, hex.wcofw_0_8, hex.wcofw_1],
     wcopb: [hex.wcopb_0, hex.wcopb_0_5, hex.wcopb_0_6, hex.wcopb_0_7, hex.wcopb_0_8, hex.wcopb_0_9, hex.wcopb_1],
     wgcmd: [hex.wgcmd_0, hex.wgcmd_0_1, hex.wgcmd_0_2, hex.wgcmd_0_3, hex.wgcmd_0_4, hex.wgcmd_0_5, hex.wgcmd_0_6, hex.wgcmd_0_7, hex.wgcmd_0_8, hex.wgcmd_0_9, hex.wgcmd_1],
@@ -241,7 +241,8 @@ export function getStochasticScore(hex) {
     };
   };
   
-  const average = array => array.length === 0 ? 0 : array.reduce((a, b) => a + b) / array.length;
+  // Need to filter the undefined values
+  const average = array => array.filter(item => item !== undefined).length === 0 ? 0 : array.filter(item => item !== undefined).reduce((a, b) => a + b) / array.length;
 
   const averageScores = {
     aefih: average(aefihSims),

@@ -6,7 +6,7 @@ import Switch from "react-switch";
 import { Chart as ChartJS, ArcElement, BarElement, LineElement, PointElement, LinearScale, CategoryScale, RadialLinearScale } from 'chart.js';
 import { Chart, Bar, Line } from "react-chartjs-2";
 import { BoxPlotController, BoxAndWiskers } from '@sgratzl/chartjs-chart-boxplot';
-import { BiCheckCircle, BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
+import { BiCheckCircle, BiUpArrow, BiSolidUpArrow } from "react-icons/bi";
 import { Progress } from 'rsuite';
 import bbox from "@turf/bbox";
 import axios from "axios";
@@ -41,14 +41,22 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
   const [actionHexData, setActionHexData] = useState(null);
   const [scores, setScores] = useState(null);
   const [actionScores, setActionScores] = useState({
+    aefih: "No Action",
+    amfih: "No Action",
+    amrpa: "No Action",
+    cshcn: "No Action",
+    ecopb: "No Action",
+    eqapk: "No Action",
     estcc: "No Action",
     firef: "No Action",
     gmgfc: "No Action",
     gppgr: "No Action",
     grntr: "No Action",
+    grsav: "No Action",
     ihabc: "No Action",
     impas: "No Action",
     isegr: "No Action",
+    lscdn: "No Action",
     mavbp: "No Action",
     mavbr: "No Action",
     netcx: "No Action",
@@ -60,6 +68,8 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
     safbb: "No Action",
     saffb: "No Action",
     saluh: "No Action",
+    samfs: "No Action",
+    scwet: "No Action",
     urbps: "No Action",
     wcofw: "No Action",
     wcopb: "No Action",
@@ -276,28 +286,29 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
     }  
   };
 
+  let getScoreLabel = (score, indicator) => {
+    const scoreBin = indicatorBins[indicator].findIndex(bin => bin >= score);
+    if (indicator !== "overall") {
+      return <span>{indicatorBinLabels[indicator][scoreBin]}</span>;
+    }
+  };
+
   let calculateImpact = (beforeScore, afterScore, indicator) => {
     const beforeScoreBin = indicatorBins[indicator].findIndex(bin => bin >= beforeScore);
     const afterScoreBin = indicatorBins[indicator].findIndex(bin => bin >= afterScore);
-    const arrowNumber = afterScoreBin - beforeScoreBin + 1;
+    const arrowNumber = afterScoreBin - beforeScoreBin;
     return (
       <td>
-        {afterScore > beforeScore && indicator !== "overall" && (
-          <span style={{color: "blue"}}>{indicatorBinLabels[indicator][beforeScoreBin]}</span>
-        )}
-        <br/>
         {afterScore <= beforeScore ?
           "--" :
-          (
-            Array.from({length: arrowNumber}).map((index) => 
-              <BiSolidUpArrow key={index} color="green" />
+          arrowNumber === 0 ? 
+            (<BiUpArrow color="green" />) :
+            (
+              Array.from(
+                {length: arrowNumber}).map((index) => <BiSolidUpArrow key={index} color="green" />
+              )
             )
-          )
         }
-        <br/>
-        {afterScore > beforeScore && indicator !== "overall" && (
-          <span style={{color: "green"}}>{indicatorBinLabels[indicator][afterScoreBin]}</span>
-        )}
       </td>
     );
   };
@@ -352,7 +363,7 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
         type: "FeatureCollection",
         features: actionHexFeatureList,
       };
-
+      
       setHexData(hexData);
       setActionHexData(actionHexData);
       setShowProgress(false);
@@ -898,407 +909,944 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
                       <b>Health </b>{" "}
                     </td>
                   </tr>
+                  {scores.amrpa > 0  ?
+                    <tr>
+                      <td>Amphibian & Reptile Areas</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.amrpa}
+                        <br/>
+                        {getScoreLabel(scores.amrpa, "amrpa")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.amrpa*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.amrpa*scores.futurePenalty, "amrpa")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.amrpa}
+                        <br/>
+                        {getScoreLabel(actionScores.amrpa, "amrpa")}
+                      </td>
+                      {calculateImpact(scores.amrpa, actionScores.amrpa, "amrpa")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Amphibian & Reptile Areas</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
+                  {scores.aefih > 0  ?
+                    <tr>
+                      <td>Atlantic Estuarine Fish Habitat</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.aefih}
+                        <br/>
+                        {getScoreLabel(scores.aefih, "aefih")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.aefih*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.aefih*scores.futurePenalty, "aefih")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.aefih}
+                        <br/>
+                        {getScoreLabel(actionScores.aefih, "aefih")}
+                      </td>
+                      {calculateImpact(scores.aefih, actionScores.aefih, "aefih")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Atlantic Estuarine Fish Habitat</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
+                  {scores.amfih > 0  ?
+                    <tr>
+                      <td>Atlantic Estuarine Fish Habitat</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.amfih}
+                        <br/>
+                        {getScoreLabel(scores.amfih, "amfih")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.amfih*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.amfih*scores.futurePenalty, "amfih")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.amfih}
+                        <br/>
+                        {getScoreLabel(actionScores.amfih, "amfih")}
+                      </td>
+                      {calculateImpact(scores.amfih, actionScores.amfih, "amfih")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Atlantic Estuarine Fish Habitat</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
+                  {scores.cshcn > 0  ?
+                    <tr>
+                      <td>Coastal Shoreline Condition</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.cshcn}
+                        <br/>
+                        {getScoreLabel(scores.cshcn, "cshcn")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.cshcn*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.cshcn*scores.futurePenalty, "cshcn")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.cshcn}
+                        <br/>
+                        {getScoreLabel(actionScores.cshcn, "cshcn")}
+                      </td>
+                      {calculateImpact(scores.cshcn, actionScores.cshcn, "cshcn")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Coastal Shoreline Condition</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
+                  {scores.ecopb > 0  ?
+                    <tr>
+                      <td>East Gulf Coastal Plain Open Pine Birds</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.ecopb}
+                        <br/>
+                        {getScoreLabel(scores.ecopb, "ecopb")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.ecopb*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.ecopb*scores.futurePenalty, "ecopb")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.ecopb}
+                        <br/>
+                        {getScoreLabel(actionScores.ecopb, "ecopb")}
+                      </td>
+                      {calculateImpact(scores.ecopb, actionScores.ecopb, "ecopb")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>East Gulf Coastal Plain Open Pine Birds</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.estcc > 0  ?
-                  <tr>
-                    <td>Estuarine Coastal Condition</td>
-                    <td style={{ color: "blue" }}>{scores.estcc}</td>
-                    <td style={{ color: "red" }}>{(scores.estcc*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.estcc}</td>
-                    {calculateImpact(scores.estcc, actionScores.estcc, "estcc")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>Estuarine Coastal Condition</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>Estuarine Coastal Condition</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.estcc}
+                        <br/>
+                        {getScoreLabel(scores.estcc, "estcc")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.estcc*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.estcc*scores.futurePenalty, "estcc")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.estcc}
+                        <br/>
+                        {getScoreLabel(actionScores.estcc, "estcc")}
+                      </td>
+                      {calculateImpact(scores.estcc, actionScores.estcc, "estcc")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Estuarine Coastal Condition</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.firef > 0  ?
-                  <tr>
-                    <td>Fire Frequency</td>
-                    <td style={{ color: "blue" }}>{scores.firef}</td>
-                    <td style={{ color: "red" }}>{(scores.firef*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.firef}</td>
-                    {calculateImpact(scores.firef, actionScores.firef, "firef")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>Fire Frequency</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
-                  {scores.gppgr > 0  ?
-                  <tr>
-                    <td>Great Plains Perennial Grass</td>
-                    <td style={{ color: "blue" }}>{scores.gppgr}</td>
-                    <td style={{ color: "red" }}>{(scores.gppgr*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.gppgr}</td>
-                    {calculateImpact(scores.gppgr, actionScores.gppgr, "gppgr")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>Great Plains Perennial Grass</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>Fire Frequency</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.firef}
+                        <br/>
+                        {getScoreLabel(scores.firef, "firef")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.firef*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.firef*scores.futurePenalty, "firef")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.firef}
+                        <br/>
+                        {getScoreLabel(actionScores.firef, "firef")}
+                      </td>
+                      {calculateImpact(scores.firef, actionScores.firef, "firef")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Fire Frequency</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
+                  {scores.grsav > 0  ?
+                    <tr>
+                      <td>Grasslands and Savannas</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.grsav}
+                        <br/>
+                        {getScoreLabel(scores.grsav, "grsav")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.grsav*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.grsav*scores.futurePenalty, "grsav")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.grsav}
+                        <br/>
+                        {getScoreLabel(actionScores.grsav, "grsav")}
+                      </td>
+                      {calculateImpact(scores.grsav, actionScores.grsav, "grsav")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Grasslands and Savannas</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.impas > 0  ?
-                  <tr>
-                    <td>Imperiled Aquatic Species</td>
-                    <td style={{ color: "blue" }}>{scores.impas}</td>
-                    <td style={{ color: "red" }}>{(scores.impas*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.impas}</td>
-                    {calculateImpact(scores.impas, actionScores.impas, "impas")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>Imperiled Aquatic Species</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
-                  {scores.isegr > 0  ?
-                  <tr>
-                    <td>Interior Southeast Grasslands</td>
-                    <td style={{ color: "blue" }}>{scores.isegr}</td>
-                    <td style={{ color: "red" }}>{(scores.isegr*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.isegr}</td>
-                    {calculateImpact(scores.isegr, actionScores.isegr, "isegr")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>Interior Southeast Grasslands</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>Imperiled Aquatic Species</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.impas}
+                        <br/>
+                        {getScoreLabel(scores.impas, "impas")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.impas*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.impas*scores.futurePenalty, "impas")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.impas}
+                        <br/>
+                        {getScoreLabel(actionScores.impas, "impas")}
+                      </td>
+                      {calculateImpact(scores.impas, actionScores.impas, "impas")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Imperiled Aquatic Species</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
+                  {scores.lscdn > 0  ?
+                    <tr>
+                      <td>Landscape Condition</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.lscdn}
+                        <br/>
+                        {getScoreLabel(scores.lscdn, "lscdn")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.lscdn*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.lscdn*scores.futurePenalty, "lscdn")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.lscdn}
+                        <br/>
+                        {getScoreLabel(actionScores.lscdn, "lscdn")}
+                      </td>
+                      {calculateImpact(scores.lscdn, actionScores.lscdn, "lscdn")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Landscape Condition</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.mavbp > 0  ?
-                  <tr>
-                    <td>MAV Forest Birds Protection</td>
-                    <td style={{ color: "blue" }}>{scores.mavbp}</td>
-                    <td style={{ color: "red" }}>{(scores.mavbp*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.mavbp}</td>
-                    {calculateImpact(scores.mavbp, actionScores.mavbp, "mavbp")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>MAV Forest Birds Protection</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>MAV Forest Birds Protection</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.mavbp}
+                        <br/>
+                        {getScoreLabel(scores.mavbp, "mavbp")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.mavbp*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.mavbp*scores.futurePenalty, "mavbp")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.mavbp}
+                        <br/>
+                        {getScoreLabel(actionScores.mavbp, "mavbp")}
+                      </td>
+                      {calculateImpact(scores.mavbp, actionScores.mavbp, "mavbp")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>MAV Forest Birds Protection</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.mavbr > 0  ?
-                  <tr>
-                    <td>MAV Forest Birds Restoration</td>
-                    <td style={{ color: "blue" }}>{scores.mavbr}</td>
-                    <td style={{ color: "red" }}>{(scores.mavbr*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.mavbr}</td>
-                    {calculateImpact(scores.mavbr, actionScores.mavbr, "mavbr")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>MAV Forest Birds Restoration</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>MAV Forest Birds Restoration</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.mavbr}
+                        <br/>
+                        {getScoreLabel(scores.mavbr, "mavbr")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.mavbr*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.mavbr*scores.futurePenalty, "mavbr")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.mavbr}
+                        <br/>
+                        {getScoreLabel(actionScores.mavbr, "mavbr")}
+                      </td>
+                      {calculateImpact(scores.mavbr, actionScores.mavbr, "mavbr")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>MAV Forest Birds Restoration</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.nlcfp > 0  ?
-                  <tr>
-                    <td>Natural Landcover Floodplains</td>
-                    <td style={{ color: "blue" }}>{scores.nlcfp}</td>
-                    <td style={{ color: "red" }}>{(scores.nlcfp*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.nlcfp}</td>
-                    {calculateImpact(scores.nlcfp, actionScores.nlcfp, "nlcfp")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>Natural Landcover Floodplains</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>Natural Landcover Floodplains</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.nlcfp}
+                        <br/>
+                        {getScoreLabel(scores.nlcfp, "nlcfp")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.nlcfp*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.nlcfp*scores.futurePenalty, "nlcfp")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.nlcfp}
+                        <br/>
+                        {getScoreLabel(actionScores.nlcfp, "nlcfp")}
+                      </td>
+                      {calculateImpact(scores.nlcfp, actionScores.nlcfp, "nlcfp")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Natural Landcover Floodplains</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.persu > 0  ?
-                  <tr>
-                    <td>Permeable Surface</td>
-                    <td style={{ color: "blue" }}>{scores.persu}</td>
-                    <td style={{ color: "red" }}>{(scores.persu*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.persu}</td>
-                    {calculateImpact(scores.persu, actionScores.persu, "persu")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>Permeable Surface</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>Permeable Surface</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.persu}
+                        <br/>
+                        {getScoreLabel(scores.persu, "persu")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.persu*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.persu*scores.futurePenalty, "persu")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.persu}
+                        <br/>
+                        {getScoreLabel(actionScores.persu, "persu")}
+                      </td>
+                      {calculateImpact(scores.persu, actionScores.persu, "persu")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Permeable Surface</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.playa > 0  ?
-                  <tr>
-                    <td>Playas</td>
-                    <td style={{ color: "blue" }}>{scores.playa}</td>
-                    <td style={{ color: "red" }}>{(scores.playa*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.playa}</td>
-                    {calculateImpact(scores.playa, actionScores.playa, "playa")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>Playas</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>Playas</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.playa}
+                        <br/>
+                        {getScoreLabel(scores.playa, "playa")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.playa*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.playa*scores.futurePenalty, "playa")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.playa}
+                        <br/>
+                        {getScoreLabel(actionScores.playa, "playa")}
+                      </td>
+                      {calculateImpact(scores.playa, actionScores.playa, "playa")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Playas</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.rescs > 0  ?
-                  <tr>
-                    <td>Resilient Coastal Sites</td>
-                    <td style={{ color: "blue" }}>{scores.rescs}</td>
-                    <td style={{ color: "red" }}>{(scores.rescs*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.rescs}</td>
-                    {calculateImpact(scores.rescs, actionScores.rescs, "rescs")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>Resilient Coastal Sites</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>Resilient Coastal Sites</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.rescs}
+                        <br/>
+                        {getScoreLabel(scores.rescs, "rescs")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.rescs*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.rescs*scores.futurePenalty, "rescs")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.rescs}
+                        <br/>
+                        {getScoreLabel(actionScores.rescs, "rescs")}
+                      </td>
+                      {calculateImpact(scores.rescs, actionScores.rescs, "rescs")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Resilient Coastal Sites</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.rests > 0  ?
-                  <tr>
-                    <td>Resilient Terrestrial Sites</td>
-                    <td style={{ color: "blue" }}>{scores.rests}</td>
-                    <td style={{ color: "red" }}>{(scores.rests*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.rests}</td>
-                    {calculateImpact(scores.rests, actionScores.rests, "rests")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>Resilient Terrestrial Sites</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>Resilient Terrestrial Sites</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.rests}
+                        <br/>
+                        {getScoreLabel(scores.rests, "rests")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.rests*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.rests*scores.futurePenalty, "rests")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.rests}
+                        <br/>
+                        {getScoreLabel(actionScores.rests, "rests")}
+                      </td>
+                      {calculateImpact(scores.rests, actionScores.rests, "rests")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Resilient Terrestrial Sites</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.safbb > 0  ?
-                  <tr>
-                    <td>South Atlantic Beach Birds</td>
-                    <td style={{ color: "blue" }}>{scores.safbb}</td>
-                    <td style={{ color: "red" }}>{(scores.safbb*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.safbb}</td>
-                    {calculateImpact(scores.safbb, actionScores.safbb, "safbb")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>South Atlantic Beach Birds</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>South Atlantic Beach Birds</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.safbb}
+                        <br/>
+                        {getScoreLabel(scores.safbb, "safbb")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.safbb*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.safbb*scores.futurePenalty, "safbb")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.safbb}
+                        <br/>
+                        {getScoreLabel(actionScores.safbb, "safbb")}
+                      </td>
+                      {calculateImpact(scores.safbb, actionScores.safbb, "safbb")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>South Atlantic Beach Birds</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.saffb > 0  ?
-                  <tr>
-                    <td>South Atlantic Forest Birds</td>
-                    <td style={{ color: "blue" }}>{scores.saffb}</td>
-                    <td style={{ color: "red" }}>{(scores.saffb*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.saffb}</td>
-                    {calculateImpact(scores.saffb, actionScores.saffb, "saffb")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>South Atlantic Forest Birds</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>South Atlantic Forest Birds</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.saffb}
+                        <br/>
+                        {getScoreLabel(scores.saffb, "saffb")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.saffb*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.saffb*scores.futurePenalty, "saffb")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.saffb}
+                        <br/>
+                        {getScoreLabel(actionScores.saffb, "saffb")}
+                      </td>
+                      {calculateImpact(scores.saffb, actionScores.saffb, "saffb")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>South Atlantic Forest Birds</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
+                  {scores.safbb > 0  ?
+                    <tr>
+                      <td>South Atlantic Beach Birds</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.safbb}
+                        <br/>
+                        {getScoreLabel(scores.safbb, "safbb")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.safbb*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.safbb*scores.futurePenalty, "safbb")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.safbb}
+                        <br/>
+                        {getScoreLabel(actionScores.safbb, "safbb")}
+                      </td>
+                      {calculateImpact(scores.safbb, actionScores.safbb, "safbb")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>South Atlantic Beach Birds</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
+                  {scores.samfs > 0  ?
+                    <tr>
+                      <td>South Atlantic Maritime Forest</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.samfs}
+                        <br/>
+                        {getScoreLabel(scores.samfs, "samfs")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.samfs*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.samfs*scores.futurePenalty, "samfs")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.samfs}
+                        <br/>
+                        {getScoreLabel(actionScores.samfs, "samfs")}
+                      </td>
+                      {calculateImpact(scores.samfs, actionScores.samfs, "samfs")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>South Atlantic Maritime Forest</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
+                  {scores.scwet > 0  ?
+                    <tr>
+                      <td>Stable Coastal Wetlands</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.scwet}
+                        <br/>
+                        {getScoreLabel(scores.scwet, "scwet")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.scwet*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.scwet*scores.futurePenalty, "scwet")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.scwet}
+                        <br/>
+                        {getScoreLabel(actionScores.scwet, "scwet")}
+                      </td>
+                      {calculateImpact(scores.scwet, actionScores.scwet, "scwet")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Stable Coastal Wetlands</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.wcofw > 0  ?
-                  <tr>
-                    <td>West Coastal Plain Ouachitas Forested Wetlands</td>
-                    <td style={{ color: "blue" }}>{scores.wcofw}</td>
-                    <td style={{ color: "red" }}>{(scores.wcofw*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.wcofw}</td>
-                    {calculateImpact(scores.wcofw, actionScores.wcofw, "wcofw")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>West Coastal Plain Ouachitas Forested Wetlands</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>West Coastal Plain Ouachitas Forested Wetlands</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.wcofw}
+                        <br/>
+                        {getScoreLabel(scores.wcofw, "wcofw")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.wcofw*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.wcofw*scores.futurePenalty, "wcofw")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.wcofw}
+                        <br/>
+                        {getScoreLabel(actionScores.wcofw, "wcofw")}
+                      </td>
+                      {calculateImpact(scores.wcofw, actionScores.wcofw, "wcofw")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>West Coastal Plain Ouachitas Forested Wetlands</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.wcopb > 0  ?
-                  <tr>
-                    <td>West Coastal Plain Ouachitas Open Pine Bird</td>
-                    <td style={{ color: "blue" }}>{scores.wcopb}</td>
-                    <td style={{ color: "red" }}>{(scores.wcopb*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.wcopb}</td>
-                    {calculateImpact(scores.wcopb, actionScores.wcopb, "wcopb")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>West Coastal Plain Ouachitas Open Pine Bird</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>West Coastal Plain Ouachitas Open Pine Bird</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.wcopb}
+                        <br/>
+                        {getScoreLabel(scores.wcopb, "wcopb")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.wcopb*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.wcopb*scores.futurePenalty, "wcopb")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.wcopb}
+                        <br/>
+                        {getScoreLabel(actionScores.wcopb, "wcopb")}
+                      </td>
+                      {calculateImpact(scores.wcopb, actionScores.wcopb, "wcopb")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>West Coastal Plain Ouachitas Open Pine Bird</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.wgcmd > 0  ?
-                  <tr>
-                    <td>West Gulf Coast Mottled Duck Nesting</td>
-                    <td style={{ color: "blue" }}>{scores.wgcmd}</td>
-                    <td style={{ color: "red" }}>{(scores.wgcmd*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.wgcmd}</td>
-                    {calculateImpact(scores.wgcmd, actionScores.wgcmd, "wgcmd")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>West Gulf Coast Mottled Duck Nesting</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>West Gulf Coast Mottled Duck Nesting</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.wgcmd}
+                        <br/>
+                        {getScoreLabel(scores.wgcmd, "wgcmd")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.wgcmd*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.wgcmd*scores.futurePenalty, "wgcmd")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.wgcmd}
+                        <br/>
+                        {getScoreLabel(actionScores.wgcmd, "wgcmd")}
+                      </td>
+                      {calculateImpact(scores.wgcmd, actionScores.wgcmd, "wgcmd")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>West Gulf Coast Mottled Duck Nesting</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   <tr>
                     <td colSpan="5">
                       <b>Function </b>{" "}
                     </td>
                   </tr>
+                  {scores.eqapk > 0  ?
+                    <tr>
+                      <td>Equitable Access to Potential Parks</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.eqapk}
+                        <br/>
+                        {getScoreLabel(scores.eqapk, "eqapk")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.eqapk*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.eqapk*scores.futurePenalty, "eqapk")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.eqapk}
+                        <br/>
+                        {getScoreLabel(actionScores.eqapk, "eqapk")}
+                      </td>
+                      {calculateImpact(scores.eqapk, actionScores.eqapk, "eqapk")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Equitable Access to Potential Parks</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.grntr > 0  ?
-                  <tr>
-                    <td>Greenways Trails</td>
-                    <td style={{ color: "blue" }}>{scores.grntr}</td>
-                    <td style={{ color: "red" }}>{(scores.grntr*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.grntr}</td>
-                    {calculateImpact(scores.grntr, actionScores.grntr, "grntr")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>Greenways Trails</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>Greenways Trails</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.grntr}
+                        <br/>
+                        {getScoreLabel(scores.grntr, "grntr")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.grntr*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.grntr*scores.futurePenalty, "grntr")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.grntr}
+                        <br/>
+                        {getScoreLabel(actionScores.grntr, "grntr")}
+                      </td>
+                      {calculateImpact(scores.grntr, actionScores.grntr, "grntr")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Greenways Trails</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.saluh > 0  ?
-                  <tr>
-                    <td>South Atlantic Low-density Urban Historic Sites</td>
-                    <td style={{ color: "blue" }}>{scores.saluh}</td>
-                    <td style={{ color: "red" }}>{(scores.saluh*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.saluh}</td>
-                    {calculateImpact(scores.saluh, actionScores.saluh, "saluh")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>South Atlantic Low-density Urban Historic Sites</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>South Atlantic Low-density Urban Historic Sites</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.saluh}
+                        <br/>
+                        {getScoreLabel(scores.saluh, "saluh")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.saluh*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.saluh*scores.futurePenalty, "saluh")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.saluh}
+                        <br/>
+                        {getScoreLabel(actionScores.saluh, "saluh")}
+                      </td>
+                      {calculateImpact(scores.saluh, actionScores.saluh, "saluh")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>South Atlantic Low-density Urban Historic Sites</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.urbps > 0  ?
-                  <tr>
-                    <td>Urban Park Size</td>
-                    <td style={{ color: "blue" }}>{scores.urbps}</td>
-                    <td style={{ color: "red" }}>{(scores.urbps*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.urbps}</td>
-                    {calculateImpact(scores.urbps, actionScores.urbps, "urbps")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>Urban Park Size</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>Urban Park Size</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.urbps}
+                        <br/>
+                        {getScoreLabel(scores.urbps, "urbps")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.urbps*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.urbps*scores.futurePenalty, "urbps")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.urbps}
+                        <br/>
+                        {getScoreLabel(actionScores.urbps, "urbps")}
+                      </td>
+                      {calculateImpact(scores.urbps, actionScores.urbps, "urbps")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Urban Park Size</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   <tr>
                     <td colSpan="5">
                       <b>Connectivity</b>{" "}
                     </td>
                   </tr>
                   {scores.gmgfc > 0  ?
-                  <tr>
-                    <td>Gulf Migratory Fish Connectivity</td>
-                    <td style={{ color: "blue" }}>{scores.gmgfc}</td>
-                    <td style={{ color: "red" }}>{(scores.gmgfc*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.gmgfc}</td>
-                    {calculateImpact(scores.gmgfc, actionScores.gmgfc, "gmgfc")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>Gulf Migratory Fish Connectivity</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>Gulf Migratory Fish Connectivity</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.gmgfc}
+                        <br/>
+                        {getScoreLabel(scores.gmgfc, "gmgfc")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.gmgfc*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.gmgfc*scores.futurePenalty, "gmgfc")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.gmgfc}
+                        <br/>
+                        {getScoreLabel(actionScores.gmgfc, "gmgfc")}
+                      </td>
+                      {calculateImpact(scores.gmgfc, actionScores.gmgfc, "gmgfc")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Gulf Migratory Fish Connectivity</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.ihabc > 0  ?
-                  <tr>
-                    <td>Intact Habitat Cores</td>
-                    <td style={{ color: "blue" }}>{scores.ihabc}</td>
-                    <td style={{ color: "red" }}>{(scores.ihabc*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.ihabc}</td>
-                    {calculateImpact(scores.ihabc, actionScores.ihabc, "ihabc")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>Intact Habitat Cores</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>Intact Habitat Cores</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.ihabc}
+                        <br/>
+                        {getScoreLabel(scores.ihabc, "ihabc")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.ihabc*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.ihabc*scores.futurePenalty, "ihabc")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.ihabc}
+                        <br/>
+                        {getScoreLabel(actionScores.ihabc, "ihabc")}
+                      </td>
+                      {calculateImpact(scores.ihabc, actionScores.ihabc, "ihabc")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Intact Habitat Cores</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   {scores.netcx > 0  ?
-                  <tr>
-                    <td>Network Complexity</td>
-                    <td style={{ color: "blue" }}>{scores.netcx}</td>
-                    <td style={{ color: "red" }}>{(scores.netcx*scores.futurePenalty).toFixed(2)}</td>
-                    <td style={{ color: "green" }}>{actionScores.netcx}</td>
-                    {calculateImpact(scores.netcx, actionScores.netcx, "netcx")}
-                  </tr>
-                  :
-                  <tr>
-                    <td>Network Complexity</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                    <td>--</td>
-                  </tr>
-                  }        
+                    <tr>
+                      <td>Network Complexity</td>
+                      <td style={{ color: "blue" }}>
+                        {scores.netcx}
+                        <br/>
+                        {getScoreLabel(scores.netcx, "netcx")}
+                      </td>
+                      <td style={{ color: "red" }}>
+                        {(scores.netcx*scores.futurePenalty).toFixed(2)}
+                        <br/>
+                        {getScoreLabel(scores.netcx*scores.futurePenalty, "netcx")}
+                      </td>
+                      <td style={{ color: "green" }}>
+                        {actionScores.netcx}
+                        <br/>
+                        {getScoreLabel(actionScores.netcx, "netcx")}
+                      </td>
+                      {calculateImpact(scores.netcx, actionScores.netcx, "netcx")}
+                    </tr>
+                    :
+                    <tr>
+                      <td>Network Complexity</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  }
                   <tr>
                     <td colSpan="1">
                       <b>Overall Score</b>{" "}

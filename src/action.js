@@ -111,8 +111,7 @@ export async function getCurrentData(data) {
 
     const currentDataArray = currentResult.map((item) => item.data.data);
     const futureDataArray = futureResult.data.data;
-    console.log(currentDataArray);
-    console.log(futureDataArray);
+
     let mergedDataArray = futureDataArray;
     mergedDataArray.forEach((feature, index) => {
       currentDataArray.forEach((item) => {
@@ -127,7 +126,7 @@ export async function getCurrentData(data) {
         {}
       )
     );
-
+    
     return mergedDataArray;
 }
 
