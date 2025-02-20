@@ -156,16 +156,10 @@ const MapView = ({
       <Source type="geojson" data={hexData}>
         <Layer
           id="hex-in-blue"
-          type="fill"
+          type="line"
           paint={{
-            "fill-color":"transparent",
-            "fill-outline-color": "blue",
-            "fill-opacity": [
-              "case",
-              ["boolean", ["feature-state", "hover"], false],
-              1,
-              parseInt(hexOpacity) / 100,
-            ],
+            "line-color": "blue",
+            "line-width": 2
           }}
         />
       </Source>
@@ -800,7 +794,7 @@ const MapView = ({
             </>
           }
           {aoi && hexGrid && clickedProperty && renderPopup()}
-          {!!selectedHexIdList.length && renderSelectedHex(aoi.currentHexagons, selectedHexIdList)}
+          {aoi && !!selectedHexIdList.length && renderSelectedHex(aoi.currentHexagons, selectedHexIdList)}
         </Map>
       </div>
       {dualMap && (

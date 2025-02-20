@@ -5,7 +5,7 @@ import Switch from "react-switch";
 import { HiDocumentReport } from "react-icons/hi";
 import FutureWithActionTable from "./FutureWithActionTable";
 
-const ActionSelect = ({ hexData, setActionHexData, actionScores, setActionScores }) => {
+const ActionSelect = ({ hexData, setActionHexData, hexIdInBlue, actionScores, setActionScores }) => {
   const navigate = useNavigate();
 
   return (
@@ -15,6 +15,7 @@ const ActionSelect = ({ hexData, setActionHexData, actionScores, setActionScores
       <FutureWithActionTable
         hexData={hexData}
         setActionHexData={setActionHexData}
+        hexIdInBlue={hexIdInBlue}
         actionScores={actionScores}
         setActionScores={setActionScores}
       />

@@ -7,7 +7,7 @@ import Slider from 'rsuite/Slider';
 import { getAoiScore } from "../helper/aggregateHex";
 import 'rsuite/Slider/styles/index.css';
 
-const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setActionScores }) => {
+const FutureWithActionTable = ({ hexData, setActionHexData, hexIdInBlue, actionScores, setActionScores }) => {
   const [actionLevels, setActionLevels] = useState({});
   const [currentLevels, setCurrentLevels] = useState({});
   const [currentScoreList, setCurrentScoreList] = useState([]);
@@ -582,7 +582,11 @@ const FutureWithActionTable = ({ hexData, setActionHexData, actionScores, setAct
 
       const actionFeatureList = hexData.features.map((feature) => {
         let actionFeature = feature;
-        actionFeature.properties.actionScore = actionScoreList.filter((hex) => hex.gid === feature.properties.gid)[0].futureScore;
+        if (hexIdInBlue.length === 0 || hexIdInBlue.includes(feature.properties.gid)) {
+          actionFeature.properties.actionScore = actionScoreList.filter((hex) => hex.gid === feature.properties.gid)[0].futureScore;
+        } else {
+          actionFeature.properties.actionScore = actionFeature.properties.currentScore;
+        }
         return actionFeature;
       });
 

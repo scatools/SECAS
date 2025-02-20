@@ -70,6 +70,7 @@ export async function getCurrentData(data) {
     let futureResult = await axios.post(`https://secas-backend.herokuapp.com/data/future`, { data });
     let gidList = futureResult.data.data.map((feature) => feature.gid);
     let currentResult = await Promise.all([
+      axios.post(`https://secas-backend.herokuapp.com/data/blueprint`, { data: gidList }),
       axios.post(`https://secas-backend.herokuapp.com/data/current/aefih`, { data: gidList }),
       axios.post(`https://secas-backend.herokuapp.com/data/current/amfih`, { data: gidList }),
       axios.post(`https://secas-backend.herokuapp.com/data/current/amrpa`, { data: gidList }),

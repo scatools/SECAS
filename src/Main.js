@@ -89,6 +89,7 @@ const Main = ({
         hexOpacity={hexOpacity}
         setHexOpacity={setHexOpacity}
         setDualMap={setDualMap}
+        hexIdInBlue={hexIdInBlue}
         setHexIdInBlue={setHexIdInBlue}
         actionScores={actionScores}
         setActionScores={setActionScores}

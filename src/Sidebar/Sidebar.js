@@ -29,6 +29,7 @@ const Sidebar = ({
   hexOpacity,
   setHexOpacity,
   setDualMap,
+  hexIdInBlue,
   setHexIdInBlue,
   actionScores,
   setActionScores,
@@ -95,6 +96,7 @@ const Sidebar = ({
               hexData={hexData}
               hexGrid={hexGrid}
               setHexGrid={setHexGrid}
+              setHexIdInBlue={setHexIdInBlue}
               setViewState={setViewState}
               hexOpacity={hexOpacity}
               setHexOpacity={setHexOpacity}
@@ -112,6 +114,7 @@ const Sidebar = ({
             aoiSelected={aoiSelected}
             hexData={hexData}
             setActionHexData={setActionHexData}
+            hexIdInBlue={hexIdInBlue}
             setHexIdInBlue={setHexIdInBlue}
             actionScores={actionScores}
             setActionScores={setActionScores}

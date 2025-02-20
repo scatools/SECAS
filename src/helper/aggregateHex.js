@@ -278,7 +278,7 @@ export function getStochasticScore(hex) {
     wcofw: average(wcofwSims),
     wcopb: average(wcopbSims),
     wgcmd: average(wgcmdSims),
-    futurePenalty: hex.futv2_me
+    futurePenalty: hex.futv2_me === -1 ? 1 : hex.futv2_me
   };
 
   return averageScores;
@@ -538,7 +538,7 @@ export function getStochasticActionScore(hex) {
     wcofw: average(wcofwSims),
     wcopb: average(wcopbSims),
     wgcmd: average(wgcmdSims),
-    futurePenalty: hex.futv2_me
+    futurePenalty: hex.futv2_me === -1 ? 1 : hex.futv2_me
   };
 
   return averageScores;

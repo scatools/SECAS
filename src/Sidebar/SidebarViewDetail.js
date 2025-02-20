@@ -30,6 +30,7 @@ const SidebarViewDetail = ({
   hexData,
   hexGrid,
   setHexGrid,
+  setHexIdInBlue,
   setViewState,
   hexOpacity,
   setHexOpacity,
@@ -44,18 +45,13 @@ const SidebarViewDetail = ({
   const [scoreStyle, setScoreStyle] = useState({});
   const [conditionChecked, setConditionChecked] = useState(false);
   const [overlayChecked, setOverlayChecked] = useState(false);
+  const [subsetMode, setSubsetMode] = useState(null);
   const [filterBlue, setFilterBlue] = useState(50);
+  const [percentBlueList, setPercentBlueList] = useState([]);
   const aoiList = Object.values(useSelector((state) => state.aoi)).filter(
     (aoi) => aoi.id === aoiSelected
   );
   const aoi = aoiList[0];
-
-  // const percentBlueList = aoi["currentHexagons"].map((hex) => {
-  //   return {
-  //     id: hex.gid,
-  //     percentBlue : parseFloat(hex.lightblue) + parseFloat(hex.darkblue)
-  //   };
-  // });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -134,19 +130,39 @@ const SidebarViewDetail = ({
     setOverlayChecked(!overlayChecked);
   };
 
-  const onAreaSelectionChange = () => {
-
+  const onSubsetChange = (e) => {
+    setSubsetMode(e.target.value);
+    setHexIdInBlue([]);
+    if (e.target.value === "blueprint") {
+      percentBlueList.map((item) => {
+        if (item.percentBlue >= filterBlue/100) {
+          setHexIdInBlue(idList => [...idList, item.id]);
+        };
+      });
+    };
   };
   
-  // const onPercentChange = (e) => {
-  //   setFilterBlue(e.target.value);
-  //   setHexIdInBlue([]);
-  //   percentBlueList.map((item) => {
-  //     if (item.percentBlue >= e.target.value/100) {
-  //       setHexIdInBlue(idList => [...idList, item.id]);
-  //     };
-  //   });
-  // };
+  const onPercentChange = (e) => {
+    setFilterBlue(e.target.value);
+    setHexIdInBlue([]);
+    percentBlueList.map((item) => {
+      if (item.percentBlue >= e.target.value/100) {
+        setHexIdInBlue(idList => [...idList, item.id]);
+      };
+    });
+  };
+
+  useEffect(() => {
+    if (aoi) {
+      const percentBlueList = aoi.currentHexagons.map((hex) => {
+        return {
+          id: hex.gid,
+          percentBlue : parseFloat(hex.frac_1)
+        };
+      });
+      setPercentBlueList(percentBlueList);
+    };
+  }, [aoi]);
 
   useEffect(() => {
     if (aoi && hexData) {
@@ -277,21 +293,28 @@ const SidebarViewDetail = ({
                     </div>
                     <div>
                       <h6>Subset Area:</h6>
-                      <Form.Select>
-                        <option>Entire Area</option>
-                        {/* <option value="b">Blueprint Quick Select</option> */}
-                        <option value="m">Manual Hexagon Select</option>
+                      <Form.Select onChange={onSubsetChange}>
+                        <option value="entire">Entire Area</option>
+                        <option value="blueprint">Blueprint Quick Select</option>
+                        <option value="manual">Manual Hexagon Select</option>
                       </Form.Select>
                     </div>
-                    {/* <div>
-                      <p>{filterBlue}% Blueprint per hex</p>
-                      <RangeSlider
-                        step={1}
-                        value={filterBlue}
-                        onChange={onChange}
-                        variant="secondary"
-                      />
-                    </div> */}
+                    {subsetMode === "blueprint" && (
+                      <div>
+                        <h6 style={{marginTop: "5px"}}>{filterBlue}% Blueprint per hexagon:</h6>
+                        <RangeSlider
+                          step={1}
+                          value={filterBlue}
+                          onChange={onPercentChange}
+                          variant="secondary"
+                        />
+                      </div>
+                    )}
+                    {subsetMode === "manual" && (
+                      <label style={{marginTop: "5px"}}>
+                        <em>Press the Shift key, then click and drag to select hexagons.</em>
+                      </label>
+                    )}
                   </>
                 )}
               </Col>

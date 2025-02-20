@@ -6,6 +6,7 @@ const TakeActionView = ({
   aoiSelected,
   hexData,
   setActionHexData,
+  hexIdInBlue,
   setHexIdInBlue,
   actionScores,
   setActionScores,
@@ -25,6 +26,7 @@ const TakeActionView = ({
         <ActionSelect
           hexData={hexData}
           setActionHexData={setActionHexData}
+          hexIdInBlue={hexIdInBlue}
           actionScores={actionScores}
           setActionScores={setActionScores}
         />

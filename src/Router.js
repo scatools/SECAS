@@ -52,7 +52,6 @@ const Router = () => {
   const [showProgress, setShowProgress] = useState(false);
 
   return (
-    // <RouterContext.Provider value={{hexIdInBlue, restoreAction, protectAction, maintainAction}}>
       <Routes>
         <Route
           exact
