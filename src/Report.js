@@ -3,7 +3,7 @@ import Map, { Layer, Popup, Source } from "react-map-gl";
 import { Accordion, Button, Col, Row, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Switch from "react-switch";
-import { Chart as ChartJS, ArcElement, BarElement, LineElement, PointElement, LinearScale, CategoryScale, RadialLinearScale } from 'chart.js';
+import { Chart as ChartJS, ArcElement, BarElement, LineElement, PointElement, LinearScale, CategoryScale, RadialLinearScale, Tooltip } from 'chart.js';
 import { Chart, Bar, Line } from "react-chartjs-2";
 import { BoxPlotController, BoxAndWiskers } from '@sgratzl/chartjs-chart-boxplot';
 import { BiCheckCircle, BiUpArrow, BiSolidUpArrow } from "react-icons/bi";
@@ -24,7 +24,7 @@ import mapboxgl from "mapbox-gl";
 mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
 // register controller in chart.js and ensure the defaults are set
-ChartJS.register(ArcElement, BarElement, LineElement, PointElement, BoxPlotController, BoxAndWiskers, LinearScale, CategoryScale, RadialLinearScale);
+ChartJS.register(ArcElement, BarElement, LineElement, PointElement, BoxPlotController, BoxAndWiskers, LinearScale, CategoryScale, RadialLinearScale, Tooltip);
 
 const MAPBOX_TOKEN =
   "pk.eyJ1IjoiY2h1Y2swNTIwIiwiYSI6ImNrMDk2NDFhNTA0bW0zbHVuZTk3dHQ1cGUifQ.dkjP73KdE6JMTiLcUoHvUA";
@@ -425,6 +425,13 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
                   position: "right"
                 }
               ]
+            },
+            plugins: {
+              tooltip: {
+                enabled: true,
+                mode: "index",
+                intersect: false,
+              }
             }
           }
         });
@@ -1783,6 +1790,11 @@ const Report = ({ aoiSelected, hexData, actionHexData, actionScores }) => {
                       display: true,
                       text: "AOI Scores"
                     },
+                    tooltip: {
+                      enabled: true,
+                      mode: "index",
+                      intersect: false,
+                    }
                   },
                 }}
               />
