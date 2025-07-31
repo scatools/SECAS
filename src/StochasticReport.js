@@ -190,12 +190,12 @@ const StochasticReport = ({ aoiSelected, setProgress, setShowProgress }) => {
   ];
 
   const indicatorBins = {
-    aefih: [0.25, 0.5, 1],
-    amfih: [0.25, 0.5, 1],
+    aefih: [0, 0.25, 0.5, 1],
+    amfih: [0, 0.25, 0.5, 1],
     amrpa: [0, 1],
     cshcn: [0, 0.25, 0.5, 1],
-    ecopb: [0.2, 0.4, 0.6, 0.8, 1],
-    eqapk: [0.5, 0.75, 1],
+    ecopb: [0, 0.2, 0.4, 0.6, 0.8, 1],
+    eqapk: [0, 0.5, 0.75, 1],
     estcc: [0, 0.25, 0.5, 0.75, 1],
     firef: [0, 0.5, 1],
     gmgfc: [0, 1],

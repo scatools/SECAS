@@ -13,12 +13,12 @@ export function calculateArea(input) {
 
 export function getStochasticScore(hex) {
   const indicators = {
-    aefih: [0.25, 0.5, 1],
-    amfih: [0.25, 0.5, 1],
+    aefih: [0, 0.25, 0.5, 1],
+    amfih: [0, 0.25, 0.5, 1],
     amrpa: [0, 1],
     cshcn: [0, 0.25, 0.5, 1],
-    ecopb: [0.2, 0.4, 0.6, 0.8, 1],
-    eqapk: [0.5, 0.75, 1],
+    ecopb: [0, 0.2, 0.4, 0.6, 0.8, 1],
+    eqapk: [0, 0.5, 0.75, 1],
     estcc: [0, 0.25, 0.5, 0.75, 1],
     firef: [0, 0.5, 1],
     gmgfc: [0, 1],
@@ -50,12 +50,12 @@ export function getStochasticScore(hex) {
   };
 
   const probabilities = {
-    aefih: [hex.aefih_0_25, hex.aefih_0_5, hex.aefih_1],
-    amfih: [hex.amfih_0_25, hex.amfih_0_5, hex.amfih_1],
+    aefih: [hex.aefih_0, hex.aefih_0_25, hex.aefih_0_5, hex.aefih_1],
+    amfih: [hex.amfih_0, hex.amfih_0_25, hex.amfih_0_5, hex.amfih_1],
     amrpa: [hex.amrpa_0, hex.amrpa_1],
     cshcn: [hex.cshcn_0, hex.cshcn_0_25, hex.cshcn_0_5, hex.cshcn_1],
-    ecopb: [hex.ecopb_0_2, hex.ecopb_0_4, hex.ecopb_0_6, hex.ecopb_0_8, hex.ecopb_1],
-    eqapk: [hex.eqapk_0_5, hex.eqapk_0_75, hex.eqapk_1],
+    ecopb: [hex.ecopb_0, hex.ecopb_0_2, hex.ecopb_0_4, hex.ecopb_0_6, hex.ecopb_0_8, hex.ecopb_1],
+    eqapk: [hex.eqapk_0, hex.eqapk_0_5, hex.eqapk_0_75, hex.eqapk_1],
     estcc: [hex.estcc_0, hex.estcc_0_25, hex.estcc_0_5, hex.estcc_0_75, hex.estcc_1],
     firef: [hex.firef_0, hex.firef_0_5, hex.firef_1],
     gmgfc: [hex.gmgfc_0, hex.gmgfc_1],
@@ -286,12 +286,12 @@ export function getStochasticScore(hex) {
 
 export function getStochasticActionScore(hex) {
   const indicators = {
-    aefih: [0.25, 0.5, 1],
-    amfih: [0.25, 0.5, 1],
+    aefih: [0, 0.25, 0.5, 1],
+    amfih: [0, 0.25, 0.5, 1],
     amrpa: [0, 1],
     cshcn: [0, 0.25, 0.5, 1],
-    ecopb: [0.2, 0.4, 0.6, 0.8, 1],
-    eqapk: [0.5, 0.75, 1],
+    ecopb: [0, 0.2, 0.4, 0.6, 0.8, 1],
+    eqapk: [0, 0.5, 0.75, 1],
     estcc: [0, 0.25, 0.5, 0.75, 1],
     firef: [0, 0.5, 1],
     gmgfc: [0, 1],

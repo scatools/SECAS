@@ -17,12 +17,12 @@ const FutureWithActionTable = ({ hexData, setActionHexData, hexIdInBlue, actionS
   const aoi = aoiList[0];
   const scores = getAoiScore(hexData.features);
   const indicators = {
-    aefih: [0.25, 0.5, 1],
-    amfih: [0.25, 0.5, 1],
+    aefih: [0, 0.25, 0.5, 1],
+    amfih: [0, 0.25, 0.5, 1],
     amrpa: [0, 1],
     cshcn: [0, 0.25, 0.5, 1],
-    ecopb: [0.2, 0.4, 0.6, 0.8, 1],
-    eqapk: [0.5, 0.75, 1],
+    ecopb: [0, 0.2, 0.4, 0.6, 0.8, 1],
+    eqapk: [0, 0.5, 0.75, 1],
     estcc: [0, 0.25, 0.5, 0.75, 1],
     firef: [0, 0.5, 1],
     gmgfc: [0, 1],
@@ -383,41 +383,45 @@ const FutureWithActionTable = ({ hexData, setActionHexData, hexIdInBlue, actionS
         wgcmd: Math.min(...medoidScoreList.map(item => item.wgcmd).filter(item => item !== -1)),
       }
 
+      console.log(minScores);
+
       const minLevels = {
-        aefih: indicators.aefih.indexOf(minScores.aefih),
-        amfih: indicators.amfih.indexOf(minScores.amfih),
-        amrpa: indicators.amrpa.indexOf(minScores.amrpa),
-        cshcn: indicators.cshcn.indexOf(minScores.cshcn),
-        ecopb: indicators.ecopb.indexOf(minScores.ecopb),
-        eqapk: indicators.eqapk.indexOf(minScores.eqapk),
-        estcc: indicators.estcc.indexOf(minScores.estcc),
-        firef: indicators.firef.indexOf(minScores.firef),
-        gmgfc: indicators.gmgfc.indexOf(minScores.gmgfc),
-        gppgr: indicators.gppgr.indexOf(minScores.gppgr),
-        grntr: indicators.grntr.indexOf(minScores.grntr),
-        grsav: indicators.grsav.indexOf(minScores.grsav),
-        ihabc: indicators.ihabc.indexOf(minScores.ihabc),
-        impas: indicators.impas.indexOf(minScores.impas),
-        isegr: indicators.isegr.indexOf(minScores.isegr),
-        lscdn: indicators.lscdn.indexOf(minScores.lscdn),
-        mavbp: indicators.mavbp.indexOf(minScores.mavbp),
-        mavbr: indicators.mavbr.indexOf(minScores.mavbr),
-        netcx: indicators.netcx.indexOf(minScores.netcx),
-        nlcfp: indicators.nlcfp.indexOf(minScores.nlcfp),
-        persu: indicators.persu.indexOf(minScores.persu),
-        playa: indicators.playa.indexOf(minScores.playa),
-        rescs: indicators.rescs.indexOf(minScores.rescs),
-        rests: indicators.rests.indexOf(minScores.rests),
-        safbb: indicators.safbb.indexOf(minScores.safbb),
-        saffb: indicators.saffb.indexOf(minScores.saffb),
-        saluh: indicators.saluh.indexOf(minScores.saluh),
-        samfs: indicators.samfs.indexOf(minScores.samfs),
-        scwet: indicators.scwet.indexOf(minScores.scwet),
-        urbps: indicators.urbps.indexOf(minScores.urbps),
-        wcofw: indicators.wcofw.indexOf(minScores.wcofw),
-        wcopb: indicators.wcopb.indexOf(minScores.wcopb),
-        wgcmd: indicators.wgcmd.indexOf(minScores.wgcmd),
+        aefih: Math.max(0, indicators.aefih.indexOf(minScores.aefih)),
+        amfih: Math.max(0, indicators.amfih.indexOf(minScores.amfih)),
+        amrpa: Math.max(0, indicators.amrpa.indexOf(minScores.amrpa)),
+        cshcn: Math.max(0, indicators.cshcn.indexOf(minScores.cshcn)),
+        ecopb: Math.max(0, indicators.ecopb.indexOf(minScores.ecopb)),
+        eqapk: Math.max(0, indicators.eqapk.indexOf(minScores.eqapk)),
+        estcc: Math.max(0, indicators.estcc.indexOf(minScores.estcc)),
+        firef: Math.max(0, indicators.firef.indexOf(minScores.firef)),
+        gmgfc: Math.max(0, indicators.gmgfc.indexOf(minScores.gmgfc)),
+        gppgr: Math.max(0, indicators.gppgr.indexOf(minScores.gppgr)),
+        grntr: Math.max(0, indicators.grntr.indexOf(minScores.grntr)),
+        grsav: Math.max(0, indicators.grsav.indexOf(minScores.grsav)),
+        ihabc: Math.max(0, indicators.ihabc.indexOf(minScores.ihabc)),
+        impas: Math.max(0, indicators.impas.indexOf(minScores.impas)),
+        isegr: Math.max(0, indicators.isegr.indexOf(minScores.isegr)),
+        lscdn: Math.max(0, indicators.lscdn.indexOf(minScores.lscdn)),
+        mavbp: Math.max(0, indicators.mavbp.indexOf(minScores.mavbp)),
+        mavbr: Math.max(0, indicators.mavbr.indexOf(minScores.mavbr)),
+        netcx: Math.max(0, indicators.netcx.indexOf(minScores.netcx)),
+        nlcfp: Math.max(0, indicators.nlcfp.indexOf(minScores.nlcfp)),
+        persu: Math.max(0, indicators.persu.indexOf(minScores.persu)),
+        playa: Math.max(0, indicators.playa.indexOf(minScores.playa)),
+        rescs: Math.max(0, indicators.rescs.indexOf(minScores.rescs)),
+        rests: Math.max(0, indicators.rests.indexOf(minScores.rests)),
+        safbb: Math.max(0, indicators.safbb.indexOf(minScores.safbb)),
+        saffb: Math.max(0, indicators.saffb.indexOf(minScores.saffb)),
+        saluh: Math.max(0, indicators.saluh.indexOf(minScores.saluh)),
+        samfs: Math.max(0, indicators.samfs.indexOf(minScores.samfs)),
+        scwet: Math.max(0, indicators.scwet.indexOf(minScores.scwet)),
+        urbps: Math.max(0, indicators.urbps.indexOf(minScores.urbps)),
+        wcofw: Math.max(0, indicators.wcofw.indexOf(minScores.wcofw)),
+        wcopb: Math.max(0, indicators.wcopb.indexOf(minScores.wcopb)),
+        wgcmd: Math.max(0, indicators.wgcmd.indexOf(minScores.wgcmd)),
       };
+
+      console.log(minLevels)
 
       setCurrentLevels(minLevels);
       setActionLevels(minLevels);
@@ -451,6 +455,7 @@ const FutureWithActionTable = ({ hexData, setActionHexData, hexIdInBlue, actionS
   
   useEffect(() => {
     let newActionScores = {...actionScores};
+    console.log(newActionScores);
     const indicatorList = Object.keys(newActionScores);
     indicatorList.forEach((indicator) => {
       newActionScores[indicator] = Math.round(scores[indicator]*scores.futurePenalty*100)/100;
@@ -577,6 +582,8 @@ const FutureWithActionTable = ({ hexData, setActionHexData, hexIdInBlue, actionS
         cScore: getAverageScore(actionScoreList, "cScore"),
         futureScore: getAverageScore(actionScoreList, "futureScore"),
       };
+
+      console.log(newActionScores);
 
       setActionScores(newActionScores);
 
